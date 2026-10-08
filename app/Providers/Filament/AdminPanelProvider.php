@@ -11,6 +11,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -28,10 +29,20 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->brandName('Aura Dental Studio')
+            ->brandLogo(fn () => view('filament.admin.logo'))
+            ->brandLogoHeight('auto')
             ->login()
             ->colors([
-                'primary' => Color::Teal,
+                'primary' => Color::Sky,
             ])
+            ->sidebarCollapsibleOnDesktop()
+            ->sidebarWidth('16.5rem')
+            ->collapsedSidebarWidth('4.75rem')
+            ->spa(true, hasPrefetching: true)
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn () => view('filament.admin.theme-overrides')
+            )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
