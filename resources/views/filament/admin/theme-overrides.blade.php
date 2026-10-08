@@ -2334,5 +2334,269 @@
         color: #ffffff !important;
         border-color: #0284c7;
     }
+
+    /* --------------------------------------------------------------------------
+       PREVENT STICKY/FLOATING TOPBAR FROM OVERLAPPING PAGE CONTENT
+       -------------------------------------------------------------------------- */
+    .fi-main-ctn,
+    .fi-page {
+        padding-top: 0.75rem !important;
+    }
+
+    /* --------------------------------------------------------------------------
+       APPOINTMENT MANAGEMENT MODULE KPIS (ULTRA-COMPACT, LOW HEIGHT BAR)
+       -------------------------------------------------------------------------- */
+    .fi-wi-appointment-stats {
+        margin-bottom: 1.25rem !important;
+        width: 100% !important;
+    }
+
+    .aura-app-compact-bar {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 0.85rem !important;
+        width: 100% !important;
+    }
+
+    @media (min-width: 1024px) {
+        .aura-app-compact-bar {
+            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            gap: 1rem !important;
+        }
+    }
+
+    /* Mini stat card */
+    .aura-mini-stat {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.85rem !important;
+        padding: 0.75rem 1rem !important;
+        min-height: 4.15rem !important;
+        border-radius: 1rem !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
+        transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    }
+
+    .aura-mini-stat:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.06) !important;
+    }
+
+    .dark .aura-mini-stat {
+        background-color: #0c182d !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* Mini icon circle/box */
+    .aura-mini-icon {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+        min-width: 2.5rem !important;
+        border-radius: 0.75rem !important;
+        flex-shrink: 0 !important;
+    }
+
+    .aura-mini-icon-emerald {
+        background-color: #ecfdf5 !important;
+        color: #059669 !important;
+        border: 1px solid #a7f3d0 !important;
+    }
+
+    .dark .aura-mini-icon-emerald {
+        background-color: rgba(5, 150, 105, 0.2) !important;
+        color: #34d399 !important;
+        border-color: rgba(5, 150, 105, 0.3) !important;
+    }
+
+    .aura-mini-icon-orange {
+        background-color: #fffbeb !important;
+        color: #d97706 !important;
+        border: 1px solid #fde68a !important;
+    }
+
+    .dark .aura-mini-icon-orange {
+        background-color: rgba(217, 119, 6, 0.2) !important;
+        color: #fbbf24 !important;
+        border-color: rgba(217, 119, 6, 0.3) !important;
+    }
+
+    .aura-mini-icon-blue {
+        background-color: #f0f9ff !important;
+        color: #0284c7 !important;
+        border: 1px solid #bae6fd !important;
+    }
+
+    .dark .aura-mini-icon-blue {
+        background-color: rgba(2, 132, 199, 0.2) !important;
+        color: #38bdf8 !important;
+        border-color: rgba(2, 132, 199, 0.3) !important;
+    }
+
+    .aura-mini-icon-slate {
+        background-color: #f8fafc !important;
+        color: #475569 !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    .dark .aura-mini-icon-slate {
+        background-color: rgba(148, 163, 184, 0.15) !important;
+        color: #94a3b8 !important;
+        border-color: rgba(148, 163, 184, 0.25) !important;
+    }
+
+    .aura-mini-info {
+        display: flex !important;
+        flex-direction: column !important;
+        line-height: 1.15 !important;
+    }
+
+    .aura-mini-num {
+        font-size: 1.35rem !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        letter-spacing: -0.02em !important;
+    }
+
+    .dark .aura-mini-num {
+        color: #ffffff !important;
+    }
+
+    .aura-mini-label {
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        color: #64748b !important;
+        margin-top: 0.1rem !important;
+        white-space: nowrap !important;
+    }
+
+    .dark .aura-mini-label {
+        color: #94a3b8 !important;
+    }
+
+    /* --------------------------------------------------------------------------
+       MODERN DENTAL SAAS TABLE STYLING
+       -------------------------------------------------------------------------- */
+    .fi-ta {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.85rem !important;
+    }
+
+    .fi-ta-ctn {
+        border-radius: 1.25rem !important;
+        border: 1px solid #e2e8f0 !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04) !important;
+        overflow: hidden !important;
+    }
+
+    .dark .fi-ta-ctn {
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        background-color: #0c182d !important;
+        box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* Table Toolbar (Search & Filter bar) */
+    .fi-ta-header-toolbar {
+        padding: 0.85rem 1.15rem !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        background-color: #ffffff !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
+    }
+
+    .dark .fi-ta-header-toolbar {
+        background-color: #0c182d !important;
+        border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    /* Search input pill */
+    .fi-ta-search-field input {
+        border-radius: 0.85rem !important;
+        border: 1px solid #e2e8f0 !important;
+        font-size: 0.84rem !important;
+        background-color: #f8fafc !important;
+        padding-block: 0.55rem !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .fi-ta-search-field input:focus {
+        border-color: #0284c7 !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15) !important;
+    }
+
+    .dark .fi-ta-search-field input {
+        background-color: rgba(15, 23, 42, 0.6) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        color: #f8fafc !important;
+    }
+
+    .dark .fi-ta-search-field input:focus {
+        border-color: #38bdf8 !important;
+        background-color: #0f172a !important;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+    }
+
+    /* Filter button next to search */
+    button[wire\\:click*="openFilters"],
+    .fi-ta-filter-trigger button,
+    .fi-ta-header-toolbar button:has(svg) {
+        border-radius: 0.85rem !important;
+        font-weight: 600 !important;
+        font-size: 0.825rem !important;
+        padding-inline: 1rem !important;
+        padding-block: 0.52rem !important;
+        transition: all 0.15s ease !important;
+    }
+
+    /* Table Header cells */
+    .fi-ta-header-cell {
+        background-color: #f8fafc !important;
+        color: #475569 !important;
+        font-size: 0.725rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.05em !important;
+        text-transform: uppercase !important;
+        padding-block: 0.85rem !important;
+        padding-inline: 1rem !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+    }
+
+    .dark .fi-ta-header-cell {
+        background-color: #0b1424 !important;
+        color: #94a3b8 !important;
+        border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    /* Table Rows */
+    .fi-ta-row {
+        transition: background-color 0.15s ease !important;
+    }
+
+    .fi-ta-row:hover {
+        background-color: #f8fafc !important;
+    }
+
+    .dark .fi-ta-row:hover {
+        background-color: rgba(30, 41, 59, 0.4) !important;
+    }
+
+    .fi-ta-cell {
+        padding-block: 0.95rem !important;
+        padding-inline: 1rem !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+    }
+
+    .dark .fi-ta-cell {
+        border-bottom-color: rgba(255, 255, 255, 0.04) !important;
+    }
 </style>
 

@@ -16,73 +16,66 @@ class AppointmentForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $isSpanish = app()->getLocale() === 'es';
-
         return $schema
             ->components([
-                Section::make($isSpanish ? 'Información del Paciente' : 'Patient Information')
-                    ->description($isSpanish ? 'Datos de contacto y personales para la reserva.' : 'Contact and personal data for the booking.')
+                Section::make('Información del Paciente')
+                    ->description('Datos de contacto y personales para la gestión de la cita.')
                     ->schema([
                         Grid::make(3)
                             ->schema([
                                 TextInput::make('patient_name')
-                                    ->label($isSpanish ? 'Nombre Completo del Paciente' : 'Patient Full Name')
-                                    ->placeholder($isSpanish ? 'ej. María Rodríguez' : 'e.g. John Doe')
+                                    ->label('Nombre Completo')
+                                    ->placeholder('ej. María Rodríguez')
                                     ->required()
                                     ->maxLength(255),
                                 TextInput::make('patient_phone')
-                                    ->label($isSpanish ? 'Teléfono / WhatsApp' : 'Phone / WhatsApp')
+                                    ->label('Teléfono / WhatsApp')
                                     ->tel()
                                     ->telRegex('/^[+0-9\s()\-.]+$/')
                                     ->validationMessages([
                                         'regex' => 'El formato del teléfono no es válido (solo números, espacios, +, -, ()).',
                                     ])
                                     ->required()
-                                    ->helperText($isSpanish ? 'Incluir código de país, ej. +15552345678' : 'Include country code, e.g. +15552345678')
+                                    ->helperText('Incluir código de país, ej. +15552345678')
                                     ->maxLength(50),
                                 TextInput::make('patient_email')
-                                    ->label($isSpanish ? 'Correo Electrónico' : 'Email Address')
+                                    ->label('Correo Electrónico (Opcional)')
                                     ->email()
+                                    ->placeholder('paciente@ejemplo.com')
                                     ->maxLength(255),
                             ]),
                         Toggle::make('is_first_visit')
-                            ->label($isSpanish ? '¿Es su primera visita a nuestra clínica?' : 'First time visiting our clinic?')
+                            ->label('¿Es su primera visita a nuestra clínica?')
+                            ->helperText('Indica si requiere apertura de ficha clínica dental.')
                             ->default(true),
                     ]),
 
-                Section::make($isSpanish ? 'Detalles de la Cita' : 'Appointment Details')
-                    ->description($isSpanish ? 'Selección de tratamiento, especialista asignado, fecha y notas.' : 'Service selection, assigned specialist, schedule, and notes.')
+                Section::make('Programación y Asignación Médica')
+                    ->description('Selección del servicio odontológico, especialista, fecha y hora.')
                     ->schema([
                         Grid::make(3)
                             ->schema([
                                 Select::make('service_id')
-                                    ->label($isSpanish ? 'Tratamiento / Servicio' : 'Treatment / Service')
+                                    ->label('Tratamiento / Servicio')
                                     ->relationship('service', 'name')
                                     ->searchable()
                                     ->preload()
                                     ->nullable(),
                                 Select::make('dentist_id')
-                                    ->label($isSpanish ? 'Especialista Asignado' : 'Assigned Specialist')
+                                    ->label('Especialista Asignado')
                                     ->relationship('dentist', 'name')
                                     ->searchable()
                                     ->preload()
                                     ->nullable(),
                                 Select::make('status')
-                                    ->label($isSpanish ? 'Estado de la Cita' : 'Status')
-                                    ->options($isSpanish ? [
-                                        'pending' => 'Pendiente de Confirmación',
+                                    ->label('Estado de la Cita')
+                                    ->options([
+                                        'pending' => 'Por Confirmar',
                                         'confirmed' => 'Confirmada',
                                         'in_progress' => 'En Consulta',
                                         'completed' => 'Completada',
                                         'cancelled' => 'Cancelada',
                                         'no_show' => 'No Asistió',
-                                    ] : [
-                                        'pending' => 'Pending Confirmation',
-                                        'confirmed' => 'Confirmed',
-                                        'in_progress' => 'In Consultation',
-                                        'completed' => 'Completed',
-                                        'cancelled' => 'Cancelled',
-                                        'no_show' => 'No Show',
                                     ])
                                     ->default('pending')
                                     ->required(),
@@ -90,23 +83,35 @@ class AppointmentForm
                         Grid::make(3)
                             ->schema([
                                 DatePicker::make('appointment_date')
-                                    ->label($isSpanish ? 'Fecha' : 'Date')
+                                    ->label('Fecha de la Cita')
+                                    ->native(false)
                                     ->required(),
                                 TextInput::make('appointment_time')
-                                    ->label($isSpanish ? 'Horario (Hora)' : 'Time Slot')
-                                    ->placeholder('10:00')
+                                    ->label('Horario')
+                                    ->placeholder('09:30')
+                                    ->helperText('Formato HH:MM (ej. 10:00, 15:30)')
                                     ->required(),
                                 TextInput::make('duration_minutes')
-                                    ->label($isSpanish ? 'Duración (Minutos)' : 'Duration (Min)')
+                                    ->label('Duración (Minutos)')
                                     ->numeric()
-                                    ->default(45),
+                                    ->default(45)
+                                    ->minValue(15)
+                                    ->maxValue(240),
                             ]),
 
-                        Textarea::make('symptoms')
-                            ->label($isSpanish ? 'Notas o Motivo de la Cita (Opcional)' : 'Notes or Reason for Visit (Optional)')
-                            ->placeholder($isSpanish ? 'Motivo de la consulta, molestias, indicaciones previas u observaciones...' : 'Reason for visit, discomfort, or special observations...')
-                            ->rows(3)
-                            ->nullable(),
+                        Grid::make(2)
+                            ->schema([
+                                Textarea::make('symptoms')
+                                    ->label('Motivo de Consulta / Molestias Reportadas')
+                                    ->placeholder('Molestias dentales, limpieza programada, revisión...')
+                                    ->rows(3)
+                                    ->nullable(),
+                                Textarea::make('internal_notes')
+                                    ->label('Notas Internas del Equipo Clínico')
+                                    ->placeholder('Observaciones privadas para recepción o doctores...')
+                                    ->rows(3)
+                                    ->nullable(),
+                            ]),
 
                         Hidden::make('preferred_locale')
                             ->default(fn () => app()->getLocale()),

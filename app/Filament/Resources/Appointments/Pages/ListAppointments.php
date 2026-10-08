@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Appointments\Pages;
 
 use App\Filament\Resources\Appointments\AppointmentResource;
+use App\Filament\Widgets\AppointmentStatsOverviewWidget;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -12,14 +13,21 @@ class ListAppointments extends ListRecords
 
     public function getTitle(): string
     {
-        return app()->getLocale() === 'es' ? 'Gestión de Citas' : 'Appointments';
+        return 'Gestión de Citas';
     }
 
     protected function getHeaderActions(): array
     {
         return [
             CreateAction::make()
-                ->label(app()->getLocale() === 'es' ? 'Nueva Cita' : 'New Appointment'),
+                ->label('Nueva Cita'),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            AppointmentStatsOverviewWidget::class,
         ];
     }
 }

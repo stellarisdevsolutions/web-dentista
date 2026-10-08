@@ -63,12 +63,16 @@ class Appointment extends Model
     }
 
     /**
-     * WhatsApp URL to contact the patient directly.
+     * WhatsApp URL to contact the patient directly in Spanish.
      */
     public function getWhatsAppUrlAttribute(): string
     {
         $phone = preg_replace('/[^0-9]/', '', (string) $this->patient_phone);
-        $message = "Hello {$this->patient_name}, regarding your appointment ({$this->code}) on {$this->appointment_date?->format('Y-m-d')} at {$this->appointment_time}.";
+        $dateFormatted = $this->appointment_date ? $this->appointment_date->format('d/m/Y') : '';
+        $serviceName = $this->service?->name ?? 'Consulta Odontológica';
+        $clinicName = config('app.name', 'Clínica Dental Aura');
+
+        $message = "Hola {$this->patient_name}, le saludamos de {$clinicName}. Le escribimos para coordinar su cita de {$serviceName} (Ref: {$this->code}) programada para el {$dateFormatted} a las {$this->appointment_time}. ¿Nos confirma su asistencia?";
 
         return "https://wa.me/{$phone}?text=".urlencode($message);
     }
