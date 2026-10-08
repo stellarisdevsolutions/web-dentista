@@ -25,12 +25,12 @@ class ServiceResource extends Resource
 
     public static function getRecordTitleAttribute(): ?string
     {
-        return app()->getLocale() === 'es' ? 'name_es' : 'name_en';
+        return 'name';
     }
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['name_es', 'name_en', 'category_es', 'category_en', 'short_description_es', 'short_description_en'];
+        return ['name', 'category', 'short_description'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string

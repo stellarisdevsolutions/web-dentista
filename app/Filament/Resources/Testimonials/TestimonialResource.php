@@ -27,7 +27,7 @@ class TestimonialResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['patient_name', 'treatment_es', 'treatment_en', 'comment_es', 'comment_en'];
+        return ['patient_name', 'treatment', 'comment'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string

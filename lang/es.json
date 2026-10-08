@@ -50,5 +50,9 @@
     "Active": "Activo",
     "Inactive": "Inactivo",
     "Featured": "Destacado",
-    "Order": "Orden"
+    "Order": "Orden",
+    "System Administration": "Administración del Sistema",
+    "Users & Roles": "Usuarios y Roles",
+    "Users": "Usuarios",
+    "User": "Usuario"
 }

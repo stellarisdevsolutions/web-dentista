@@ -13,12 +13,9 @@ return new class extends Migration
     {
         Schema::create('faqs', function (Blueprint $table): void {
             $table->id();
-            $table->string('category_en')->nullable();
-            $table->string('category_es')->nullable();
-            $table->string('question_en')->nullable();
-            $table->string('question_es')->nullable();
-            $table->text('answer_en')->nullable();
-            $table->text('answer_es')->nullable();
+            $table->string('category')->nullable();
+            $table->string('question');
+            $table->text('answer');
             $table->boolean('is_active')->default(true);
             $table->integer('order')->default(0);
             $table->timestamps();

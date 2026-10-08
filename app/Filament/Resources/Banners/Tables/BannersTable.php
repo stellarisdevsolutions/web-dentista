@@ -22,17 +22,17 @@ class BannersTable
                     ->label('Imagen')
                     ->disk('public'),
 
-                TextColumn::make('badge_es')
+                TextColumn::make('badge')
                     ->label('Etiqueta')
                     ->badge(),
 
-                TextColumn::make('title_es')
+                TextColumn::make('title')
                     ->label('Título Principal')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
-                TextColumn::make('button_text_es')
+                TextColumn::make('button_text')
                     ->label('Texto Botón (CTA)'),
 
                 ToggleColumn::make('is_active')

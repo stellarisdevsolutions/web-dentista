@@ -27,7 +27,7 @@ class DentistResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['name', 'specialty_es', 'specialty_en', 'email', 'phone'];
+        return ['name', 'specialty', 'email', 'phone'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string

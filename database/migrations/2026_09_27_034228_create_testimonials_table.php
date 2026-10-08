@@ -15,11 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('patient_name');
             $table->string('patient_avatar')->nullable();
-            $table->string('treatment_en')->nullable();
-            $table->string('treatment_es')->nullable();
+            $table->string('treatment')->nullable();
             $table->unsignedTinyInteger('rating')->default(5);
-            $table->text('comment_en')->nullable();
-            $table->text('comment_es')->nullable();
+            $table->text('comment')->nullable();
             $table->string('source')->default('Verified Patient');
             $table->boolean('is_verified')->default(true);
             $table->boolean('is_active')->default(true);

@@ -821,4 +821,1518 @@
         border: 1px solid rgba(255, 255, 255, 0.06) !important;
         background-color: #0f172a !important;
     }
+
+
+
+    /* --------------------------------------------------------------------------
+       MODERN PAGE HEADER ENHANCEMENTS (DONEZO-STYLE SINGLE-ROW HEADER - SOLID COLORS)
+       -------------------------------------------------------------------------- */
+    .fi-header {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+        padding-bottom: 0 !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .fi-header > div:first-child {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.2rem !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+    }
+
+    .fi-header-heading {
+        font-size: 1.75rem !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.03em !important;
+        color: #0f172a !important;
+        line-height: 1.2 !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+    }
+
+    .dark .fi-header-heading {
+        color: #ffffff !important;
+    }
+
+    /* PURE SOLID COLOR - NO GRADIENTS */
+    .aura-heading-highlight {
+        color: #0284c7 !important;
+        background: none !important;
+        -webkit-background-clip: initial !important;
+        -webkit-text-fill-color: initial !important;
+    }
+
+    .dark .aura-heading-highlight {
+        color: #38bdf8 !important;
+        background: none !important;
+        -webkit-background-clip: initial !important;
+        -webkit-text-fill-color: initial !important;
+    }
+
+    .fi-header-subheading {
+        font-size: 0.85rem !important;
+        color: #64748b !important;
+        margin: 0 !important;
+        line-height: 1.4 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .dark .fi-header-subheading {
+        color: #94a3b8 !important;
+    }
+
+    .fi-header-actions {
+        display: inline-flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 0.65rem !important;
+        flex-shrink: 0 !important;
+        flex-wrap: nowrap !important;
+        margin: 0 !important;
+    }
+
+    /* 1. Botón "Nueva Cita" - Azul Océano Vibrante y Limpio (#0284c7) */
+    .aura-btn-header-primary {
+        background: #0284c7 !important;
+        background-color: #0284c7 !important;
+        color: #ffffff !important;
+        border: 1px solid #0284c7 !important;
+        border-radius: 9999px !important;
+        font-weight: 700 !important;
+        font-size: 0.85rem !important;
+        padding: 0.55rem 1.25rem !important;
+        box-shadow: 0 4px 14px -1px rgba(2, 132, 199, 0.4) !important;
+        transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.45rem !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    .aura-btn-header-primary svg {
+        color: #ffffff !important;
+        stroke: #ffffff !important;
+        width: 16px !important;
+        height: 16px !important;
+        min-width: 16px !important;
+        min-height: 16px !important;
+    }
+
+    .aura-btn-header-primary:hover {
+        background: #0369a1 !important;
+        background-color: #0369a1 !important;
+        border-color: #0369a1 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 6px 18px -1px rgba(2, 132, 199, 0.5) !important;
+    }
+
+    .dark .aura-btn-header-primary {
+        background: #0284c7 !important;
+        background-color: #0284c7 !important;
+        color: #ffffff !important;
+        border: 1.5px solid #38bdf8 !important;
+        box-shadow: 0 4px 16px -2px rgba(2, 132, 199, 0.45) !important;
+    }
+
+    .dark .aura-btn-header-primary:hover {
+        background: #0ea5e9 !important;
+        background-color: #0ea5e9 !important;
+        border-color: #7dd3fc !important;
+    }
+
+    .aura-btn-header-primary:active {
+        transform: scale(0.97) !important;
+    }
+
+    .aura-btn-header-celeste svg {
+        color: #ffffff !important;
+        stroke: #ffffff !important;
+        width: 16px !important;
+        height: 16px !important;
+        min-width: 16px !important;
+        min-height: 16px !important;
+    }
+
+    .aura-btn-header-outline-blue svg {
+        color: #0284c7 !important;
+        stroke: #0284c7 !important;
+        width: 16px !important;
+        height: 16px !important;
+        min-width: 16px !important;
+        min-height: 16px !important;
+    }
+
+    .dark .aura-btn-header-outline-blue svg {
+        color: #38bdf8 !important;
+        stroke: #38bdf8 !important;
+    }
+
+    /* 2. Botón "Ver Agenda" - Celeste sólido (#0ea5e9) */
+    .aura-btn-header-celeste {
+        background: #0ea5e9 !important;
+        background-color: #0ea5e9 !important;
+        color: #ffffff !important;
+        border: 1px solid #0ea5e9 !important;
+        border-radius: 9999px !important;
+        font-weight: 700 !important;
+        font-size: 0.85rem !important;
+        padding: 0.55rem 1.25rem !important;
+        box-shadow: 0 4px 12px -1px rgba(14, 165, 233, 0.35) !important;
+        transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.45rem !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    .aura-btn-header-celeste:hover {
+        background: #0284c7 !important;
+        background-color: #0284c7 !important;
+        border-color: #0284c7 !important;
+        transform: translateY(-1px) !important;
+    }
+
+    .dark .aura-btn-header-celeste {
+        background: #0284c7 !important;
+        background-color: #0284c7 !important;
+        color: #ffffff !important;
+        border: 1px solid #0284c7 !important;
+        box-shadow: 0 4px 14px -2px rgba(14, 165, 233, 0.4) !important;
+    }
+
+    .dark .aura-btn-header-celeste:hover {
+        background: #0ea5e9 !important;
+        background-color: #0ea5e9 !important;
+        border-color: #0ea5e9 !important;
+    }
+
+    .aura-btn-header-celeste:active {
+        transform: scale(0.97) !important;
+    }
+
+    /* 3. Botón "Ver Sitio Web" - Blanco con bordes azul sólido */
+    .aura-btn-header-outline-blue {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #0284c7 !important;
+        border: 1.5px solid #0284c7 !important;
+        border-radius: 9999px !important;
+        font-weight: 700 !important;
+        font-size: 0.85rem !important;
+        padding: 0.55rem 1.25rem !important;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+        transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.45rem !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    .aura-btn-header-outline-blue:hover {
+        background: #f0f9ff !important;
+        background-color: #f0f9ff !important;
+        color: #0369a1 !important;
+        border-color: #0369a1 !important;
+        transform: translateY(-1px) !important;
+    }
+
+    .dark .aura-btn-header-outline-blue {
+        background: #0b172a !important;
+        background-color: #0b172a !important;
+        color: #38bdf8 !important;
+        border: 1.5px solid #38bdf8 !important;
+        box-shadow: none !important;
+    }
+
+    .dark .aura-btn-header-outline-blue:hover {
+        background: #1e293b !important;
+        background-color: #1e293b !important;
+        color: #7dd3fc !important;
+        border-color: #7dd3fc !important;
+        transform: translateY(-1px) !important;
+    }
+
+    .aura-btn-header-outline-blue:active {
+        transform: scale(0.97) !important;
+    }
+
+    /* --------------------------------------------------------------------------
+       BENTO LAYOUT: 3 COLUMNAS (2 COLUMNAS DE KPIS + 1 COLUMNA ESPECIALISTAS DOBLE FILA)
+       -------------------------------------------------------------------------- */
+    .fi-wi-stats-bento,
+    .fi-wi > div:has(.aura-bento-layout) {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .aura-bento-layout {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 1.15rem !important;
+        width: 100% !important;
+    }
+
+    @media (min-width: 640px) and (max-width: 1023px) {
+        .aura-bento-layout {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+
+        .aura-specialists-card {
+            grid-column: 1 / -1 !important;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .aura-bento-layout {
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            grid-template-rows: auto auto !important;
+            align-items: stretch !important;
+        }
+
+        .aura-kpi-theme-blue {
+            grid-column: 1 !important;
+            grid-row: 1 !important;
+        }
+
+        .aura-kpi-theme-orange {
+            grid-column: 2 !important;
+            grid-row: 1 !important;
+        }
+
+        .aura-kpi-theme-emerald {
+            grid-column: 1 !important;
+            grid-row: 2 !important;
+        }
+
+        .aura-kpi-theme-indigo {
+            grid-column: 2 !important;
+            grid-row: 2 !important;
+        }
+
+        .aura-specialists-card {
+            grid-column: 3 !important;
+            grid-row: 1 / span 2 !important;
+            height: 100% !important;
+        }
+    }
+
+    /* Base KPI Item Card (Finnova Modern Style) */
+    .aura-kpi-item {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1.35rem 1.4rem !important;
+        border-radius: 1.35rem !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
+        box-sizing: border-box !important;
+        transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.2s ease, border-color 0.2s ease !important;
+    }
+
+    .dark .aura-kpi-item {
+        background-color: #0c182d !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .aura-kpi-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -3px rgba(15, 23, 42, 0.08) !important;
+        border-color: #cbd5e1 !important;
+    }
+
+    .dark .aura-kpi-item:hover {
+        border-color: rgba(255, 255, 255, 0.16) !important;
+    }
+
+    /* Head */
+    .aura-finnova-head,
+    .aura-kpi-head-simple {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.65rem;
+    }
+
+    /* Body simple */
+    .aura-kpi-body-simple {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.65rem;
+    }
+
+    /* Big Icon Boxes (for cards without the days chart) */
+    .aura-kpi-big-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 1rem;
+        flex-shrink: 0;
+        transition: transform 0.2s ease;
+    }
+
+    .aura-kpi-item:hover .aura-kpi-big-icon {
+        transform: scale(1.05);
+    }
+
+    .aura-big-icon-blue {
+        background-color: #f0f9ff;
+        color: #0284c7;
+        border: 1px solid #bae6fd;
+    }
+
+    .dark .aura-big-icon-blue {
+        background-color: #082f49;
+        color: #38bdf8;
+        border-color: #0369a1;
+    }
+
+    .aura-big-icon-orange {
+        background-color: #fff7ed;
+        color: #ea580c;
+        border: 1px solid #fed7aa;
+    }
+
+    .dark .aura-big-icon-orange {
+        background-color: #431407;
+        color: #fb923c;
+        border-color: #7c2d12;
+    }
+
+    .aura-big-icon-indigo {
+        background-color: #eef2ff;
+        color: #4f46e5;
+        border: 1px solid #c7d2fe;
+    }
+
+    .dark .aura-big-icon-indigo {
+        background-color: #1e1b4b;
+        color: #818cf8;
+        border-color: #3730a3;
+    }
+
+    /* Foot simple */
+    .aura-kpi-foot-simple {
+        padding-top: 0.55rem;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .dark .aura-kpi-foot-simple {
+        border-top-color: #1e293b;
+    }
+
+    .aura-kpi-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+    }
+
+    .aura-kpi-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.15rem 0.55rem;
+        border-radius: 9999px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .aura-chip-blue {
+        background-color: #f0f9ff;
+        color: #0284c7;
+        border: 1px solid #bae6fd;
+    }
+
+    .dark .aura-chip-blue {
+        background-color: #082f49;
+        color: #7dd3fc;
+        border-color: #0369a1;
+    }
+
+    .aura-chip-amber {
+        background-color: #fffbeb;
+        color: #b45309;
+        border: 1px solid #fde68a;
+    }
+
+    .dark .aura-chip-amber {
+        background-color: #451a03;
+        color: #fcd34d;
+        border-color: #78350f;
+    }
+
+    .aura-chip-green {
+        background-color: #ecfdf5;
+        color: #059669;
+        border: 1px solid #a7f3d0;
+    }
+
+    .dark .aura-chip-green {
+        background-color: #064e3b;
+        color: #6ee7b7;
+        border-color: #047857;
+    }
+
+    .aura-chip-indigo {
+        background-color: #eef2ff;
+        color: #4f46e5;
+        border: 1px solid #c7d2fe;
+    }
+
+    .dark .aura-chip-indigo {
+        background-color: #1e1b4b;
+        color: #a5b4fc;
+        border-color: #3730a3;
+    }
+
+    .aura-icon-circle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.85rem;
+        height: 1.85rem;
+        border-radius: 9999px;
+        flex-shrink: 0;
+    }
+
+    .aura-icon-blue {
+        background-color: #e0f2fe;
+        color: #0284c7;
+        border: 1px solid #bae6fd;
+    }
+
+    .dark .aura-icon-blue {
+        background-color: #082f49;
+        color: #38bdf8;
+        border-color: #0369a1;
+    }
+
+    .aura-icon-orange {
+        background-color: #ffedd5;
+        color: #ea580c;
+        border: 1px solid #fed7aa;
+    }
+
+    .dark .aura-icon-orange {
+        background-color: #431407;
+        color: #fb923c;
+        border-color: #7c2d12;
+    }
+
+    .aura-icon-emerald {
+        background-color: #d1fae5;
+        color: #059669;
+        border: 1px solid #a7f3d0;
+    }
+
+    .dark .aura-icon-emerald {
+        background-color: #064e3b;
+        color: #34d399;
+        border-color: #047857;
+    }
+
+    .aura-icon-indigo {
+        background-color: #e0e7ff;
+        color: #4f46e5;
+        border: 1px solid #c7d2fe;
+    }
+
+    .dark .aura-icon-indigo {
+        background-color: #1e1b4b;
+        color: #818cf8;
+        border-color: #3730a3;
+    }
+
+    /* Body */
+    .aura-finnova-body {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.65rem;
+    }
+
+    .aura-finnova-stat {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .aura-kpi-num {
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .dark .aura-kpi-num {
+        color: #ffffff;
+    }
+
+    .aura-kpi-subtext {
+        font-size: 0.72rem;
+        color: #64748b;
+        margin-top: 0.2rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .dark .aura-kpi-subtext {
+        color: #94a3b8;
+    }
+
+    /* Mini Vertical Bar Chart */
+    .aura-mini-bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 0.35rem;
+        height: 2.6rem;
+    }
+
+    .aura-bar-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.2rem;
+        height: 100%;
+        justify-content: flex-end;
+    }
+
+    .aura-bar {
+        width: 6px;
+        background-color: #cbd5e1;
+        border-radius: 3px;
+        min-height: 4px;
+        transition: height 0.3s ease;
+    }
+
+    .dark .aura-bar {
+        background-color: #334155;
+    }
+
+    .aura-bar-label {
+        font-size: 0.58rem;
+        font-weight: 700;
+        color: #94a3b8;
+        line-height: 1;
+    }
+
+    /* Active Bar & Day Colors per Theme */
+    .aura-kpi-theme-blue .aura-bar.aura-bar-active { background-color: #0284c7; }
+    .aura-kpi-theme-blue .aura-bar-label.aura-label-active { color: #0284c7; }
+
+    .aura-kpi-theme-orange .aura-bar.aura-bar-active { background-color: #ea580c; }
+    .aura-kpi-theme-orange .aura-bar-label.aura-label-active { color: #ea580c; }
+
+    .aura-kpi-theme-emerald .aura-bar.aura-bar-active { background-color: #059669; }
+    .aura-kpi-theme-emerald .aura-bar-label.aura-label-active { color: #059669; }
+
+    .aura-kpi-theme-indigo .aura-bar.aura-bar-active { background-color: #4f46e5; }
+    .aura-kpi-theme-indigo .aura-bar-label.aura-label-active { color: #4f46e5; }
+
+    .dark .aura-kpi-theme-blue .aura-bar.aura-bar-active { background-color: #38bdf8; }
+    .dark .aura-kpi-theme-blue .aura-bar-label.aura-label-active { color: #38bdf8; }
+
+    .dark .aura-kpi-theme-orange .aura-bar.aura-bar-active { background-color: #fb923c; }
+    .dark .aura-kpi-theme-orange .aura-bar-label.aura-label-active { color: #fb923c; }
+
+    .dark .aura-kpi-theme-emerald .aura-bar.aura-bar-active { background-color: #10b981; }
+    .dark .aura-kpi-theme-emerald .aura-bar-label.aura-label-active { color: #34d399; }
+
+    .dark .aura-kpi-theme-indigo .aura-bar.aura-bar-active { background-color: #818cf8; }
+    .dark .aura-kpi-theme-indigo .aura-bar-label.aura-label-active { color: #818cf8; }
+
+    /* Foot */
+    .aura-finnova-foot {
+        padding-top: 0.55rem;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .dark .aura-finnova-foot {
+        border-top-color: #1e293b;
+    }
+
+    .aura-foot-status {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    .dark .aura-foot-status {
+        color: #94a3b8;
+    }
+
+    .dark .aura-medical-foot {
+        border-top-color: #1e293b;
+    }
+
+    .aura-foot-desc {
+        font-size: 0.7rem;
+        color: #64748b;
+    }
+
+    .dark .aura-foot-desc {
+        color: #94a3b8;
+    }
+
+    /* --------------------------------------------------------------------------
+       COLUMNA 3 (DOBLE FILA): LISTADO DE ESPECIALISTAS (PINTEREST / FINNOVA STYLE)
+       -------------------------------------------------------------------------- */
+    .aura-specialists-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1.45rem !important;
+        border-radius: 1.35rem !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
+        box-sizing: border-box !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+    }
+
+    .dark .aura-specialists-card {
+        background-color: #0c182d !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .aura-specialists-card:hover {
+        box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.08) !important;
+        border-color: #cbd5e1 !important;
+    }
+
+    .dark .aura-specialists-card:hover {
+        border-color: rgba(255, 255, 255, 0.16) !important;
+    }
+
+    .aura-spec-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .aura-spec-title-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .aura-spec-title {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+    }
+
+    .dark .aura-spec-title {
+        color: #ffffff;
+    }
+
+    .aura-spec-subtitle {
+        font-size: 0.74rem;
+        color: #64748b;
+        margin-top: 0.15rem;
+    }
+
+    .dark .aura-spec-subtitle {
+        color: #94a3b8;
+    }
+
+    .aura-spec-count-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.25rem 0.65rem;
+        border-radius: 9999px;
+        background-color: #ecfdf5;
+        color: #047857;
+        border: 1px solid #a7f3d0;
+        font-size: 0.72rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .dark .aura-spec-count-badge {
+        background-color: #064e3b;
+        color: #6ee7b7;
+        border-color: #047857;
+    }
+
+    .aura-pulse-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 9999px;
+        background-color: #10b981;
+    }
+
+    .aura-spec-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        flex: 1;
+    }
+
+    .aura-spec-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 0.75rem;
+        border-radius: 0.85rem;
+        background-color: #f8fafc;
+        border: 1px solid #f1f5f9;
+        transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .aura-spec-row:hover {
+        background-color: #f1f5f9;
+        border-color: #e2e8f0;
+    }
+
+    .dark .aura-spec-row {
+        background-color: #111e35;
+        border-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .dark .aura-spec-row:hover {
+        background-color: #162644;
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .aura-spec-avatar-box {
+        width: 2.35rem;
+        height: 2.35rem;
+        border-radius: 9999px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .aura-spec-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .aura-spec-avatar-fallback {
+        width: 100%;
+        height: 100%;
+        border-radius: 9999px;
+        color: #ffffff;
+        font-size: 0.75rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+        user-select: none;
+    }
+
+    .aura-spec-info {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .aura-spec-name {
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .dark .aura-spec-name {
+        color: #ffffff;
+    }
+
+    .aura-spec-specialty {
+        font-size: 0.7rem;
+        color: #64748b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 0.1rem;
+    }
+
+    .dark .aura-spec-specialty {
+        color: #94a3b8;
+    }
+
+    .aura-spec-status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 9999px;
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        font-size: 0.65rem;
+        font-weight: 600;
+        color: #047857;
+        flex-shrink: 0;
+    }
+
+    .dark .aura-spec-status-pill {
+        background-color: #0c182d;
+        border-color: rgba(255, 255, 255, 0.08);
+        color: #6ee7b7;
+    }
+
+    .aura-spec-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 9999px;
+        background-color: #10b981;
+    }
+
+    .aura-spec-footer {
+        padding-top: 0.85rem;
+        border-top: 1px solid #f1f5f9;
+        margin-top: 0.85rem;
+    }
+
+    .dark .aura-spec-footer {
+        border-top-color: #1e293b;
+    }
+
+    .aura-spec-view-all {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #0284c7;
+        text-decoration: none;
+        padding: 0.45rem 0.75rem;
+        border-radius: 0.75rem;
+        background-color: #f0f9ff;
+        border: 1px solid #bae6fd;
+        transition: all 0.15s ease;
+    }
+
+    .aura-spec-view-all:hover {
+        background-color: #0284c7;
+        color: #ffffff;
+        border-color: #0284c7;
+    }
+
+    .dark .aura-spec-view-all {
+        background-color: #082f49;
+        color: #7dd3fc;
+        border-color: #0369a1;
+    }
+
+    .dark .aura-spec-view-all:hover {
+        background-color: #0284c7;
+        color: #ffffff;
+    }
+
+    /* --------------------------------------------------------------------------
+       FINNOVA APPOINTMENT FEED (MODERN REPLACEMENT FOR BASIC DATED TABLE)
+       -------------------------------------------------------------------------- */
+    .fi-wi-appointments-feed,
+    .fi-wi > div:has(.aura-feed-container) {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    @media (min-width: 1024px) {
+        .fi-wi-appointments-feed,
+        .fi-wi:has(.fi-wi-appointments-feed),
+        .fi-wi:has(.aura-feed-container) {
+            grid-column: 1 / span 2 !important;
+            grid-row: span 2 !important;
+            width: 100% !important;
+        }
+
+        .fi-wi:has(.fi-wi-chart) {
+            grid-column: 3 !important;
+            width: 100% !important;
+        }
+    }
+
+    /* Chart widgets styling (Column 3) */
+    .fi-wi-chart .fi-section,
+    .fi-wi:has(.fi-wi-chart) .fi-section,
+    .fi-wi:has(.fi-wi-chart) section {
+        border-radius: 1.35rem !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
+        overflow: hidden !important;
+    }
+
+    .dark .fi-wi-chart .fi-section,
+    .dark .fi-wi:has(.fi-wi-chart) .fi-section,
+    .dark .fi-wi:has(.fi-wi-chart) section {
+        background-color: #0c182d !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .aura-feed-container {
+        border-radius: 1.5rem !important;
+        background-color: #ffffff !important;
+        border: 1px solid rgba(226, 232, 240, 0.9) !important;
+        box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05) !important;
+        padding: 1.5rem !important;
+        box-sizing: border-box !important;
+    }
+
+    .dark .aura-feed-container {
+        background-color: #0c182d !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .aura-feed-header-block {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 1.15rem;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .dark .aura-feed-header-block {
+        border-bottom-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .aura-feed-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .aura-feed-title {
+        font-size: 1.15rem !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        margin: 0 !important;
+        letter-spacing: -0.015em !important;
+    }
+
+    .dark .aura-feed-title {
+        color: #ffffff !important;
+    }
+
+    .aura-feed-subtitle {
+        font-size: 0.835rem !important;
+        color: #64748b !important;
+        margin: 0 !important;
+        line-height: 1.4 !important;
+    }
+
+    .dark .aura-feed-subtitle {
+        color: #94a3b8 !important;
+    }
+
+    .aura-feed-filters-row {
+        display: flex;
+        align-items: center;
+        margin-top: 0.2rem;
+    }
+
+    .aura-feed-tabs {
+        display: inline-flex;
+        align-items: center;
+        background-color: #f1f5f9;
+        padding: 0.25rem;
+        border-radius: 0.85rem;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .dark .aura-feed-tabs {
+        background-color: rgba(15, 23, 42, 0.6);
+        border-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .aura-feed-tab-btn {
+        padding: 0.4rem 0.85rem;
+        border-radius: 0.65rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #64748b;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .dark .aura-feed-tab-btn {
+        color: #94a3b8;
+    }
+
+    .aura-feed-tab-btn:hover {
+        color: #0284c7;
+    }
+
+    .dark .aura-feed-tab-btn:hover {
+        color: #38bdf8;
+    }
+
+    .aura-feed-tab-btn.aura-tab-active {
+        background: #0284c7;
+        color: #ffffff !important;
+        box-shadow: 0 2px 8px -1px rgba(2, 132, 199, 0.4);
+    }
+
+    .aura-btn-go-module {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.48rem 0.95rem;
+        border-radius: 0.75rem;
+        background-color: #0284c7;
+        color: #ffffff !important;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 2px 6px -1px rgba(2, 132, 199, 0.4);
+        transition: all 0.15s ease;
+        white-space: nowrap;
+    }
+
+    .aura-btn-go-module:hover {
+        background-color: #0369a1;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px -1px rgba(2, 132, 199, 0.5);
+    }
+
+    .aura-btn-go-module:active {
+        transform: scale(0.97);
+    }
+
+    .aura-feed-view-all {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.825rem;
+        font-weight: 700;
+        color: #0284c7;
+        text-decoration: none;
+        transition: transform 0.15s ease;
+    }
+
+    .aura-feed-view-all:hover {
+        color: #0369a1;
+        transform: translateX(2px);
+    }
+
+    .dark .aura-feed-view-all {
+        color: #38bdf8;
+    }
+
+    /* List Rows */
+    .aura-feed-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+    }
+
+    .aura-feed-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+        padding: 0.95rem 1.15rem;
+        border-radius: 1rem;
+        background: #f8fafc;
+        border: 1px solid rgba(226, 232, 240, 0.75);
+        align-items: center;
+        transition: all 0.15s ease;
+    }
+
+    @media (min-width: 768px) {
+        .aura-feed-row {
+            grid-template-columns: 2fr 1.6fr 1.3fr 1fr;
+            gap: 1rem;
+        }
+    }
+
+    .dark .aura-feed-row {
+        background: rgba(15, 23, 42, 0.45);
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .aura-feed-row:hover {
+        background: #f1f5f9;
+        border-color: rgba(2, 132, 199, 0.3);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.04);
+    }
+
+    .dark .aura-feed-row:hover {
+        background: rgba(30, 41, 59, 0.5);
+        border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    .aura-feed-patient {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+    }
+
+    .aura-feed-avatar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.6rem;
+        height: 2.6rem;
+        border-radius: 0.8rem;
+        background: #0284c7 !important;
+        background-color: #0284c7 !important;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 0.875rem;
+        box-shadow: 0 2px 8px -1px rgba(2, 132, 199, 0.35);
+        flex-shrink: 0;
+    }
+
+    .aura-feed-patient-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.25;
+    }
+
+    .aura-patient-name {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .dark .aura-patient-name {
+        color: #f1f5f9;
+    }
+
+    .aura-patient-phone {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.775rem;
+        color: #64748b;
+        margin-top: 0.15rem;
+    }
+
+    .dark .aura-patient-phone {
+        color: #94a3b8;
+    }
+
+    .aura-feed-service-col {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .aura-service-badge {
+        font-size: 0.825rem;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .dark .aura-service-badge {
+        color: #e2e8f0;
+    }
+
+    .aura-dentist-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.75rem;
+        color: #0284c7;
+        font-weight: 500;
+    }
+
+    .dark .aura-dentist-tag {
+        color: #38bdf8;
+    }
+
+    .aura-feed-datetime {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .aura-date-text {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.775rem;
+        color: #475569;
+        font-weight: 500;
+    }
+
+    .dark .aura-date-text {
+        color: #94a3b8;
+    }
+
+    .aura-time-pill {
+        display: inline-block;
+        padding: 0.15rem 0.5rem;
+        border-radius: 9999px;
+        background: rgba(148, 163, 184, 0.15);
+        color: #334155;
+        font-size: 0.725rem;
+        font-weight: 700;
+        width: fit-content;
+    }
+
+    .dark .aura-time-pill {
+        background: rgba(148, 163, 184, 0.12);
+        color: #cbd5e1;
+    }
+
+    .aura-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        width: fit-content;
+    }
+
+    .aura-status-confirmed {
+        background: rgba(16, 185, 129, 0.12);
+        color: #047857;
+        border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .dark .aura-status-confirmed {
+        background: rgba(16, 185, 129, 0.18);
+        color: #34d399;
+    }
+
+    .aura-status-pending {
+        background: rgba(245, 158, 11, 0.12);
+        color: #b45309;
+        border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .dark .aura-status-pending {
+        background: rgba(245, 158, 11, 0.18);
+        color: #fde68a;
+    }
+
+    .aura-status-progress {
+        background: rgba(14, 165, 233, 0.12);
+        color: #0284c7;
+        border: 1px solid rgba(14, 165, 233, 0.25);
+    }
+
+    .dark .aura-status-progress {
+        background: rgba(14, 165, 233, 0.18);
+        color: #38bdf8;
+    }
+
+    .aura-status-completed {
+        background: rgba(100, 116, 139, 0.12);
+        color: #475569;
+    }
+
+    .dark .aura-status-completed {
+        background: rgba(148, 163, 184, 0.12);
+        color: #94a3b8;
+    }
+
+    .aura-feed-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+
+    .aura-btn-whatsapp {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.4rem 0.85rem;
+        border-radius: 9999px;
+        background: #10b981;
+        color: #ffffff !important;
+        font-size: 0.775rem;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        transition: all 0.15s ease;
+    }
+
+    .aura-btn-whatsapp:hover {
+        background: #059669;
+        transform: scale(1.02);
+    }
+
+    .aura-btn-confirm {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.4rem 0.85rem;
+        border-radius: 9999px;
+        background: rgba(14, 165, 233, 0.12);
+        color: #0284c7 !important;
+        border: 1px solid rgba(14, 165, 233, 0.3);
+        font-size: 0.775rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .aura-btn-confirm:hover {
+        background: #0284c7;
+        color: #ffffff !important;
+    }
+
+    .aura-btn-edit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 9999px;
+        background: rgba(100, 116, 139, 0.1);
+        color: #64748b;
+        text-decoration: none;
+        transition: all 0.15s ease;
+    }
+
+    .aura-btn-edit:hover {
+        background: rgba(2, 132, 199, 0.15);
+        color: #0284c7;
+    }
+
+    .dark .aura-btn-edit {
+        background: rgba(255, 255, 255, 0.06);
+        color: #94a3b8;
+    }
+
+    .dark .aura-btn-edit:hover {
+        color: #38bdf8;
+    }
+
+    .aura-feed-empty {
+        padding: 3rem 1.5rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .aura-empty-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 1rem;
+        background: rgba(14, 165, 233, 0.1);
+        color: #0284c7;
+        margin-bottom: 1rem;
+    }
+
+    .aura-feed-empty h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .dark .aura-feed-empty h4 {
+        color: #f8fafc;
+    }
+
+    .aura-feed-empty p {
+        font-size: 0.825rem;
+        color: #64748b;
+        margin: 0.35rem 0 0 0;
+    }
+
+    /* Botón inferior amigable para ir a citas */
+    .aura-feed-bottom-action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1.25rem;
+        padding-top: 1.15rem;
+        border-top: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .dark .aura-feed-bottom-action {
+        border-top-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .aura-btn-footer-appointments {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        max-width: 320px;
+        padding: 0.65rem 1.25rem;
+        border-radius: 0.85rem;
+        background-color: #f0f9ff;
+        color: #0284c7 !important;
+        border: 1px solid rgba(2, 132, 199, 0.3);
+        font-size: 0.825rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        text-align: center;
+    }
+
+    .aura-btn-footer-appointments:hover {
+        background-color: #0284c7;
+        color: #ffffff !important;
+        border-color: #0284c7;
+        box-shadow: 0 4px 12px -2px rgba(2, 132, 199, 0.35);
+        transform: translateY(-1px);
+    }
+
+    .aura-btn-footer-appointments:active {
+        transform: scale(0.98);
+    }
+
+    .dark .aura-btn-footer-appointments {
+        background-color: rgba(2, 132, 199, 0.15);
+        color: #38bdf8 !important;
+        border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    .dark .aura-btn-footer-appointments:hover {
+        background-color: #0284c7;
+        color: #ffffff !important;
+        border-color: #0284c7;
+    }
 </style>
+

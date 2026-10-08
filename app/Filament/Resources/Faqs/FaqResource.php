@@ -25,12 +25,12 @@ class FaqResource extends Resource
 
     public static function getRecordTitleAttribute(): ?string
     {
-        return app()->getLocale() === 'es' ? 'question_es' : 'question_en';
+        return 'question';
     }
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['question_es', 'question_en', 'answer_es', 'answer_en', 'category_es', 'category_en'];
+        return ['question', 'answer', 'category'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string

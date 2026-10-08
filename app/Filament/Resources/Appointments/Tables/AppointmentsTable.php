@@ -33,7 +33,7 @@ class AppointmentsTable
                     ->sortable()
                     ->description(fn (Appointment $record): string => (string) $record->patient_phone),
 
-                TextColumn::make('service.name_es')
+                TextColumn::make('service.name')
                     ->label('Tratamiento')
                     ->placeholder('Consulta General')
                     ->sortable(),
@@ -90,7 +90,7 @@ class AppointmentsTable
                     ->relationship('dentist', 'name'),
                 SelectFilter::make('service_id')
                     ->label('Tratamiento')
-                    ->relationship('service', 'name_es'),
+                    ->relationship('service', 'name'),
             ])
             ->recordActions([
                 Action::make('whatsapp')

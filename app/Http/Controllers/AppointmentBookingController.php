@@ -22,13 +22,13 @@ class AppointmentBookingController extends Controller
     {
         $clinic = ClinicSetting::first() ?? new ClinicSetting([
             'clinic_name' => 'Aura Dental Studio',
-            'tagline_es' => 'Odontología moderna, integral y sin dolor para sonrisas radiantes.',
+            'tagline' => 'Odontología moderna, integral y sin dolor para sonrisas radiantes.',
             'phone' => '+1 (555) 234-5678',
             'whatsapp' => '+15552345678',
             'email' => 'hola@auradental.com',
             'address' => 'Av. Las Palmas 742, Piso 4, Distrito Salud',
             'emergency_phone' => '+1 (555) 911-DENT',
-            'opening_hours_es' => "Lunes a Viernes: 8:00 AM - 7:00 PM\nSábado: 9:00 AM - 3:00 PM\nDomingo: Solo Urgencias",
+            'opening_hours' => "Lunes a Viernes: 8:00 AM - 7:00 PM\nSábado: 9:00 AM - 3:00 PM\nDomingo: Solo Urgencias",
         ]);
 
         $services = Service::where('is_active', true)->with('dentists')->orderBy('order')->get();

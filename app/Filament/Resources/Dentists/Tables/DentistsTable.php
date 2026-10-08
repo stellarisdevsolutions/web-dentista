@@ -29,11 +29,11 @@ class DentistsTable
                     ->sortable()
                     ->weight('bold'),
 
-                TextColumn::make('title_es')
+                TextColumn::make('title')
                     ->label('Cargo / Título')
                     ->searchable(),
 
-                TextColumn::make('specialty_es')
+                TextColumn::make('specialty')
                     ->label('Especialidad')
                     ->badge()
                     ->searchable(),

@@ -22,18 +22,13 @@ class PostsTable
                     ->label('Portada')
                     ->disk('public'),
 
-                TextColumn::make('title_es')
-                    ->label('Título del Artículo (ES)')
+                TextColumn::make('title')
+                    ->label('Título del Artículo')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
-                TextColumn::make('title_en')
-                    ->label('Title (EN)')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('category_es')
+                TextColumn::make('category')
                     ->label('Categoría')
                     ->badge()
                     ->searchable(),

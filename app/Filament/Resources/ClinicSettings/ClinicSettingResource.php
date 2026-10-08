@@ -124,10 +124,10 @@ class ClinicSettingResource extends Resource
 
                 Section::make('Lema y Horarios de Atención')
                     ->schema([
-                        TextInput::make('tagline_es')
+                        TextInput::make('tagline')
                             ->label('Lema / Eslogan')
                             ->placeholder('Odontología moderna, integral y sin dolor...'),
-                        Textarea::make('opening_hours_es')
+                        Textarea::make('opening_hours')
                             ->label('Horario de Atención')
                             ->rows(3)
                             ->placeholder("Lunes a Viernes: 8:00 AM - 7:00 PM\nSábado: 9:00 AM - 3:00 PM"),

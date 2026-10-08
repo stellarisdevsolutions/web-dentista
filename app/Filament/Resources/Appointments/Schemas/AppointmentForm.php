@@ -57,7 +57,7 @@ class AppointmentForm
                             ->schema([
                                 Select::make('service_id')
                                     ->label($isSpanish ? 'Tratamiento / Servicio' : 'Treatment / Service')
-                                    ->relationship('service', $isSpanish ? 'name_es' : 'name_en')
+                                    ->relationship('service', 'name')
                                     ->searchable()
                                     ->preload()
                                     ->nullable(),

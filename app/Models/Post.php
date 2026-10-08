@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasBilingualAttributes;
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     /** @use HasFactory<PostFactory> */
-    use HasBilingualAttributes, HasFactory;
+    use HasFactory;
 
     protected $guarded = ['id'];
 
@@ -25,25 +24,5 @@ class Post extends Model
             'published_at' => 'datetime',
             'is_published' => 'boolean',
         ];
-    }
-
-    public function getTitleAttribute(): string
-    {
-        return $this->getLocalized('title');
-    }
-
-    public function getCategoryAttribute(): string
-    {
-        return $this->getLocalized('category');
-    }
-
-    public function getExcerptAttribute(): string
-    {
-        return $this->getLocalized('excerpt');
-    }
-
-    public function getContentAttribute(): string
-    {
-        return $this->getLocalized('content');
     }
 }

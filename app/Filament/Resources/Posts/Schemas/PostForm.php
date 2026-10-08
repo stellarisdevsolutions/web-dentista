@@ -25,8 +25,8 @@ class PostForm
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                TextInput::make($isSpanish ? 'title_es' : 'title_en')
-                                    ->label($isSpanish ? 'Título del Artículo' : 'Post Title')
+                                TextInput::make('title')
+                                    ->label('Título del Artículo')
                                     ->required()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(function ($state, callable $set): void {
@@ -35,19 +35,19 @@ class PostForm
                                         }
                                     })
                                     ->maxLength(255),
-                                TextInput::make($isSpanish ? 'category_es' : 'category_en')
-                                    ->label($isSpanish ? 'Categoría' : 'Category')
-                                    ->placeholder($isSpanish ? 'ej. Prevención, Ortodoncia, Estética' : 'e.g. Prevention, Orthodontics, Cosmetic')
+                                TextInput::make('category')
+                                    ->label('Categoría')
+                                    ->placeholder('ej. Prevención, Ortodoncia, Estética')
                                     ->maxLength(100),
                             ]),
 
-                        Textarea::make($isSpanish ? 'excerpt_es' : 'excerpt_en')
-                            ->label($isSpanish ? 'Resumen del Artículo' : 'Article Excerpt')
-                            ->placeholder($isSpanish ? 'Breve adelanto para las tarjetas del blog...' : 'Short preview for blog cards...')
+                        Textarea::make('excerpt')
+                            ->label('Resumen del Artículo')
+                            ->placeholder('Breve adelanto para las tarjetas del blog...')
                             ->rows(2),
 
-                        RichEditor::make($isSpanish ? 'content_es' : 'content_en')
-                            ->label($isSpanish ? 'Cuerpo Completo del Artículo' : 'Full Body Content'),
+                        RichEditor::make('content')
+                            ->label('Cuerpo Completo del Artículo'),
                     ]),
 
                 Section::make($isSpanish ? 'Publicación e Imagen Destacada' : 'Publishing & Featured Media')

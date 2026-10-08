@@ -35,7 +35,7 @@ class TestimonialsTable
                     ->color('warning')
                     ->sortable(),
 
-                TextColumn::make('treatment_es')
+                TextColumn::make('treatment')
                     ->label('Tratamiento Realizado')
                     ->searchable(),
 

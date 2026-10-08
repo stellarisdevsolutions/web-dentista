@@ -16,16 +16,14 @@ class ServiceForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $isSpanish = app()->getLocale() === 'es';
-
         return $schema
             ->components([
-                Section::make($isSpanish ? 'Detalles del Servicio / Tratamiento' : 'Service Details')
+                Section::make('Detalles del Servicio / Tratamiento')
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                TextInput::make($isSpanish ? 'name_es' : 'name_en')
-                                    ->label($isSpanish ? 'Nombre del Tratamiento' : 'Treatment Name')
+                                TextInput::make('name')
+                                    ->label('Nombre del Tratamiento')
                                     ->required()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(function ($state, callable $set): void {
@@ -34,23 +32,23 @@ class ServiceForm
                                         }
                                     })
                                     ->maxLength(255),
-                                TextInput::make($isSpanish ? 'category_es' : 'category_en')
-                                    ->label($isSpanish ? 'Categoría' : 'Category')
-                                    ->placeholder($isSpanish ? 'ej. Odontología Estética, Ortodoncia' : 'e.g. Cosmetic Dentistry, Orthodontics')
+                                TextInput::make('category')
+                                    ->label('Categoría')
+                                    ->placeholder('ej. Odontología Estética, Ortodoncia')
                                     ->maxLength(100),
                             ]),
 
-                        TextInput::make($isSpanish ? 'short_description_es' : 'short_description_en')
-                            ->label($isSpanish ? 'Descripción Breve' : 'Short Description')
-                            ->placeholder($isSpanish ? 'Resumen para las tarjetas de la web...' : 'Summary for homepage cards...')
+                        TextInput::make('short_description')
+                            ->label('Descripción Breve')
+                            ->placeholder('Resumen para las tarjetas de la web...')
                             ->maxLength(255),
 
-                        Textarea::make($isSpanish ? 'description_es' : 'description_en')
-                            ->label($isSpanish ? 'Descripción Completa y Protocolo Clínico' : 'Full Description & Clinical Protocol')
+                        Textarea::make('description')
+                            ->label('Descripción Completa y Protocolo Clínico')
                             ->rows(4),
                     ]),
 
-                Section::make($isSpanish ? 'Precios, Duración y Multimedia' : 'Pricing, Duration & Media')
+                Section::make('Precios, Duración y Multimedia')
                     ->schema([
                         Grid::make(3)
                             ->schema([
@@ -59,43 +57,43 @@ class ServiceForm
                                     ->unique(ignoreRecord: true)
                                     ->maxLength(255),
                                 TextInput::make('price')
-                                    ->label($isSpanish ? 'Precio Base ($)' : 'Starting Price ($)')
+                                    ->label('Precio Base ($)')
                                     ->numeric()
                                     ->prefix('$')
                                     ->placeholder('85.00'),
                                 TextInput::make('duration_minutes')
-                                    ->label($isSpanish ? 'Duración Estándar (Minutos)' : 'Standard Duration (Minutes)')
+                                    ->label('Duración Estándar (Minutos)')
                                     ->numeric()
                                     ->default(45),
                             ]),
 
                         FileUpload::make('image')
-                            ->label($isSpanish ? 'Imagen del Tratamiento' : 'Treatment Image')
+                            ->label('Imagen del Tratamiento')
                             ->image()
                             ->directory('services')
                             ->disk('public'),
 
                         Select::make('dentists')
-                            ->label($isSpanish ? 'Doctores / Especialistas Habilitados' : 'Authorized Dentists')
+                            ->label('Doctores / Especialistas Habilitados')
                             ->multiple()
                             ->relationship('dentists', 'name')
                             ->preload()
                             ->searchable()
-                            ->helperText($isSpanish ? 'Especialistas asignados a este tratamiento.' : 'Dentists authorized to perform this treatment.'),
+                            ->helperText('Especialistas asignados a este tratamiento.'),
 
                         Grid::make(4)
                             ->schema([
                                 Toggle::make('allows_online_booking')
-                                    ->label($isSpanish ? 'Permitir Reserva Online' : 'Allow Online Booking')
+                                    ->label('Permitir Reserva Online')
                                     ->default(true),
                                 Toggle::make('is_featured')
-                                    ->label($isSpanish ? 'Destacar en Inicio' : 'Feature on Homepage')
+                                    ->label('Destacar en Inicio')
                                     ->default(false),
                                 Toggle::make('is_active')
-                                    ->label($isSpanish ? 'Servicio Activo' : 'Active Service')
+                                    ->label('Servicio Activo')
                                     ->default(true),
                                 TextInput::make('order')
-                                    ->label($isSpanish ? 'Orden' : 'Sort Order')
+                                    ->label('Orden')
                                     ->numeric()
                                     ->default(0),
                             ]),

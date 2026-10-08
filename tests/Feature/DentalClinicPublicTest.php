@@ -19,7 +19,7 @@ class DentalClinicPublicTest extends TestCase
     {
         $clinic = ClinicSetting::create([
             'clinic_name' => 'Aura Dental Studio Test',
-            'tagline_es' => 'Odontología moderna de alta calidad.',
+            'tagline' => 'Odontología moderna de alta calidad.',
             'phone' => '+1 (555) 000-1111',
             'whatsapp' => '+15550001111',
             'email' => 'info@auradental.com',
@@ -27,10 +27,10 @@ class DentalClinicPublicTest extends TestCase
         ]);
 
         $service = Service::create([
-            'name_es' => 'Blanqueamiento Premium',
+            'name' => 'Blanqueamiento Premium',
             'slug' => 'blanqueamiento-premium',
-            'category_es' => 'Estética',
-            'short_description_es' => 'Blanqueamiento dental en una sola sesión.',
+            'category' => 'Estética',
+            'short_description' => 'Blanqueamiento dental en una sola sesión.',
             'price' => 199.00,
             'duration_minutes' => 60,
             'is_active' => true,
@@ -39,9 +39,9 @@ class DentalClinicPublicTest extends TestCase
         $dentist = Dentist::create([
             'name' => 'Dra. Maria López',
             'slug' => 'dra-maria-lopez',
-            'specialty_es' => 'Estética Dental',
+            'specialty' => 'Estética Dental',
             'license_number' => 'DDS-12345',
-            'bio_es' => 'Especialista en carillas y estética dental.',
+            'bio' => 'Especialista en carillas y estética dental.',
             'is_active' => true,
         ]);
 
@@ -68,9 +68,9 @@ class DentalClinicPublicTest extends TestCase
         Dentist::create([
             'name' => 'Dra. Maria López',
             'slug' => 'dra-maria-lopez',
-            'specialty_es' => 'Estética Dental',
+            'specialty' => 'Estética Dental',
             'license_number' => 'DDS-12345',
-            'bio_es' => 'Especialista en carillas y estética dental.',
+            'bio' => 'Especialista en carillas y estética dental.',
             'is_active' => true,
         ]);
 
@@ -95,7 +95,7 @@ class DentalClinicPublicTest extends TestCase
         ]);
 
         Service::create([
-            'name_es' => 'Blanqueamiento Premium',
+            'name' => 'Blanqueamiento Premium',
             'slug' => 'blanqueamiento-premium',
             'price' => 199.00,
             'is_active' => true,
@@ -122,7 +122,7 @@ class DentalClinicPublicTest extends TestCase
         ]);
 
         $service = Service::create([
-            'name_es' => 'Limpieza Dental Ultrasonido',
+            'name' => 'Limpieza Dental Ultrasonido',
             'slug' => 'limpieza-dental-ultrasonido',
             'price' => 75.00,
             'duration_minutes' => 45,
@@ -132,7 +132,7 @@ class DentalClinicPublicTest extends TestCase
         $dentist = Dentist::create([
             'name' => 'Dr. Carlos Mendoza',
             'slug' => 'dr-carlos-mendoza',
-            'specialty_es' => 'Prevención y Salud Oral',
+            'specialty' => 'Prevención y Salud Oral',
             'is_active' => true,
         ]);
 
@@ -196,7 +196,7 @@ class DentalClinicPublicTest extends TestCase
     public function test_service_dentists_api_returns_assigned_specialists(): void
     {
         $service = Service::create([
-            'name_es' => 'Ortodoncia Invisible',
+            'name' => 'Ortodoncia Invisible',
             'slug' => 'ortodoncia-invisible-api',
             'is_active' => true,
         ]);
@@ -204,14 +204,14 @@ class DentalClinicPublicTest extends TestCase
         $dentist1 = Dentist::create([
             'name' => 'Dr. Especialista Ortodoncia',
             'slug' => 'dr-especialista-ortodoncia',
-            'specialty_es' => 'Ortodoncia',
+            'specialty' => 'Ortodoncia',
             'is_active' => true,
         ]);
 
         $dentist2 = Dentist::create([
             'name' => 'Dr. Cirujano',
             'slug' => 'dr-cirujano',
-            'specialty_es' => 'Cirugía',
+            'specialty' => 'Cirugía',
             'is_active' => true,
         ]);
 
@@ -307,10 +307,10 @@ class DentalClinicPublicTest extends TestCase
         ]);
 
         Service::create([
-            'name_es' => 'Implantes Dentales Titanio',
+            'name' => 'Implantes Dentales Titanio',
             'slug' => 'implantes-dentales-titanio',
-            'category_es' => 'Implantología',
-            'short_description_es' => 'Reemplazo permanente con tornillos de titanio grado médico.',
+            'category' => 'Implantología',
+            'short_description' => 'Reemplazo permanente con tornillos de titanio grado médico.',
             'price' => 850.00,
             'duration_minutes' => 90,
             'is_active' => true,
@@ -337,11 +337,11 @@ class DentalClinicPublicTest extends TestCase
         ]);
 
         $service = Service::create([
-            'name_es' => 'Carillas de Porcelana',
+            'name' => 'Carillas de Porcelana',
             'slug' => 'carillas-de-porcelana',
-            'category_es' => 'Estética',
-            'short_description_es' => 'Transforma tu sonrisa con carillas ultra-finas.',
-            'description_es' => 'Láminas cerámicas de alta resistencia diseñadas a medida.',
+            'category' => 'Estética',
+            'short_description' => 'Transforma tu sonrisa con carillas ultra-finas.',
+            'description' => 'Láminas cerámicas de alta resistencia diseñadas a medida.',
             'price' => 450.00,
             'duration_minutes' => 60,
             'is_active' => true,
@@ -350,7 +350,7 @@ class DentalClinicPublicTest extends TestCase
         $dentist = Dentist::create([
             'name' => 'Dr. Roberto Sánchez',
             'slug' => 'dr-roberto-sanchez',
-            'specialty_es' => 'Estética y Rehabilitación Oral',
+            'specialty' => 'Estética y Rehabilitación Oral',
             'is_active' => true,
         ]);
 
@@ -439,11 +439,11 @@ class DentalClinicPublicTest extends TestCase
         ]);
 
         Post::create([
-            'title_es' => 'Guía Completa de Alineadores Invisibles',
+            'title' => 'Guía Completa de Alineadores Invisibles',
             'slug' => 'guia-completa-alineadores-invisibles',
-            'category_es' => 'Ortodoncia',
-            'excerpt_es' => 'Conoce cómo funcionan los alineadores transparentes paso a paso.',
-            'content_es' => 'Los alineadores transparentes corrigen la posición dental sin brackets metálicos.',
+            'category' => 'Ortodoncia',
+            'excerpt' => 'Conoce cómo funcionan los alineadores transparentes paso a paso.',
+            'content' => 'Los alineadores transparentes corrigen la posición dental sin brackets metálicos.',
             'is_published' => true,
             'published_at' => now(),
         ]);
@@ -465,11 +465,11 @@ class DentalClinicPublicTest extends TestCase
         ]);
 
         $post = Post::create([
-            'title_es' => 'Mitos del Blanqueamiento Dental',
+            'title' => 'Mitos del Blanqueamiento Dental',
             'slug' => 'mitos-del-blanqueamiento-dental',
-            'category_es' => 'Estética',
-            'excerpt_es' => 'Aclaramos si el peróxido daña el esmalte dental.',
-            'content_es' => 'El blanqueamiento dental supervisado por odontólogos es 100% seguro y eficaz.',
+            'category' => 'Estética',
+            'excerpt' => 'Aclaramos si el peróxido daña el esmalte dental.',
+            'content' => 'El blanqueamiento dental supervisado por odontólogos es 100% seguro y eficaz.',
             'is_published' => true,
             'published_at' => now(),
         ]);
@@ -485,7 +485,7 @@ class DentalClinicPublicTest extends TestCase
         $wednesday = Carbon::now()->next(Carbon::WEDNESDAY)->format('Y-m-d');
 
         $service = Service::create([
-            'name_es' => 'Limpieza Avanzada',
+            'name' => 'Limpieza Avanzada',
             'slug' => 'limpieza-avanzada-test',
             'duration_minutes' => 45,
             'is_active' => true,
@@ -598,7 +598,7 @@ class DentalClinicPublicTest extends TestCase
         $wednesday = Carbon::now()->next(Carbon::WEDNESDAY)->format('Y-m-d');
 
         $service = Service::create([
-            'name_es' => 'Ortodoncia Control',
+            'name' => 'Ortodoncia Control',
             'slug' => 'ortodoncia-control-test',
             'duration_minutes' => 45,
             'is_active' => true,
@@ -668,10 +668,10 @@ class DentalClinicPublicTest extends TestCase
         ]);
 
         $service60min = Service::create([
-            'name_es' => 'Blanqueamiento 60m',
+            'name' => 'Blanqueamiento 60m',
             'slug' => 'blanqueamiento-60m',
-            'category_es' => 'Estética',
-            'short_description_es' => 'Tratamiento de 60 minutos.',
+            'category' => 'Estética',
+            'short_description' => 'Tratamiento de 60 minutos.',
             'price' => 200.00,
             'duration_minutes' => 60,
             'is_active' => true,
@@ -715,7 +715,7 @@ class DentalClinicPublicTest extends TestCase
         $wednesday = Carbon::now()->next(Carbon::WEDNESDAY)->toDateString();
 
         $service = Service::create([
-            'name_es' => 'Limpieza Ultrasonido',
+            'name' => 'Limpieza Ultrasonido',
             'slug' => 'limpieza-ultrasonido-test',
             'duration_minutes' => 30,
             'is_active' => true,
@@ -778,7 +778,7 @@ class DentalClinicPublicTest extends TestCase
         $wednesday = Carbon::now()->next(Carbon::WEDNESDAY)->toDateString();
 
         $service = Service::create([
-            'name_es' => 'Control General',
+            'name' => 'Control General',
             'slug' => 'control-general-test',
             'duration_minutes' => 30,
             'is_active' => true,
@@ -839,7 +839,7 @@ class DentalClinicPublicTest extends TestCase
         $wednesday = Carbon::now()->next(Carbon::WEDNESDAY)->toDateString();
 
         $service = Service::create([
-            'name_es' => 'Blanqueamiento Dental',
+            'name' => 'Blanqueamiento Dental',
             'slug' => 'blanqueamiento-especifico-test',
             'duration_minutes' => 30,
             'is_active' => true,
@@ -930,7 +930,7 @@ class DentalClinicPublicTest extends TestCase
 
         // 60-minute treatment
         $service60min = Service::create([
-            'name_es' => 'Tratamiento Largo 60m',
+            'name' => 'Tratamiento Largo 60m',
             'slug' => 'tratamiento-largo-60m',
             'duration_minutes' => 60,
             'is_active' => true,
@@ -979,7 +979,7 @@ class DentalClinicPublicTest extends TestCase
         ]);
 
         $service60min = Service::create([
-            'name_es' => 'Endodoncia 60m',
+            'name' => 'Endodoncia 60m',
             'slug' => 'endodoncia-60m-test',
             'duration_minutes' => 60,
             'is_active' => true,
@@ -1041,7 +1041,7 @@ class DentalClinicPublicTest extends TestCase
         ]);
 
         $service60min = Service::create([
-            'name_es' => 'Implante 60m',
+            'name' => 'Implante 60m',
             'slug' => 'implante-60m-test',
             'duration_minutes' => 60,
             'is_active' => true,
@@ -1105,14 +1105,14 @@ class DentalClinicPublicTest extends TestCase
         ]);
 
         $service30min = Service::create([
-            'name_es' => 'Diagnóstico Rápido 30m',
+            'name' => 'Diagnóstico Rápido 30m',
             'slug' => 'diagnostico-30m-test',
             'duration_minutes' => 30,
             'is_active' => true,
         ]);
 
         $service60min = Service::create([
-            'name_es' => 'Blanqueamiento 60m',
+            'name' => 'Blanqueamiento 60m',
             'slug' => 'blanqueamiento-60m-1200-test',
             'duration_minutes' => 60,
             'is_active' => true,

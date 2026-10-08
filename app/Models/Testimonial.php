@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasBilingualAttributes;
 use Database\Factories\TestimonialFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Testimonial extends Model
 {
     /** @use HasFactory<TestimonialFactory> */
-    use HasBilingualAttributes, HasFactory;
+    use HasFactory;
 
     protected $guarded = ['id'];
 
@@ -27,15 +26,5 @@ class Testimonial extends Model
             'is_active' => 'boolean',
             'order' => 'integer',
         ];
-    }
-
-    public function getTreatmentAttribute(): string
-    {
-        return $this->getLocalized('treatment');
-    }
-
-    public function getCommentAttribute(): string
-    {
-        return $this->getLocalized('comment');
     }
 }

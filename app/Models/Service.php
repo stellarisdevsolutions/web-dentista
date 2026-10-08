@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasBilingualAttributes;
 use Database\Factories\ServiceFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Service extends Model
 {
     /** @use HasFactory<ServiceFactory> */
-    use HasBilingualAttributes, HasFactory;
+    use HasFactory;
 
     protected $guarded = ['id'];
 
@@ -46,26 +45,6 @@ class Service extends Model
     public function dentists(): BelongsToMany
     {
         return $this->belongsToMany(Dentist::class)->withTimestamps();
-    }
-
-    public function getNameAttribute(): string
-    {
-        return $this->getLocalized('name');
-    }
-
-    public function getCategoryAttribute(): string
-    {
-        return $this->getLocalized('category');
-    }
-
-    public function getShortDescriptionAttribute(): string
-    {
-        return $this->getLocalized('short_description');
-    }
-
-    public function getDescriptionAttribute(): string
-    {
-        return $this->getLocalized('description');
     }
 
     public function getImageUrlAttribute(): string

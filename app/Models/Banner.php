@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasBilingualAttributes;
 use Database\Factories\BannerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Banner extends Model
 {
     /** @use HasFactory<BannerFactory> */
-    use HasBilingualAttributes, HasFactory;
+    use HasFactory;
 
     protected $guarded = ['id'];
 
@@ -25,25 +24,5 @@ class Banner extends Model
             'is_active' => 'boolean',
             'order' => 'integer',
         ];
-    }
-
-    public function getBadgeAttribute(): string
-    {
-        return $this->getLocalized('badge');
-    }
-
-    public function getTitleAttribute(): string
-    {
-        return $this->getLocalized('title');
-    }
-
-    public function getSubtitleAttribute(): string
-    {
-        return $this->getLocalized('subtitle');
-    }
-
-    public function getButtonTextAttribute(): string
-    {
-        return $this->getLocalized('button_text');
     }
 }

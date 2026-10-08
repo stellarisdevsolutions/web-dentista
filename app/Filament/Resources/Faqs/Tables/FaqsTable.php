@@ -17,18 +17,13 @@ class FaqsTable
         return $table
             ->defaultSort('order', 'asc')
             ->columns([
-                TextColumn::make('question_es')
-                    ->label('Pregunta (ES)')
+                TextColumn::make('question')
+                    ->label('Pregunta')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
-                TextColumn::make('question_en')
-                    ->label('Question (EN)')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('category_es')
+                TextColumn::make('category')
                     ->label('Categoría')
                     ->badge()
                     ->searchable(),

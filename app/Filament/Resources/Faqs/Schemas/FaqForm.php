@@ -19,16 +19,16 @@ class FaqForm
             ->components([
                 Section::make($isSpanish ? 'Pregunta y Respuesta' : 'FAQ Content')
                     ->schema([
-                        TextInput::make($isSpanish ? 'category_es' : 'category_en')
-                            ->label($isSpanish ? 'Categoría' : 'Category')
-                            ->placeholder($isSpanish ? 'ej. Citas y Reservas, Precios y Seguros' : 'e.g. Appointments & Booking, Pricing & Insurance')
+                        TextInput::make('category')
+                            ->label('Categoría')
+                            ->placeholder('ej. Citas y Reservas, Precios y Seguros')
                             ->maxLength(100),
-                        TextInput::make($isSpanish ? 'question_es' : 'question_en')
-                            ->label($isSpanish ? 'Pregunta' : 'Question')
+                        TextInput::make('question')
+                            ->label('Pregunta')
                             ->required()
                             ->maxLength(255),
-                        Textarea::make($isSpanish ? 'answer_es' : 'answer_en')
-                            ->label($isSpanish ? 'Respuesta' : 'Answer')
+                        Textarea::make('answer')
+                            ->label('Respuesta')
                             ->required()
                             ->rows(4),
                     ]),

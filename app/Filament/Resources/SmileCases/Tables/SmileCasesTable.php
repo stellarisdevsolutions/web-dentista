@@ -26,13 +26,13 @@ class SmileCasesTable
                     ->label('Después')
                     ->disk('public'),
 
-                TextColumn::make('title_es')
+                TextColumn::make('title')
                     ->label('Título del Caso')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
-                TextColumn::make('service.name_es')
+                TextColumn::make('service.name')
                     ->label('Tratamiento')
                     ->placeholder('General')
                     ->sortable(),

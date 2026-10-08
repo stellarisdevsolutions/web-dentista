@@ -1,7 +1,7 @@
 @php
     $footerClinic = $clinic ?? \App\Models\ClinicSetting::first() ?? new \App\Models\ClinicSetting([
         'clinic_name' => 'Aura Dental Studio',
-        'tagline_es' => 'Odontología integral, moderna y sin dolor.',
+        'tagline' => 'Odontología integral, moderna y sin dolor.',
         'phone' => '+1 (555) 234-5678',
         'whatsapp' => '+15552345678',
         'email' => 'hola@auradental.com',

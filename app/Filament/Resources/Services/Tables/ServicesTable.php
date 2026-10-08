@@ -22,18 +22,13 @@ class ServicesTable
                     ->label('Imagen')
                     ->disk('public'),
 
-                TextColumn::make('name_es')
-                    ->label('Tratamiento (ES)')
+                TextColumn::make('name')
+                    ->label('Tratamiento')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
-                TextColumn::make('name_en')
-                    ->label('Treatment (EN)')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('category_es')
+                TextColumn::make('category')
                     ->label('Categoría')
                     ->badge()
                     ->searchable(),

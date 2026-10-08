@@ -54,12 +54,12 @@ class TestimonialForm
 
                 Section::make($isSpanish ? 'Opinión del Tratamiento' : 'Review Content')
                     ->schema([
-                        TextInput::make($isSpanish ? 'treatment_es' : 'treatment_en')
-                            ->label($isSpanish ? 'Tratamiento Realizado' : 'Treatment Received')
-                            ->placeholder($isSpanish ? 'ej. Blanqueamiento Dental Láser' : 'e.g. Laser Teeth Whitening')
+                        TextInput::make('treatment')
+                            ->label('Tratamiento Realizado')
+                            ->placeholder('ej. Blanqueamiento Dental Láser')
                             ->maxLength(150),
-                        Textarea::make($isSpanish ? 'comment_es' : 'comment_en')
-                            ->label($isSpanish ? 'Testimonio / Comentario del Paciente' : 'Patient Testimonial')
+                        Textarea::make('comment')
+                            ->label('Testimonio / Comentario del Paciente')
                             ->required()
                             ->rows(4),
                     ]),

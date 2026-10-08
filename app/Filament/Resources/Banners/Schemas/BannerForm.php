@@ -22,23 +22,23 @@ class BannerForm
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                TextInput::make($isSpanish ? 'badge_es' : 'badge_en')
-                                    ->label($isSpanish ? 'Etiqueta Superior' : 'Top Badge')
-                                    ->placeholder($isSpanish ? 'ej. Especial de Primavera' : 'e.g. Spring Smile Makeover')
+                                TextInput::make('badge')
+                                    ->label('Etiqueta Superior')
+                                    ->placeholder('ej. Especial de Primavera')
                                     ->maxLength(100),
-                                TextInput::make($isSpanish ? 'button_text_es' : 'button_text_en')
-                                    ->label($isSpanish ? 'Texto del Botón CTA' : 'Button CTA Text')
-                                    ->placeholder($isSpanish ? 'ej. Agenda tu Consulta' : 'e.g. Book Your Consultation')
+                                TextInput::make('button_text')
+                                    ->label('Texto del Botón CTA')
+                                    ->placeholder('ej. Agenda tu Consulta')
                                     ->maxLength(100),
                             ]),
 
-                        TextInput::make($isSpanish ? 'title_es' : 'title_en')
-                            ->label($isSpanish ? 'Título Principal del Hero' : 'Hero Main Title')
+                        TextInput::make('title')
+                            ->label('Título Principal del Hero')
                             ->required()
                             ->maxLength(255),
 
-                        Textarea::make($isSpanish ? 'subtitle_es' : 'subtitle_en')
-                            ->label($isSpanish ? 'Subtítulo / Bajada' : 'Subtitle / Tagline')
+                        Textarea::make('subtitle')
+                            ->label('Subtítulo / Bajada')
                             ->rows(3),
                     ]),
 

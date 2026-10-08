@@ -25,12 +25,12 @@ class SmileCaseResource extends Resource
 
     public static function getRecordTitleAttribute(): ?string
     {
-        return app()->getLocale() === 'es' ? 'title_es' : 'title_en';
+        return 'title';
     }
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['title_es', 'title_en', 'description_es', 'description_en'];
+        return ['title', 'description'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string

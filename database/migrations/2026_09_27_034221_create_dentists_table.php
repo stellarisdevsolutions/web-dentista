@@ -15,13 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('title_en')->nullable();
-            $table->string('title_es')->nullable();
+            $table->string('title')->nullable();
             $table->string('license_number')->nullable();
-            $table->string('specialty_en')->nullable();
-            $table->string('specialty_es')->nullable();
-            $table->text('bio_en')->nullable();
-            $table->text('bio_es')->nullable();
+            $table->string('specialty')->nullable();
+            $table->text('bio')->nullable();
             $table->string('photo')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();

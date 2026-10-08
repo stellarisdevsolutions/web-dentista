@@ -6,7 +6,7 @@
         'email' => 'hola@auradental.com',
         'address' => 'Av. Las Palmas 742, Piso 4, Distrito Salud',
         'emergency_phone' => '+1 (555) 911-DENT',
-        'opening_hours_es' => "Lunes a Viernes: 8:00 AM - 7:00 PM\nSábado: 9:00 AM - 3:00 PM",
+        'opening_hours' => "Lunes a Viernes: 8:00 AM - 7:00 PM\nSábado: 9:00 AM - 3:00 PM",
     ]);
 
     $allServices = \App\Models\Service::where('is_active', true)->orderBy('order')->get();

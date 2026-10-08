@@ -16,15 +16,13 @@ class DentistForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $isSpanish = app()->getLocale() === 'es';
-
         $days = [
-            'monday' => $isSpanish ? 'Lunes' : 'Monday',
-            'tuesday' => $isSpanish ? 'Martes' : 'Tuesday',
-            'wednesday' => $isSpanish ? 'Miércoles' : 'Wednesday',
-            'thursday' => $isSpanish ? 'Jueves' : 'Thursday',
-            'friday' => $isSpanish ? 'Viernes' : 'Friday',
-            'saturday' => $isSpanish ? 'Sábado' : 'Saturday',
+            'monday' => 'Lunes',
+            'tuesday' => 'Martes',
+            'wednesday' => 'Miércoles',
+            'thursday' => 'Jueves',
+            'friday' => 'Viernes',
+            'saturday' => 'Sábado',
         ];
 
         $shiftComponents = [];
@@ -36,28 +34,28 @@ class DentistForm
                         ->inline(false)
                         ->default(false),
                     TextInput::make("weekly_schedule.{$dayKey}.morning_start")
-                        ->label($isSpanish ? 'Mañana Inicio' : 'Morning Start')
+                        ->label('Mañana Inicio')
                         ->placeholder('09:00'),
                     TextInput::make("weekly_schedule.{$dayKey}.morning_end")
-                        ->label($isSpanish ? 'Mañana Fin' : 'Morning End')
+                        ->label('Mañana Fin')
                         ->placeholder('13:00'),
                     TextInput::make("weekly_schedule.{$dayKey}.afternoon_start")
-                        ->label($isSpanish ? 'Tarde Inicio' : 'Afternoon Start')
+                        ->label('Tarde Inicio')
                         ->placeholder('14:00'),
                     TextInput::make("weekly_schedule.{$dayKey}.afternoon_end")
-                        ->label($isSpanish ? 'Tarde Fin' : 'Afternoon End')
+                        ->label('Tarde Fin')
                         ->placeholder('18:00'),
                 ]);
         }
 
         return $schema
             ->components([
-                Section::make($isSpanish ? 'Perfil General del Especialista' : 'General Profile')
+                Section::make('Perfil General del Especialista')
                     ->schema([
                         Grid::make(3)
                             ->schema([
                                 TextInput::make('name')
-                                    ->label($isSpanish ? 'Nombre Completo Profesional' : 'Full Professional Name')
+                                    ->label('Nombre Completo Profesional')
                                     ->required()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state)))
@@ -67,7 +65,7 @@ class DentistForm
                                     ->unique(ignoreRecord: true)
                                     ->maxLength(255),
                                 TextInput::make('license_number')
-                                    ->label($isSpanish ? 'Nº Colegiatura / Registro Médico' : 'Medical License')
+                                    ->label('Nº Colegiatura / Registro Médico')
                                     ->placeholder('ej. DDS-94821')
                                     ->maxLength(100),
                             ]),
@@ -75,16 +73,16 @@ class DentistForm
                         Grid::make(3)
                             ->schema([
                                 FileUpload::make('photo')
-                                    ->label($isSpanish ? 'Fotografía del Doctor/a' : 'Doctor Photo')
+                                    ->label('Fotografía del Doctor/a')
                                     ->image()
                                     ->directory('dentists')
                                     ->disk('public'),
                                 TextInput::make('email')
-                                    ->label($isSpanish ? 'Correo Electrónico' : 'Email')
+                                    ->label('Correo Electrónico')
                                     ->email()
                                     ->maxLength(255),
                                 TextInput::make('phone')
-                                    ->label($isSpanish ? 'Teléfono Directo' : 'Phone')
+                                    ->label('Teléfono Directo')
                                     ->tel()
                                     ->telRegex('/^[+0-9\s()\-.]+$/')
                                     ->validationMessages([
@@ -95,45 +93,45 @@ class DentistForm
                             ]),
                     ]),
 
-                Section::make($isSpanish ? 'Especialidad y Tratamientos Asignados' : 'Specialty & Assigned Treatments')
+                Section::make('Especialidad y Tratamientos Asignados')
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                TextInput::make($isSpanish ? 'title_es' : 'title_en')
-                                    ->label($isSpanish ? 'Título Profesional' : 'Professional Title')
-                                    ->placeholder($isSpanish ? 'ej. Director de Implantología y Cirugía Oral' : 'e.g. Chief Implantologist & Oral Surgeon')
+                                TextInput::make('title')
+                                    ->label('Título Profesional')
+                                    ->placeholder('ej. Director de Implantología y Cirugía Oral')
                                     ->required(),
-                                TextInput::make($isSpanish ? 'specialty_es' : 'specialty_en')
-                                    ->label($isSpanish ? 'Especialidad' : 'Specialty')
-                                    ->placeholder($isSpanish ? 'ej. Implantología y Cirugía Reconstructiva' : 'e.g. Implantology & Reconstructive Surgery')
+                                TextInput::make('specialty')
+                                    ->label('Especialidad')
+                                    ->placeholder('ej. Implantología y Cirugía Reconstructiva')
                                     ->required(),
                             ]),
 
-                        Textarea::make($isSpanish ? 'bio_es' : 'bio_en')
-                            ->label($isSpanish ? 'Biografía y Formación Académica' : 'Biography & Education')
+                        Textarea::make('bio')
+                            ->label('Biografía y Formación Académica')
                             ->rows(3),
 
                         Select::make('services')
-                            ->label($isSpanish ? 'Tratamientos que Realiza este Especialista' : 'Assigned Treatments')
+                            ->label('Tratamientos que Realiza este Especialista')
                             ->multiple()
-                            ->relationship('services', $isSpanish ? 'name_es' : 'name_en')
+                            ->relationship('services', 'name')
                             ->preload()
                             ->searchable()
-                            ->helperText($isSpanish ? 'Selecciona los tratamientos clínicos que este profesional atiende.' : 'Select the treatments this dentist performs.'),
+                            ->helperText('Selecciona los tratamientos clínicos que este profesional atiende.'),
                     ]),
 
-                Section::make($isSpanish ? 'Horarios y Turnos de Atención (Mañana y Tarde)' : 'Schedule & Shifts (Morning & Afternoon)')
-                    ->description($isSpanish ? 'Configura los turnos de atención por día. El espacio entre el fin de la mañana y el inicio de la tarde actúa automáticamente como receso de almuerzo.' : 'Configure daily morning and afternoon shifts. The gap automatically serves as lunch break.')
+                Section::make('Horarios y Turnos de Atención (Mañana y Tarde)')
+                    ->description('Configura los turnos de atención por día. El espacio entre el fin de la mañana y el inicio de la tarde actúa automáticamente como receso de almuerzo.')
                     ->schema([
                         ...$shiftComponents,
                         Grid::make(2)
                             ->schema([
                                 TextInput::make('order')
-                                    ->label($isSpanish ? 'Orden' : 'Sort Order')
+                                    ->label('Orden')
                                     ->numeric()
                                     ->default(0),
                                 Toggle::make('is_active')
-                                    ->label($isSpanish ? 'Disponible para Citas' : 'Available for Booking')
+                                    ->label('Disponible para Citas')
                                     ->default(true),
                             ]),
                     ]),

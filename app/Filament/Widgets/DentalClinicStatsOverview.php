@@ -5,42 +5,57 @@ namespace App\Filament\Widgets;
 use App\Models\Appointment;
 use App\Models\Dentist;
 use App\Models\Service;
-use Filament\Support\Icons\Heroicon;
-use Filament\Widgets\StatsOverviewWidget;
-use Filament\Widgets\StatsOverviewWidget\Stat;
+use Carbon\Carbon;
+use Filament\Widgets\Widget;
 
-class DentalClinicStatsOverview extends StatsOverviewWidget
+class DentalClinicStatsOverview extends Widget
 {
     protected static ?int $sort = 1;
 
-    protected function getStats(): array
+    protected static bool $isLazy = false;
+
+    protected int|string|array $columnSpan = [
+        'default' => 'full',
+        'sm' => 'full',
+        'md' => 'full',
+        'lg' => 'full',
+        'xl' => 'full',
+        '2xl' => 'full',
+    ];
+
+    public function getColumnSpan(): int|string|array
     {
-        $totalAppointments = Appointment::count();
+        return [
+            'default' => 'full',
+            'sm' => 'full',
+            'md' => 'full',
+            'lg' => 'full',
+            'xl' => 'full',
+            '2xl' => 'full',
+        ];
+    }
+
+    protected string $view = 'filament.widgets.dental-clinic-stats-overview';
+
+    public function getViewData(): array
+    {
+        $today = Carbon::today()->toDateString();
+        $weeklyAppointments = Appointment::where('appointment_date', '>=', Carbon::now()->subDays(7))->count();
+        $todayAppointments = Appointment::whereDate('appointment_date', $today)->count();
         $pendingAppointments = Appointment::where('status', 'pending')->count();
-        $confirmedAppointments = Appointment::where('status', 'confirmed')->count();
+        $confirmedAppointments = Appointment::whereIn('status', ['confirmed', 'in_progress'])->count();
         $activeDentists = Dentist::where('is_active', true)->count();
+        $dentistsList = Dentist::where('is_active', true)->orderBy('order')->take(4)->get(['id', 'name', 'specialty', 'photo']);
         $activeServices = Service::where('is_active', true)->count();
 
         return [
-            Stat::make(__('Total Appointments'), (string) $totalAppointments)
-                ->description(__('All recorded bookings'))
-                ->descriptionIcon(Heroicon::OutlinedCalendarDays)
-                ->color('primary'),
-
-            Stat::make(__('Pending Review'), (string) $pendingAppointments)
-                ->description(__('Requires reception confirmation'))
-                ->descriptionIcon(Heroicon::OutlinedClock)
-                ->color($pendingAppointments > 0 ? 'warning' : 'gray'),
-
-            Stat::make(__('Confirmed Appointments'), (string) $confirmedAppointments)
-                ->description(__('Ready for consultation'))
-                ->descriptionIcon(Heroicon::OutlinedCheckCircle)
-                ->color('success'),
-
-            Stat::make(__('Active Specialists'), (string) $activeDentists)
-                ->description("{$activeServices} ".__('treatments available'))
-                ->descriptionIcon(Heroicon::OutlinedUserGroup)
-                ->color('info'),
+            'weeklyAppointments' => $weeklyAppointments,
+            'todayAppointments' => $todayAppointments,
+            'pendingAppointments' => $pendingAppointments,
+            'confirmedAppointments' => $confirmedAppointments,
+            'activeDentists' => $activeDentists,
+            'dentistsList' => $dentistsList,
+            'activeServices' => $activeServices,
         ];
     }
 }

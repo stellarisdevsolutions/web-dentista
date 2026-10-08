@@ -21,16 +21,16 @@ class SmileCaseForm
             ->components([
                 Section::make($isSpanish ? 'Detalles del Caso Clínico' : 'Case Details')
                     ->schema([
-                        TextInput::make($isSpanish ? 'title_es' : 'title_en')
-                            ->label($isSpanish ? 'Título del Caso' : 'Case Title')
-                            ->placeholder($isSpanish ? 'ej. Alineación Dental Completa con Alineadores' : 'e.g. Full Smile Alignment with Clear Aligners')
+                        TextInput::make('title')
+                            ->label('Título del Caso')
+                            ->placeholder('ej. Alineación Dental Completa con Alineadores')
                             ->required()
                             ->maxLength(255),
-                        Textarea::make($isSpanish ? 'description_es' : 'description_en')
-                            ->label($isSpanish ? 'Descripción Clínica del Caso' : 'Clinical Case Description')
+                        Textarea::make('description')
+                            ->label('Descripción Clínica del Caso')
                             ->rows(3),
-                        Textarea::make($isSpanish ? 'patient_testimonial_es' : 'patient_testimonial_en')
-                            ->label($isSpanish ? 'Testimonio del Paciente' : 'Patient Testimonial')
+                        Textarea::make('patient_testimonial')
+                            ->label('Testimonio del Paciente')
                             ->rows(2),
                     ]),
 
@@ -39,13 +39,13 @@ class SmileCaseForm
                         Grid::make(2)
                             ->schema([
                                 FileUpload::make('before_image')
-                                    ->label($isSpanish ? 'Foto Antes (Estado Inicial)' : 'Before Photo')
+                                    ->label('Foto Antes (Estado Inicial)')
                                     ->image()
                                     ->directory('cases')
                                     ->disk('public')
                                     ->required(),
                                 FileUpload::make('after_image')
-                                    ->label($isSpanish ? 'Foto Después (Resultado Final)' : 'After Photo')
+                                    ->label('Foto Después (Resultado Final)')
                                     ->image()
                                     ->directory('cases')
                                     ->disk('public')
@@ -55,8 +55,8 @@ class SmileCaseForm
                         Grid::make(2)
                             ->schema([
                                 Select::make('service_id')
-                                    ->label($isSpanish ? 'Tratamiento Asociado' : 'Associated Treatment')
-                                    ->relationship('service', $isSpanish ? 'name_es' : 'name_en')
+                                    ->label('Tratamiento Asociado')
+                                    ->relationship('service', 'name')
                                     ->searchable()
                                     ->preload()
                                     ->nullable(),

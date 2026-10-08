@@ -14,15 +14,13 @@ return new class extends Migration
         Schema::create('clinic_settings', function (Blueprint $table): void {
             $table->id();
             $table->string('clinic_name');
-            $table->string('tagline_en')->nullable();
-            $table->string('tagline_es')->nullable();
+            $table->string('tagline')->nullable();
             $table->string('phone');
             $table->string('whatsapp');
             $table->string('email');
             $table->string('address');
             $table->text('google_maps_url')->nullable();
-            $table->text('opening_hours_en')->nullable();
-            $table->text('opening_hours_es')->nullable();
+            $table->text('opening_hours')->nullable();
             $table->string('emergency_phone')->nullable();
             $table->string('logo_url')->nullable();
             $table->boolean('show_language_switcher')->default(true);

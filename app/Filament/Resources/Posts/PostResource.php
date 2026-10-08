@@ -25,12 +25,12 @@ class PostResource extends Resource
 
     public static function getRecordTitleAttribute(): ?string
     {
-        return app()->getLocale() === 'es' ? 'title_es' : 'title_en';
+        return 'title';
     }
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['title_es', 'title_en', 'excerpt_es', 'excerpt_en', 'category_es', 'category_en', 'slug'];
+        return ['title', 'excerpt', 'category', 'slug'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string
