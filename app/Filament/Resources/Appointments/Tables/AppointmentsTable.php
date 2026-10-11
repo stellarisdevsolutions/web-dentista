@@ -23,17 +23,14 @@ class AppointmentsTable
     {
         return $table
             ->defaultSort('appointment_date', 'desc')
-            ->searchPlaceholder('Buscar paciente, teléfono, código...')
-            ->emptyStateHeading('No hay citas registradas')
-            ->emptyStateDescription('Ajusta los filtros de búsqueda o registra una nueva cita para comenzar.')
-            ->emptyStateIcon(Heroicon::OutlinedCalendarDays)
             ->columns([
-                TextColumn::make('appointment_date')
-                    ->label('Fecha y Hora')
-                    ->date('d M, Y')
+                TextColumn::make('code')
+                    ->label('Código')
+                    ->searchable()
+                    ->copyable()
                     ->weight('bold')
-                    ->description(fn (Appointment $record): string => "{$record->appointment_time} ({$record->duration_minutes} min)")
-                    ->sortable(),
+                    ->fontFamily('mono')
+                    ->color('primary'),
 
                 TextColumn::make('patient_name')
                     ->label('Paciente')
@@ -47,8 +44,6 @@ class AppointmentsTable
                         }
                         if ($record->is_first_visit) {
                             $info[] = '1ª Visita';
-                        } else {
-                            $info[] = 'Recurrente';
                         }
 
                         return implode(' • ', $info);
@@ -58,7 +53,6 @@ class AppointmentsTable
                     ->label('Tratamiento')
                     ->placeholder('Consulta General')
                     ->sortable()
-                    ->weight('medium')
                     ->description(fn (Appointment $record): ?string => $record->service?->price_from ? 'Desde $'.number_format($record->service->price_from, 0) : null),
 
                 TextColumn::make('dentist.name')
@@ -66,6 +60,17 @@ class AppointmentsTable
                     ->placeholder('Por Asignar')
                     ->sortable()
                     ->description(fn (Appointment $record): ?string => $record->dentist?->specialty),
+
+                TextColumn::make('appointment_date')
+                    ->label('Fecha')
+                    ->date('d M, Y')
+                    ->sortable(),
+
+                TextColumn::make('appointment_time')
+                    ->label('Horario')
+                    ->badge()
+                    ->color(Color::Slate)
+                    ->description(fn (Appointment $record): string => "{$record->duration_minutes} min"),
 
                 TextColumn::make('status')
                     ->label('Estado')
@@ -87,14 +92,6 @@ class AppointmentsTable
                         'no_show' => 'No Asistió',
                         default => ucfirst($state),
                     }),
-
-                TextColumn::make('code')
-                    ->label('Código')
-                    ->searchable()
-                    ->copyable()
-                    ->copyMessage('Código copiado al portapapeles')
-                    ->fontFamily('mono')
-                    ->color('gray'),
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -124,13 +121,6 @@ class AppointmentsTable
                     ->trueLabel('Primera Visita')
                     ->falseLabel('Paciente Recurrente'),
             ])
-            ->filtersTriggerAction(function (Action $action) {
-                return $action
-                    ->button()
-                    ->label('Filtros')
-                    ->icon(Heroicon::OutlinedFunnel)
-                    ->color('gray');
-            })
             ->recordActions([
                 Action::make('whatsapp')
                     ->label('WhatsApp')

@@ -24,7 +24,7 @@ class AppointmentForm
                         Grid::make(3)
                             ->schema([
                                 TextInput::make('patient_name')
-                                    ->label('Nombre Completo')
+                                    ->label('Nombre Completo del Paciente')
                                     ->placeholder('ej. María Rodríguez')
                                     ->required()
                                     ->maxLength(255),
@@ -50,7 +50,7 @@ class AppointmentForm
                             ->default(true),
                     ]),
 
-                Section::make('Programación y Asignación Médica')
+                Section::make('Detalles de la Cita')
                     ->description('Selección del servicio odontológico, especialista, fecha y hora.')
                     ->schema([
                         Grid::make(3)
@@ -102,7 +102,7 @@ class AppointmentForm
                         Grid::make(2)
                             ->schema([
                                 Textarea::make('symptoms')
-                                    ->label('Motivo de Consulta / Molestias Reportadas')
+                                    ->label('Notas o Motivo de la Cita (Opcional)')
                                     ->placeholder('Molestias dentales, limpieza programada, revisión...')
                                     ->rows(3)
                                     ->nullable(),

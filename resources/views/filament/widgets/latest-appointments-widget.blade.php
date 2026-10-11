@@ -1,16 +1,25 @@
 <x-filament-widgets::widget class="fi-wi-appointments-feed">
+    @php
+        $isDentist = $currentUser->isDentist();
+        $pageTitle = $isDentist ? 'Mis citas · hoy' : 'Citas y solicitudes de pacientes · hoy';
+        $pageSubtitle = $isDentist 
+            ? 'Tus consultas y pacientes programados para la jornada de hoy.' 
+            : 'Monitorea las citas programadas y solicitudes de atención en tiempo real.';
+        $headerBtnText = $isDentist ? 'Ver mi agenda' : 'Ver agenda completa';
+    @endphp
+
     <div class="aura-feed-container">
         <!-- Encabezado Estructurado -->
         <div class="aura-feed-header-block">
-            <!-- Fila 1: Título y Botón Amigable a la Derecha -->
+            <!-- Fila 1: Título y Botón a la Derecha -->
             <div class="aura-feed-title-row">
                 <h3 class="aura-feed-title">
-                    Citas y Solicitudes de Pacientes
+                    {{ $pageTitle }}
                 </h3>
 
-                <!-- Botón de Cabecera Amigable -->
-                <a href="{{ url('/admin/appointments') }}" class="aura-btn-go-module" title="Ver la agenda completa de citas">
-                    <span>Ver Agenda Completa</span>
+                <!-- Botón de Cabecera -->
+                <a href="{{ url('/admin/appointments') }}" class="aura-btn-go-module" title="{{ $headerBtnText }}">
+                    <span>{{ $headerBtnText }}</span>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12"></line>
                         <polyline points="12 5 19 12 12 19"></polyline>
@@ -20,7 +29,7 @@
 
             <!-- Fila 2: Párrafo Descriptivo -->
             <p class="aura-feed-subtitle">
-                Monitorea las citas programadas y solicitudes de atención en tiempo real.
+                {{ $pageSubtitle }}
             </p>
 
             <!-- Fila 3: Filtros debajo del Párrafo -->
@@ -31,27 +40,27 @@
                         wire:click="setTab('all')" 
                         class="aura-feed-tab-btn {{ $activeTab === 'all' ? 'aura-tab-active' : '' }}"
                     >
-                        Todas ({{ $counts['all'] }})
-                    </button>
-                    <button 
-                        type="button" 
-                        wire:click="setTab('pending')" 
-                        class="aura-feed-tab-btn {{ $activeTab === 'pending' ? 'aura-tab-active' : '' }}"
-                    >
-                        Por Confirmar ({{ $counts['pending'] }})
+                        Todos ({{ $counts['all'] }})
                     </button>
                     <button 
                         type="button" 
                         wire:click="setTab('confirmed')" 
                         class="aura-feed-tab-btn {{ $activeTab === 'confirmed' ? 'aura-tab-active' : '' }}"
                     >
-                        Confirmadas ({{ $counts['confirmed'] }})
+                        Confirmados ({{ $counts['confirmed'] }})
+                    </button>
+                    <button 
+                        type="button" 
+                        wire:click="setTab('pending')" 
+                        class="aura-feed-tab-btn {{ $activeTab === 'pending' ? 'aura-tab-active' : '' }}"
+                    >
+                        Sin confirmar ({{ $counts['pending'] }})
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Listado de las 5 Últimas Citas (Sin Acciones Individuales) -->
+        <!-- Listado Visual de Citas (Sin botones de acción individuales) -->
         <div class="aura-feed-list">
             @forelse($appointments as $appointment)
                 @php
@@ -64,7 +73,7 @@
                     $statusMap = [
                         'confirmed' => ['label' => 'Confirmada', 'class' => 'aura-status-confirmed', 'dot' => '#10b981'],
                         'pending' => ['label' => 'Por Confirmar', 'class' => 'aura-status-pending', 'dot' => '#f59e0b'],
-                        'in_progress' => ['label' => 'En Sillón', 'class' => 'aura-status-progress', 'dot' => '#0ea5e9'],
+                        'in_progress' => ['label' => 'En Consulta', 'class' => 'aura-status-progress', 'dot' => '#0ea5e9'],
                         'completed' => ['label' => 'Completada', 'class' => 'aura-status-completed', 'dot' => '#64748b'],
                         'cancelled' => ['label' => 'Cancelada', 'class' => 'aura-status-cancelled', 'dot' => '#ef4444'],
                         'no_show' => ['label' => 'No Asistió', 'class' => 'aura-status-noshow', 'dot' => '#ef4444'],
@@ -73,7 +82,7 @@
                 @endphp
 
                 <div class="aura-feed-row">
-                    <!-- Columna 1: Datos del Paciente (Avatar, Nombre, Teléfono) -->
+                    <!-- Columna 1: Paciente (Avatar, Nombre, Teléfono) -->
                     <div class="aura-feed-patient">
                         <div class="aura-feed-avatar">
                             <span>{{ $initials }}</span>
@@ -89,37 +98,34 @@
                         </div>
                     </div>
 
-                    <!-- Columna 2: Servicio y Doctor Asignado -->
+                    <!-- Columna 2: Servicio y Dentista (Oculto para Dentista) -->
                     <div class="aura-feed-service-col">
                         <span class="aura-service-badge">
                             {{ $appointment->service?->name ?? 'Consulta General' }}
                         </span>
-                        <span class="aura-dentist-tag">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                            {{ $appointment->dentist?->name ?? 'Por Asignar' }}
-                        </span>
+                        @if (! $isDentist)
+                            <span class="aura-dentist-tag">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                {{ $appointment->dentist?->name ?? 'Por Asignar' }}
+                            </span>
+                        @endif
                     </div>
 
-                    <!-- Columna 3: Fecha y Hora Programada -->
+                    <!-- Columna 3: Horario -->
                     <div class="aura-feed-datetime">
-                        <span class="aura-date-text">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                            </svg>
-                            {{ \Carbon\Carbon::parse($appointment->appointment_date)->locale('es')->isoFormat('D MMM, YYYY') }}
-                        </span>
                         <span class="aura-time-pill">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
                             {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}
                         </span>
                     </div>
 
-                    <!-- Columna 4: Estado de la Cita -->
+                    <!-- Columna 4: Estado -->
                     <div class="aura-feed-status">
                         <span class="aura-status-badge {{ $statusInfo['class'] }}">
                             <span class="aura-dot" style="background-color: {{ $statusInfo['dot'] }};"></span>
@@ -146,7 +152,7 @@
         <!-- Botón Inferior para ir a Citas -->
         <div class="aura-feed-bottom-action">
             <a href="{{ url('/admin/appointments') }}" class="aura-btn-footer-appointments">
-                <span>Ver todas las citas en la agenda</span>
+                <span>{{ $isDentist ? 'Ver todas mis citas en la agenda' : 'Ver todas las citas en la agenda' }}</span>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>

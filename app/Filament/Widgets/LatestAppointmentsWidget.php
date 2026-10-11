@@ -3,35 +3,43 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Appointment;
-use Filament\Notifications\Notification;
+use App\Models\User;
+use Carbon\Carbon;
 use Filament\Widgets\Widget;
 
 class LatestAppointmentsWidget extends Widget
 {
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 10;
 
     protected static bool $isLazy = false;
 
-    public string $activeTab = 'all';
+    protected ?string $pollingInterval = '60s';
 
-    protected int|string|array $columnSpan = [
-        'default' => 'full',
-        'sm' => 'full',
-        'md' => 'full',
-        'lg' => 2,
-        'xl' => 2,
-        '2xl' => 2,
-    ];
+    public string $activeTab = 'all';
 
     public function getColumnSpan(): int|string|array
     {
+        /** @var User|null $user */
+        $user = auth()->user();
+
+        if ($user && $user->isDentist()) {
+            return [
+                'default' => 'full',
+                'sm' => 'full',
+                'md' => 'full',
+                'lg' => 12,
+                'xl' => 12,
+                '2xl' => 12,
+            ];
+        }
+
         return [
             'default' => 'full',
             'sm' => 'full',
             'md' => 'full',
-            'lg' => 2,
-            'xl' => 2,
-            '2xl' => 2,
+            'lg' => 8,
+            'xl' => 8,
+            '2xl' => 8,
         ];
     }
 
@@ -39,44 +47,58 @@ class LatestAppointmentsWidget extends Widget
 
     public function setTab(string $tab): void
     {
-        $this->activeTab = $tab;
-    }
-
-    public function confirmAppointment(int $id): void
-    {
-        $appointment = Appointment::find($id);
-        if ($appointment) {
-            $appointment->update(['status' => 'confirmed']);
-            Notification::make()
-                ->title('Cita confirmada')
-                ->body("La cita del paciente {$appointment->patient_name} ha sido confirmada.")
-                ->success()
-                ->send();
+        if (in_array($tab, ['all', 'confirmed', 'pending'], true)) {
+            $this->activeTab = $tab;
         }
     }
 
+    /**
+     * Obtener los datos para la vista según el rol y filtros (solo visual).
+     *
+     * @return array<string, mixed>
+     */
     public function getViewData(): array
     {
-        $query = Appointment::with(['service', 'dentist'])->latest();
+        /** @var User $user */
+        $user = auth()->user();
+        $today = Carbon::today()->toDateString();
 
+        $query = Appointment::query()
+            ->with(['service', 'dentist'])
+            ->whereDate('appointment_date', $today);
+
+        // Scope del servidor estricto para dentistas
+        if ($user && $user->isDentist()) {
+            $dentistId = (int) ($user->dentist_id ?? 0);
+            $query->where('dentist_id', $dentistId);
+        }
+
+        // Filtro por tab activo
         if ($this->activeTab === 'pending') {
             $query->where('status', 'pending');
         } elseif ($this->activeTab === 'confirmed') {
             $query->whereIn('status', ['confirmed', 'in_progress']);
         }
 
-        $appointments = $query->take(5)->get();
+        $appointments = $query->orderBy('appointment_time', 'asc')->get();
+
+        // Conteo del servidor por tab según el rol
+        $baseCountQuery = Appointment::query()->whereDate('appointment_date', $today);
+        if ($user && $user->isDentist()) {
+            $baseCountQuery->where('dentist_id', (int) ($user->dentist_id ?? 0));
+        }
 
         $counts = [
-            'all' => Appointment::count(),
-            'pending' => Appointment::where('status', 'pending')->count(),
-            'confirmed' => Appointment::whereIn('status', ['confirmed', 'in_progress'])->count(),
+            'all' => (clone $baseCountQuery)->count(),
+            'confirmed' => (clone $baseCountQuery)->whereIn('status', ['confirmed', 'in_progress'])->count(),
+            'pending' => (clone $baseCountQuery)->where('status', 'pending')->count(),
         ];
 
         return [
             'appointments' => $appointments,
             'counts' => $counts,
             'activeTab' => $this->activeTab,
+            'currentUser' => $user,
         ];
     }
 }

@@ -3,10 +3,12 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
-use App\Filament\Widgets\AppointmentsWeeklyChartWidget;
-use App\Filament\Widgets\DentalClinicStatsOverview;
+use App\Filament\Widgets\AppointmentDemandChart;
+use App\Filament\Widgets\KpiCardsWidget;
 use App\Filament\Widgets\LatestAppointmentsWidget;
-use App\Filament\Widgets\TreatmentsDonutChartWidget;
+use App\Filament\Widgets\TodaySpecialistsWidget;
+use App\Filament\Widgets\TreatmentDistributionChart;
+use App\Filament\Widgets\WelcomeBannerWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -52,10 +54,12 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                DentalClinicStatsOverview::class,
-                AppointmentsWeeklyChartWidget::class,
-                TreatmentsDonutChartWidget::class,
+                WelcomeBannerWidget::class,
+                KpiCardsWidget::class,
+                AppointmentDemandChart::class,
+                TreatmentDistributionChart::class,
                 LatestAppointmentsWidget::class,
+                TodaySpecialistsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

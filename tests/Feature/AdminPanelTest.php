@@ -51,8 +51,8 @@ class AdminPanelTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertSee('Aura Dental Studio');
-        $response->assertSee('Nueva Cita');
-        $response->assertSee('Citas Registradas');
+        $response->assertSee('Nueva cita');
+        $response->assertSee('citas hoy');
     }
 
     public function test_authenticated_admin_can_view_appointments_resource(): void

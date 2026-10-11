@@ -9,7 +9,46 @@
             }
         } catch (e) {}
     })();
+
+    /* Minimal inline Chart.js plugin to draw values on top of bar charts */
+    (function() {
+        const barValuesOnTopPlugin = {
+            id: 'barValuesOnTop',
+            afterDatasetsDraw(chart) {
+                if (chart.config.type !== 'bar') return;
+                if (!chart.options.plugins?.barValuesOnTop?.display) return;
+                const ctx = chart.ctx;
+                const isDark = document.documentElement.classList.contains('dark');
+                const textColor = isDark ? '#F1F5F9' : '#0F172A';
+
+                chart.data.datasets.forEach((dataset, i) => {
+                    const meta = chart.getDatasetMeta(i);
+                    if (!meta || !meta.data) return;
+                    meta.data.forEach((bar, index) => {
+                        const value = dataset.data[index];
+                        if (value > 0) {
+                            ctx.save();
+                            ctx.fillStyle = textColor;
+                            ctx.font = '800 12px Manrope, sans-serif';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'bottom';
+                            const targetY = Math.max((chart.chartArea?.top || 0) + 14, bar.y - 6);
+                            ctx.fillText(value, bar.x, targetY);
+                            ctx.restore();
+                        }
+                    });
+                });
+            }
+        };
+
+        window.filamentChartJsGlobalPlugins = window.filamentChartJsGlobalPlugins || [];
+        window.filamentChartJsGlobalPlugins.push(barValuesOnTopPlugin);
+    })();
 </script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
     /* ==========================================================================
@@ -19,12 +58,25 @@
     :root {
         --sidebar-width: 17rem;
         --collapsed-sidebar-width: 4.75rem;
-        --sidebar-bg: #0b172a;               /* Deep midnight medical navy blue */
-        --sidebar-bg-hover: rgba(255, 255, 255, 0.08);
-        --sidebar-border: rgba(255, 255, 255, 0.08);
-        --accent-blue-active: #0284c7;        /* Sky-600 / Vibrant ocean blue */
-        --accent-blue-gradient: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-        --accent-cyan: #38bdf8;
+        --sidebar-bg: #0A1730;               /* Color base: #0A1730 (azul marino) */
+        --sidebar-bg-hover: #16294D;         /* Hover: fondo #16294D */
+        --sidebar-border: rgba(255, 255, 255, 0.06);
+        --accent-blue-active: #0A74B8;
+        --accent-blue-gradient: linear-gradient(90deg, #0A74B8, #0EA5E9);
+        --accent-cyan: #0EA5E9;
+
+        /* Aura System Design Tokens */
+        --aura-navy: #0A1730;
+        --aura-cyan: #0EA5E9;
+        --aura-sky: #38BDF8;
+        --aura-muted: #9FB3D1;
+        --aura-amber: #FDE68A;
+        --aura-blue-dark: #0A74B8;
+        --aura-blue-soft: #7DD3FC;
+        --aura-blue-tint: #CFE3F4;
+        --aura-slate-border: #E6ECF4;
+        --aura-slate-text: #5B6B86;
+        --aura-group-label: #6F83A6;
     }
 
     /* Fondo general del canvas tipo aplicación moderna */
@@ -34,6 +86,20 @@
 
     .dark .fi-body {
         background-color: #050b14 !important;
+    }
+
+    /* Screen reader only utility (accesible para lectores de pantalla, invisible visualmente) */
+    .sr-only,
+    .fi-sr-only {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
     }
 
     /* --------------------------------------------------------------------------
@@ -102,12 +168,12 @@
         /* Sidebar estilo Isla / Cápsula flotante */
         .fi-body-has-topbar .fi-sidebar {
             position: sticky !important;
-            top: 0.75rem !important;
-            margin: 0.75rem 0.5rem 0.75rem 0.75rem !important;
-            height: calc(100dvh - 1.5rem) !important;
-            border-radius: 1.75rem !important;
+            top: 16px !important;
+            margin: 16px !important;
+            height: calc(100dvh - 32px) !important;
+            border-radius: 28px !important;
             border: 1px solid var(--sidebar-border) !important;
-            box-shadow: 0 16px 36px -4px rgba(2, 6, 23, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+            box-shadow: 0 14px 40px rgba(15, 61, 140, 0.30) !important;
             z-index: 30 !important;
             transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
             overflow: hidden !important;  /* El contenedor no scrollea: el scroll es solo interno del nav */
@@ -586,78 +652,129 @@
         margin-bottom: 0.85rem !important;
     }
 
-    /* Títulos de grupos (GESTIÓN CLÍNICA, CMS Y CONTENIDO WEB, etc.) */
+    /* Títulos de grupos (ADMINISTRACIÓN, GESTIÓN CLÍNICA, CMS Y CONTENIDO WEB, etc.) */
     .fi-sidebar-group-label {
-        color: #64748b !important;
+        color: #6F83A6 !important;
         font-size: 0.72rem !important;
         font-weight: 700 !important;
         letter-spacing: 0.08em !important;
         text-transform: uppercase !important;
-        padding-inline: 0.25rem !important;
+        padding-inline: 0.5rem !important;
     }
 
     .fi-sidebar-group-collapse-btn {
-        color: #64748b !important;
+        color: #6F83A6 !important;
     }
 
-    /* Links inactivos (Nombre del módulo e icono MÁS CLAROS) */
+    /* Links normales (inactivos) */
     .fi-sidebar-item-btn {
-        border-radius: 0.95rem !important;
-        padding: 0.7rem 0.95rem !important;
-        color: #f1f5f9 !important;             /* Texto claro y nítido */
+        border-radius: 14px !important;
+        padding: 12px 14px !important;
+        color: #9FB3D1 !important;
         font-weight: 500 !important;
         font-size: 0.9rem !important;
         transition: all 0.15s ease-in-out !important;
     }
 
     .fi-sidebar-item-btn:hover {
-        background-color: var(--sidebar-bg-hover) !important;
-        color: #ffffff !important;
+        background-color: #16294D !important;
+        background: #16294D !important;
+        color: #FFFFFF !important;
     }
 
-    /* Iconos inactivos claros y luminosos */
+    /* Iconos inactivos */
     .fi-sidebar-item-btn .fi-icon {
-        color: #cbd5e1 !important;             /* Icono plateado claro nítido */
-        opacity: 0.95 !important;
+        color: #9FB3D1 !important;
+        opacity: 1 !important;
         width: 1.25rem !important;
         height: 1.25rem !important;
         transition: transform 0.15s ease, color 0.15s ease !important;
     }
 
     .fi-sidebar-item-btn:hover .fi-icon {
-        color: #ffffff !important;
-        opacity: 1 !important;
-        transform: scale(1.08) !important;
+        color: #FFFFFF !important;
+        transform: scale(1.05) !important;
     }
 
     .fi-sidebar-item-label {
-        color: #f1f5f9 !important;
+        color: #9FB3D1 !important;
         font-weight: 500 !important;
     }
 
     .fi-sidebar-item-btn:hover .fi-sidebar-item-label {
-        color: #ffffff !important;
+        color: #FFFFFF !important;
     }
 
-    /* Ítem Activo (Pill Azul Vibrante como la imagen "Escritorio") */
+    /* Módulo seleccionado (activo) */
     .fi-sidebar-item.fi-active .fi-sidebar-item-btn,
     .fi-sidebar-item-btn.fi-active {
-        background-color: var(--accent-blue-active) !important;
-        background: var(--accent-blue-gradient) !important;
-        color: #ffffff !important;
-        box-shadow: 0 4px 16px -1px rgba(2, 132, 199, 0.55) !important;
+        background: linear-gradient(90deg, #0A74B8, #0EA5E9) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 10px 22px rgba(14, 165, 233, 0.35) !important;
+        border-radius: 14px !important;
+        padding: 12px 14px !important;
     }
 
     .fi-sidebar-item.fi-active .fi-sidebar-item-btn .fi-icon,
     .fi-sidebar-item-btn.fi-active .fi-icon {
-        color: #ffffff !important;
+        color: #FFFFFF !important;
         opacity: 1 !important;
     }
 
     .fi-sidebar-item.fi-active .fi-sidebar-item-label,
     .fi-sidebar-item-btn.fi-active .fi-sidebar-item-label {
-        font-weight: 700 !important;
-        color: #ffffff !important;
+        font-weight: 600 !important;
+        color: #FFFFFF !important;
+    }
+
+    /* Refinamiento específico para Modo Oscuro (.dark) */
+    .dark .fi-sidebar {
+        background-color: #071122 !important;
+        background: #071122 !important;
+    }
+
+    @media (min-width: 1024px) {
+        .dark .fi-body-has-topbar .fi-sidebar {
+            background-color: #081326 !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 16px 44px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .dark .fi-sidebar-header-ctn {
+            background-color: #081326 !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+    }
+
+    .dark .fi-sidebar-item-btn {
+        color: #9FB3D1 !important;
+    }
+
+    .dark .fi-sidebar-item-btn .fi-icon {
+        color: #9FB3D1 !important;
+    }
+
+    .dark .fi-sidebar-item-btn:hover {
+        background-color: #142545 !important;
+        background: #142545 !important;
+        color: #FFFFFF !important;
+    }
+
+    .dark .fi-sidebar-item-btn:hover .fi-icon,
+    .dark .fi-sidebar-item-btn:hover .fi-sidebar-item-label {
+        color: #FFFFFF !important;
+    }
+
+    .dark .fi-sidebar-item.fi-active .fi-sidebar-item-btn,
+    .dark .fi-sidebar-item-btn.fi-active {
+        background: linear-gradient(90deg, #0A74B8, #0EA5E9) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 10px 24px rgba(14, 165, 233, 0.45) !important;
+    }
+
+    .dark .fi-sidebar-group-label,
+    .dark .fi-sidebar-group-collapse-btn {
+        color: #6F83A6 !important;
     }
 
     /* --------------------------------------------------------------------------
@@ -771,18 +888,36 @@
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            border-radius: 0.85rem !important;  /* Squircle / Cuadrado suave */
+            border-radius: 14px !important;
+            color: #9FB3D1 !important;
+        }
+
+        .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-btn:hover {
+            background-color: #16294D !important;
+            color: #FFFFFF !important;
         }
 
         .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-btn .fi-icon {
+            color: #9FB3D1 !important;
             margin: 0 auto !important;
         }
 
-        /* Ítem Activo en modo colapsado: SQUIRCLE / CUADRADO REDONDEADO ELEGANTE */
+        .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-btn:hover .fi-icon {
+            color: #FFFFFF !important;
+        }
+
+        /* Ítem Activo en modo colapsado */
         .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active .fi-sidebar-item-btn,
         .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-btn.fi-active {
-            border-radius: 0.85rem !important;  /* No es círculo, sino squircle */
-            box-shadow: 0 4px 14px -1px rgba(2, 132, 199, 0.6) !important;
+            border-radius: 14px !important;
+            background: linear-gradient(90deg, #0A74B8, #0EA5E9) !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 10px 22px rgba(14, 165, 233, 0.35) !important;
+        }
+
+        .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active .fi-sidebar-item-btn .fi-icon,
+        .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-btn.fi-active .fi-icon {
+            color: #FFFFFF !important;
         }
 
         .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-group-label {
@@ -1067,736 +1202,256 @@
         transform: scale(0.97) !important;
     }
 
+
+
+
+
     /* --------------------------------------------------------------------------
-       BENTO LAYOUT: 3 COLUMNAS (2 COLUMNAS DE KPIS + 1 COLUMNA ESPECIALISTAS DOBLE FILA)
+       FILA 5: TABLA DE CITAS (8 COLS) Y PANEL DE ESPECIALISTAS (4 COLS) EN LA MISMA FILA
        -------------------------------------------------------------------------- */
-    .fi-wi-stats-bento,
-    .fi-wi > div:has(.aura-bento-layout) {
-        grid-column: 1 / -1 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    .aura-bento-layout {
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        gap: 1.15rem !important;
-        width: 100% !important;
-    }
-
-    @media (min-width: 640px) and (max-width: 1023px) {
-        .aura-bento-layout {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    @media (min-width: 1024px) {
+        .fi-wi-appointments-feed,
+        .fi-wi:has(.fi-wi-appointments-feed),
+        .fi-wi:has(.aura-feed-container),
+        .fi-wi > div:has(.aura-feed-container) {
+            grid-column: span 8 / span 8 !important;
+            width: 100% !important;
+            max-width: 100% !important;
         }
 
-        .aura-specialists-card {
+        .fi-wi-today-specialists,
+        .fi-wi:has(.fi-wi-today-specialists),
+        .fi-wi:has(.aura-specialists-card),
+        .fi-wi > div:has(.aura-specialists-card) {
+            grid-column: span 4 / span 4 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Si el widget de especialistas no existe (rol dentista), la tabla ocupa las 12 columnas */
+        .fi-page:not(:has(.aura-specialists-card)) .fi-wi:has(.fi-wi-appointments-feed),
+        .fi-page:not(:has(.aura-specialists-card)) .fi-wi:has(.aura-feed-container),
+        .fi-wi:has(.fi-wi-appointments-feed):last-child {
             grid-column: 1 / -1 !important;
         }
     }
 
-    @media (min-width: 1024px) {
-        .aura-bento-layout {
-            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-            grid-template-rows: auto auto !important;
-            align-items: stretch !important;
-        }
-
-        .aura-kpi-theme-blue {
-            grid-column: 1 !important;
-            grid-row: 1 !important;
-        }
-
-        .aura-kpi-theme-orange {
-            grid-column: 2 !important;
-            grid-row: 1 !important;
-        }
-
-        .aura-kpi-theme-emerald {
-            grid-column: 1 !important;
-            grid-row: 2 !important;
-        }
-
-        .aura-kpi-theme-indigo {
-            grid-column: 2 !important;
-            grid-row: 2 !important;
-        }
-
-        .aura-specialists-card {
-            grid-column: 3 !important;
-            grid-row: 1 / span 2 !important;
-            height: 100% !important;
+    @media (max-width: 1023px) {
+        .fi-wi-appointments-feed,
+        .fi-wi:has(.fi-wi-appointments-feed),
+        .fi-wi:has(.aura-feed-container),
+        .fi-wi:has(.fi-wi-today-specialists),
+        .fi-wi:has(.aura-specialists-card) {
+            grid-column: 1 / -1 !important;
+            width: 100% !important;
         }
     }
 
-    /* Base KPI Item Card (Finnova Modern Style) */
-    .aura-kpi-item {
+    /* ==========================================================================
+       AURA DENTAL - CHARTS ROW (DEMAND 1.5fr & DISTRIBUTION 1fr)
+       ========================================================================== */
+    .aura-chart-card {
+        background: #ffffff !important;
+        border-radius: 28px !important;
+        padding: 24px !important;
+        box-shadow: 0 10px 34px rgba(10, 23, 48, 0.07) !important;
+        border: 1px solid rgba(230, 236, 244, 0.7) !important;
+        box-sizing: border-box !important;
         position: relative;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 1.35rem 1.4rem !important;
-        border-radius: 1.35rem !important;
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-        box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
-        box-sizing: border-box !important;
-        transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.2s ease, border-color 0.2s ease !important;
+        min-height: 340px;
+        container-type: inline-size;
     }
 
-    .dark .aura-kpi-item {
-        background-color: #0c182d !important;
+    .dark .aura-chart-card {
+        background: #0c182d !important;
         border-color: rgba(255, 255, 255, 0.08) !important;
-        box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.3) !important;
+        box-shadow: 0 10px 34px rgba(0, 0, 0, 0.3) !important;
     }
 
-    .aura-kpi-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px -3px rgba(15, 23, 42, 0.08) !important;
-        border-color: #cbd5e1 !important;
+    .aura-chart-title {
+        font-size: 18px !important;
+        font-weight: 800 !important;
+        color: #0A1730 !important;
+        letter-spacing: -0.02em !important;
+        margin: 0 0 14px 0 !important;
+        line-height: 1.3 !important;
     }
 
-    .dark .aura-kpi-item:hover {
-        border-color: rgba(255, 255, 255, 0.16) !important;
+    .dark .aura-chart-title {
+        color: #ffffff !important;
     }
 
-    /* Head */
-    .aura-finnova-head,
-    .aura-kpi-head-simple {
+    /* Demand Chart Legend */
+    .aura-demand-legend {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 0.65rem;
-    }
-
-    /* Body simple */
-    .aura-kpi-body-simple {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.75rem;
-        margin-bottom: 0.65rem;
-    }
-
-    /* Big Icon Boxes (for cards without the days chart) */
-    .aura-kpi-big-icon {
-        display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 3rem;
-        height: 3rem;
-        border-radius: 1rem;
-        flex-shrink: 0;
-        transition: transform 0.2s ease;
+        gap: 24px;
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid #F1F5F9;
     }
 
-    .aura-kpi-item:hover .aura-kpi-big-icon {
-        transform: scale(1.05);
+    .dark .aura-demand-legend {
+        border-top-color: rgba(255, 255, 255, 0.08);
     }
 
-    .aura-big-icon-blue {
-        background-color: #f0f9ff;
-        color: #0284c7;
-        border: 1px solid #bae6fd;
-    }
-
-    .dark .aura-big-icon-blue {
-        background-color: #082f49;
-        color: #38bdf8;
-        border-color: #0369a1;
-    }
-
-    .aura-big-icon-orange {
-        background-color: #fff7ed;
-        color: #ea580c;
-        border: 1px solid #fed7aa;
-    }
-
-    .dark .aura-big-icon-orange {
-        background-color: #431407;
-        color: #fb923c;
-        border-color: #7c2d12;
-    }
-
-    .aura-big-icon-indigo {
-        background-color: #eef2ff;
-        color: #4f46e5;
-        border: 1px solid #c7d2fe;
-    }
-
-    .dark .aura-big-icon-indigo {
-        background-color: #1e1b4b;
-        color: #818cf8;
-        border-color: #3730a3;
-    }
-
-    /* Foot simple */
-    .aura-kpi-foot-simple {
-        padding-top: 0.55rem;
-        border-top: 1px solid #f1f5f9;
-    }
-
-    .dark .aura-kpi-foot-simple {
-        border-top-color: #1e293b;
-    }
-
-    .aura-kpi-label {
-        font-size: 0.78rem;
-        font-weight: 700;
-        color: #475569;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        white-space: nowrap;
-    }
-
-    .aura-kpi-chip {
+    .aura-demand-legend-item {
         display: inline-flex;
         align-items: center;
-        padding: 0.15rem 0.55rem;
-        border-radius: 9999px;
-        font-size: 0.65rem;
-        font-weight: 700;
-        white-space: nowrap;
+        gap: 8px;
     }
 
-    .aura-chip-blue {
-        background-color: #f0f9ff;
-        color: #0284c7;
-        border: 1px solid #bae6fd;
-    }
-
-    .dark .aura-chip-blue {
-        background-color: #082f49;
-        color: #7dd3fc;
-        border-color: #0369a1;
-    }
-
-    .aura-chip-amber {
-        background-color: #fffbeb;
-        color: #b45309;
-        border: 1px solid #fde68a;
-    }
-
-    .dark .aura-chip-amber {
-        background-color: #451a03;
-        color: #fcd34d;
-        border-color: #78350f;
-    }
-
-    .aura-chip-green {
-        background-color: #ecfdf5;
-        color: #059669;
-        border: 1px solid #a7f3d0;
-    }
-
-    .dark .aura-chip-green {
-        background-color: #064e3b;
-        color: #6ee7b7;
-        border-color: #047857;
-    }
-
-    .aura-chip-indigo {
-        background-color: #eef2ff;
-        color: #4f46e5;
-        border: 1px solid #c7d2fe;
-    }
-
-    .dark .aura-chip-indigo {
-        background-color: #1e1b4b;
-        color: #a5b4fc;
-        border-color: #3730a3;
-    }
-
-    .aura-icon-circle {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.85rem;
-        height: 1.85rem;
-        border-radius: 9999px;
-        flex-shrink: 0;
-    }
-
-    .aura-icon-blue {
-        background-color: #e0f2fe;
-        color: #0284c7;
-        border: 1px solid #bae6fd;
-    }
-
-    .dark .aura-icon-blue {
-        background-color: #082f49;
-        color: #38bdf8;
-        border-color: #0369a1;
-    }
-
-    .aura-icon-orange {
-        background-color: #ffedd5;
-        color: #ea580c;
-        border: 1px solid #fed7aa;
-    }
-
-    .dark .aura-icon-orange {
-        background-color: #431407;
-        color: #fb923c;
-        border-color: #7c2d12;
-    }
-
-    .aura-icon-emerald {
-        background-color: #d1fae5;
-        color: #059669;
-        border: 1px solid #a7f3d0;
-    }
-
-    .dark .aura-icon-emerald {
-        background-color: #064e3b;
-        color: #34d399;
-        border-color: #047857;
-    }
-
-    .aura-icon-indigo {
-        background-color: #e0e7ff;
-        color: #4f46e5;
-        border: 1px solid #c7d2fe;
-    }
-
-    .dark .aura-icon-indigo {
-        background-color: #1e1b4b;
-        color: #818cf8;
-        border-color: #3730a3;
-    }
-
-    /* Body */
-    .aura-finnova-body {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 0.75rem;
-        margin-bottom: 0.65rem;
-    }
-
-    .aura-finnova-stat {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .aura-kpi-num {
-        font-size: 2.25rem;
-        font-weight: 800;
-        color: #0f172a;
-        line-height: 1.1;
-        letter-spacing: -0.03em;
-        font-variant-numeric: tabular-nums;
-    }
-
-    .dark .aura-kpi-num {
-        color: #ffffff;
-    }
-
-    .aura-kpi-subtext {
-        font-size: 0.72rem;
-        color: #64748b;
-        margin-top: 0.2rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .dark .aura-kpi-subtext {
-        color: #94a3b8;
-    }
-
-    /* Mini Vertical Bar Chart */
-    .aura-mini-bars {
-        display: flex;
-        align-items: flex-end;
-        gap: 0.35rem;
-        height: 2.6rem;
-    }
-
-    .aura-bar-col {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.2rem;
-        height: 100%;
-        justify-content: flex-end;
-    }
-
-    .aura-bar {
-        width: 6px;
-        background-color: #cbd5e1;
+    .aura-demand-dot {
+        width: 10px;
+        height: 10px;
         border-radius: 3px;
-        min-height: 4px;
-        transition: height 0.3s ease;
-    }
-
-    .dark .aura-bar {
-        background-color: #334155;
-    }
-
-    .aura-bar-label {
-        font-size: 0.58rem;
-        font-weight: 700;
-        color: #94a3b8;
-        line-height: 1;
-    }
-
-    /* Active Bar & Day Colors per Theme */
-    .aura-kpi-theme-blue .aura-bar.aura-bar-active { background-color: #0284c7; }
-    .aura-kpi-theme-blue .aura-bar-label.aura-label-active { color: #0284c7; }
-
-    .aura-kpi-theme-orange .aura-bar.aura-bar-active { background-color: #ea580c; }
-    .aura-kpi-theme-orange .aura-bar-label.aura-label-active { color: #ea580c; }
-
-    .aura-kpi-theme-emerald .aura-bar.aura-bar-active { background-color: #059669; }
-    .aura-kpi-theme-emerald .aura-bar-label.aura-label-active { color: #059669; }
-
-    .aura-kpi-theme-indigo .aura-bar.aura-bar-active { background-color: #4f46e5; }
-    .aura-kpi-theme-indigo .aura-bar-label.aura-label-active { color: #4f46e5; }
-
-    .dark .aura-kpi-theme-blue .aura-bar.aura-bar-active { background-color: #38bdf8; }
-    .dark .aura-kpi-theme-blue .aura-bar-label.aura-label-active { color: #38bdf8; }
-
-    .dark .aura-kpi-theme-orange .aura-bar.aura-bar-active { background-color: #fb923c; }
-    .dark .aura-kpi-theme-orange .aura-bar-label.aura-label-active { color: #fb923c; }
-
-    .dark .aura-kpi-theme-emerald .aura-bar.aura-bar-active { background-color: #10b981; }
-    .dark .aura-kpi-theme-emerald .aura-bar-label.aura-label-active { color: #34d399; }
-
-    .dark .aura-kpi-theme-indigo .aura-bar.aura-bar-active { background-color: #818cf8; }
-    .dark .aura-kpi-theme-indigo .aura-bar-label.aura-label-active { color: #818cf8; }
-
-    /* Foot */
-    .aura-finnova-foot {
-        padding-top: 0.55rem;
-        border-top: 1px solid #f1f5f9;
-    }
-
-    .dark .aura-finnova-foot {
-        border-top-color: #1e293b;
-    }
-
-    .aura-foot-status {
-        font-size: 0.72rem;
-        font-weight: 600;
-        color: #475569;
-    }
-
-    .dark .aura-foot-status {
-        color: #94a3b8;
-    }
-
-    .dark .aura-medical-foot {
-        border-top-color: #1e293b;
-    }
-
-    .aura-foot-desc {
-        font-size: 0.7rem;
-        color: #64748b;
-    }
-
-    .dark .aura-foot-desc {
-        color: #94a3b8;
-    }
-
-    /* --------------------------------------------------------------------------
-       COLUMNA 3 (DOBLE FILA): LISTADO DE ESPECIALISTAS (PINTEREST / FINNOVA STYLE)
-       -------------------------------------------------------------------------- */
-    .aura-specialists-card {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 1.45rem !important;
-        border-radius: 1.35rem !important;
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-        box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
-        box-sizing: border-box !important;
-        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
-    }
-
-    .dark .aura-specialists-card {
-        background-color: #0c182d !important;
-        border-color: rgba(255, 255, 255, 0.08) !important;
-        box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.3) !important;
-    }
-
-    .aura-specialists-card:hover {
-        box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.08) !important;
-        border-color: #cbd5e1 !important;
-    }
-
-    .dark .aura-specialists-card:hover {
-        border-color: rgba(255, 255, 255, 0.16) !important;
-    }
-
-    .aura-spec-header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-    }
-
-    .aura-spec-title-group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .aura-spec-title {
-        font-size: 1.05rem;
-        font-weight: 800;
-        color: #0f172a;
-        margin: 0;
-        line-height: 1.2;
-        letter-spacing: -0.02em;
-    }
-
-    .dark .aura-spec-title {
-        color: #ffffff;
-    }
-
-    .aura-spec-subtitle {
-        font-size: 0.74rem;
-        color: #64748b;
-        margin-top: 0.15rem;
-    }
-
-    .dark .aura-spec-subtitle {
-        color: #94a3b8;
-    }
-
-    .aura-spec-count-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        padding: 0.25rem 0.65rem;
-        border-radius: 9999px;
-        background-color: #ecfdf5;
-        color: #047857;
-        border: 1px solid #a7f3d0;
-        font-size: 0.72rem;
-        font-weight: 700;
-        white-space: nowrap;
-    }
-
-    .dark .aura-spec-count-badge {
-        background-color: #064e3b;
-        color: #6ee7b7;
-        border-color: #047857;
-    }
-
-    .aura-pulse-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 9999px;
-        background-color: #10b981;
-    }
-
-    .aura-spec-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.6rem;
-        flex: 1;
-    }
-
-    .aura-spec-row {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.6rem 0.75rem;
-        border-radius: 0.85rem;
-        background-color: #f8fafc;
-        border: 1px solid #f1f5f9;
-        transition: background-color 0.15s ease, border-color 0.15s ease;
-    }
-
-    .aura-spec-row:hover {
-        background-color: #f1f5f9;
-        border-color: #e2e8f0;
-    }
-
-    .dark .aura-spec-row {
-        background-color: #111e35;
-        border-color: rgba(255, 255, 255, 0.04);
-    }
-
-    .dark .aura-spec-row:hover {
-        background-color: #162644;
-        border-color: rgba(255, 255, 255, 0.08);
-    }
-
-    .aura-spec-avatar-box {
-        width: 2.35rem;
-        height: 2.35rem;
-        border-radius: 9999px;
-        overflow: hidden;
         flex-shrink: 0;
     }
 
-    .aura-spec-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+    .aura-demand-legend-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: #5B6B86;
     }
 
-    .aura-spec-avatar-fallback {
-        width: 100%;
-        height: 100%;
-        border-radius: 9999px;
-        color: #ffffff;
-        font-size: 0.75rem;
-        font-weight: 800;
+    .dark .aura-demand-legend-text {
+        color: #94A3B8;
+    }
+
+    /* Demand empty overlay */
+    .aura-demand-empty-overlay {
+        position: absolute;
+        inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        text-transform: uppercase;
-        user-select: none;
+        pointer-events: none;
     }
 
-    .aura-spec-info {
+    .aura-demand-empty-badge {
+        background: rgba(241, 245, 249, 0.95);
+        color: #64748B;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        border: 1px solid #E2E8F0;
+    }
+
+    .dark .aura-demand-empty-badge {
+        background: rgba(15, 23, 42, 0.95);
+        color: #94A3B8;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Donut Chart Layout */
+    .aura-donut-body {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        gap: 16px;
+        width: 100%;
+        flex: 1;
+    }
+
+    @container (max-width: 440px) {
+        .aura-donut-body {
+            flex-direction: column !important;
+            gap: 16px !important;
+        }
+    }
+
+    .aura-donut-empty-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0 28px;
+        pointer-events: none;
+    }
+
+    .aura-donut-empty-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: #64748B;
+        line-height: 1.4;
+    }
+
+    .dark .aura-donut-empty-text {
+        color: #94A3B8;
+    }
+
+    .aura-donut-legend {
         display: flex;
         flex-direction: column;
+        gap: 10px;
+        min-width: 0;
         flex: 1;
+    }
+
+    .aura-donut-legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
         min-width: 0;
     }
 
-    .aura-spec-name {
-        font-size: 0.82rem;
-        font-weight: 700;
-        color: #0f172a;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .dark .aura-spec-name {
-        color: #ffffff;
-    }
-
-    .aura-spec-specialty {
-        font-size: 0.7rem;
-        color: #64748b;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-top: 0.1rem;
-    }
-
-    .dark .aura-spec-specialty {
-        color: #94a3b8;
-    }
-
-    .aura-spec-status-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        padding: 0.15rem 0.5rem;
-        border-radius: 9999px;
-        background-color: #ffffff;
-        border: 1px solid #e2e8f0;
-        font-size: 0.65rem;
-        font-weight: 600;
-        color: #047857;
+    .aura-donut-legend-box {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
         flex-shrink: 0;
     }
 
-    .dark .aura-spec-status-pill {
-        background-color: #0c182d;
-        border-color: rgba(255, 255, 255, 0.08);
-        color: #6ee7b7;
+    .aura-donut-legend-name {
+        font-weight: 600;
+        color: #1E293B;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+        flex-shrink: 1;
     }
 
-    .aura-spec-dot {
-        width: 5px;
-        height: 5px;
-        border-radius: 9999px;
-        background-color: #10b981;
+    .dark .aura-donut-legend-name {
+        color: #E2E8F0;
     }
 
-    .aura-spec-footer {
-        padding-top: 0.85rem;
-        border-top: 1px solid #f1f5f9;
-        margin-top: 0.85rem;
+    .aura-donut-legend-sep {
+        color: #94A3B8;
+        flex-shrink: 0;
     }
 
-    .dark .aura-spec-footer {
-        border-top-color: #1e293b;
-    }
-
-    .aura-spec-view-all {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.45rem;
-        font-size: 0.78rem;
+    .aura-donut-legend-pct {
         font-weight: 700;
-        color: #0284c7;
-        text-decoration: none;
-        padding: 0.45rem 0.75rem;
-        border-radius: 0.75rem;
-        background-color: #f0f9ff;
-        border: 1px solid #bae6fd;
-        transition: all 0.15s ease;
+        color: #0A1730;
+        flex-shrink: 0;
     }
 
-    .aura-spec-view-all:hover {
-        background-color: #0284c7;
-        color: #ffffff;
-        border-color: #0284c7;
+    .dark .aura-donut-legend-pct {
+        color: #38BDF8;
     }
 
-    .dark .aura-spec-view-all {
-        background-color: #082f49;
-        color: #7dd3fc;
-        border-color: #0369a1;
+    .aura-donut-empty-legend-hint {
+        font-size: 12px;
+        color: #94A3B8;
+        font-style: italic;
     }
 
-    .dark .aura-spec-view-all:hover {
-        background-color: #0284c7;
-        color: #ffffff;
-    }
-
-    /* --------------------------------------------------------------------------
-       FINNOVA APPOINTMENT FEED (MODERN REPLACEMENT FOR BASIC DATED TABLE)
-       -------------------------------------------------------------------------- */
-    .fi-wi-appointments-feed,
-    .fi-wi > div:has(.aura-feed-container) {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    @media (min-width: 1024px) {
-        .fi-wi-appointments-feed,
-        .fi-wi:has(.fi-wi-appointments-feed),
-        .fi-wi:has(.aura-feed-container) {
-            grid-column: 1 / span 2 !important;
-            grid-row: span 2 !important;
-            width: 100% !important;
+    /* Stack charts when container is below 760px */
+    @container (max-width: 760px) {
+        .fi-wi:has(.aura-demand-widget-container),
+        .fi-wi:has(.aura-donut-widget-container) {
+            grid-column: 1 / -1 !important;
         }
-
-        .fi-wi:has(.fi-wi-chart) {
-            grid-column: 3 !important;
-            width: 100% !important;
-        }
-    }
-
-    /* Chart widgets styling (Column 3) */
-    .fi-wi-chart .fi-section,
-    .fi-wi:has(.fi-wi-chart) .fi-section,
-    .fi-wi:has(.fi-wi-chart) section {
-        border-radius: 1.35rem !important;
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-        box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
-        overflow: hidden !important;
-    }
-
-    .dark .fi-wi-chart .fi-section,
-    .dark .fi-wi:has(.fi-wi-chart) .fi-section,
-    .dark .fi-wi:has(.fi-wi-chart) section {
-        background-color: #0c182d !important;
-        border-color: rgba(255, 255, 255, 0.08) !important;
-        box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.3) !important;
     }
 
     .aura-feed-container {
@@ -2336,267 +1991,1140 @@
     }
 
     /* --------------------------------------------------------------------------
-       PREVENT STICKY/FLOATING TOPBAR FROM OVERLAPPING PAGE CONTENT
+       WELCOME BANNER WIDGET (SECTION 1 - HERO BANNER)
        -------------------------------------------------------------------------- */
-    .fi-main-ctn,
-    .fi-page {
-        padding-top: 0.75rem !important;
-    }
-
-    /* --------------------------------------------------------------------------
-       APPOINTMENT MANAGEMENT MODULE KPIS (ULTRA-COMPACT, LOW HEIGHT BAR)
-       -------------------------------------------------------------------------- */
-    .fi-wi-appointment-stats {
-        margin-bottom: 1.25rem !important;
+    .fi-wi-welcome-banner,
+    .fi-wi:has(.fi-wi-welcome-banner) {
+        grid-column: 1 / -1 !important;
         width: 100% !important;
+        max-width: 100% !important;
     }
 
-    .aura-app-compact-bar {
-        display: grid !important;
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 0.85rem !important;
-        width: 100% !important;
+    .fi-dashboard-page > .fi-header,
+    .fi-page-dashboard > .fi-header {
+        display: none !important;
     }
 
-    @media (min-width: 1024px) {
-        .aura-app-compact-bar {
-            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-            gap: 1rem !important;
+    .aura-welcome-banner {
+        font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+        width: 100%;
+        border-radius: 32px;
+        padding: 30px 34px;
+        background: linear-gradient(120deg, var(--aura-navy, #0A1730) 30%, #0B4F80);
+        color: #ffffff;
+        box-shadow: 0 18px 40px rgba(10, 23, 48, 0.25);
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        box-sizing: border-box;
+    }
+
+    .aura-welcome-left {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 480px;
+        min-width: 0;
+    }
+
+    .aura-welcome-title {
+        font-size: 34px !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.02em !important;
+        line-height: 1.2 !important;
+        color: #ffffff !important;
+        margin: 0 !important;
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+    }
+
+    .aura-welcome-name {
+        color: var(--aura-sky, #38BDF8) !important;
+        display: inline-block;
+        max-width: 480px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+    }
+
+    .aura-welcome-subtitle {
+        font-size: 15px !important;
+        color: var(--aura-muted, #9FB3D1) !important;
+        max-width: 520px;
+        margin-top: 8px !important;
+        margin-bottom: 0 !important;
+        line-height: 1.5 !important;
+        font-weight: 500 !important;
+    }
+
+    .aura-welcome-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 24px;
+        flex-wrap: wrap;
+    }
+
+    .aura-welcome-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--aura-cyan, #0EA5E9);
+        color: #0F172A !important;
+        font-weight: 800;
+        font-size: 14px;
+        min-height: 48px;
+        padding: 0 24px;
+        border-radius: 9999px;
+        box-shadow: 0 10px 24px rgba(14, 165, 233, 0.40);
+        text-decoration: none;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        box-sizing: border-box;
+    }
+
+    .aura-welcome-btn-primary:hover {
+        background-color: #38bdf8;
+        transform: translateY(-1px);
+        box-shadow: 0 14px 28px rgba(14, 165, 233, 0.50);
+    }
+
+    .aura-welcome-btn-primary:active {
+        transform: scale(0.98);
+    }
+
+    .aura-welcome-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1.5px solid var(--aura-sky, #38BDF8);
+        background-color: transparent;
+        color: #ffffff !important;
+        font-weight: 700;
+        font-size: 14px;
+        min-height: 48px;
+        padding: 0 24px;
+        border-radius: 9999px;
+        text-decoration: none;
+        transition: background-color 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+        box-sizing: border-box;
+    }
+
+    .aura-welcome-btn-secondary:hover {
+        background-color: rgba(56, 189, 248, 0.15);
+        border-color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+    .aura-welcome-btn-secondary:active {
+        transform: scale(0.98);
+    }
+
+    .aura-welcome-cards {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-shrink: 0;
+        flex-wrap: wrap;
+    }
+
+    .aura-welcome-card {
+        background: rgba(255, 255, 255, 0.10);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 22px;
+        padding: 16px 22px;
+        min-width: 110px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .aura-welcome-card-num {
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1.1;
+        color: #ffffff;
+    }
+
+    .aura-welcome-card-num.aura-highlight {
+        color: var(--aura-amber, #FDE68A);
+    }
+
+    .aura-welcome-card-label {
+        font-size: 13px;
+        color: var(--aura-muted, #9FB3D1);
+        margin-top: 4px;
+        text-transform: lowercase;
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        .aura-welcome-banner {
+            padding: 24px 20px;
+            border-radius: 24px;
+            gap: 20px;
+        }
+
+        .aura-welcome-title {
+            font-size: 26px !important;
+        }
+
+        .aura-welcome-cards {
+            width: 100%;
+            justify-content: flex-start;
+        }
+
+        .aura-welcome-card {
+            flex: 1 1 calc(50% - 8px);
+            min-width: 0;
         }
     }
 
-    /* Mini stat card */
-    .aura-mini-stat {
-        display: flex !important;
-        align-items: center !important;
-        gap: 0.85rem !important;
-        padding: 0.75rem 1rem !important;
-        min-height: 4.15rem !important;
-        border-radius: 1rem !important;
-        background-color: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
-        box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04) !important;
-        transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    /* --------------------------------------------------------------------------
+       KPI CARDS WIDGET (SECTION 2 - 4 CARDS WITH 4-ZONE LAYOUT & CONTAINER QUERIES)
+       -------------------------------------------------------------------------- */
+    .fi-wi-kpi-cards,
+    .fi-wi:has(.fi-wi-kpi-cards) {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
-    .aura-mini-stat:hover {
-        transform: translateY(-1px) !important;
-        box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.06) !important;
+    .aura-kpi-container {
+        container-type: inline-size;
+        width: 100%;
+        box-sizing: border-box;
     }
 
-    .dark .aura-mini-stat {
-        background-color: #0c182d !important;
-        border-color: rgba(255, 255, 255, 0.08) !important;
-        box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3) !important;
+    .aura-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
-    /* Mini icon circle/box */
-    .aura-mini-icon {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        width: 2.5rem !important;
-        height: 2.5rem !important;
-        min-width: 2.5rem !important;
-        border-radius: 0.75rem !important;
-        flex-shrink: 0 !important;
+    /* Container Queries para adaptarse fielmente con sidebar abierto o cerrado */
+    @container (max-width: 999px) {
+        .aura-kpi-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
     }
 
-    .aura-mini-icon-emerald {
-        background-color: #ecfdf5 !important;
-        color: #059669 !important;
-        border: 1px solid #a7f3d0 !important;
+    @container (max-width: 559px) {
+        .aura-kpi-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
     }
 
-    .dark .aura-mini-icon-emerald {
-        background-color: rgba(5, 150, 105, 0.2) !important;
-        color: #34d399 !important;
-        border-color: rgba(5, 150, 105, 0.3) !important;
+    /* Fallback con media queries por compatibilidad */
+    @media (max-width: 1024px) {
+        .aura-kpi-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
     }
 
-    .aura-mini-icon-orange {
-        background-color: #fffbeb !important;
-        color: #d97706 !important;
-        border: 1px solid #fde68a !important;
+    @media (max-width: 560px) {
+        .aura-kpi-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
     }
 
-    .dark .aura-mini-icon-orange {
-        background-color: rgba(217, 119, 6, 0.2) !important;
-        color: #fbbf24 !important;
-        border-color: rgba(217, 119, 6, 0.3) !important;
+    /* Estructura común para las 4 tarjetas: Flex column sin space-between global */
+    .aura-kpi-card {
+        border-radius: 28px;
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 12px;
+        min-height: 240px;
+        height: 100%;
+        box-sizing: border-box;
+        overflow: visible;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        position: relative;
     }
 
-    .aura-mini-icon-blue {
-        background-color: #f0f9ff !important;
-        color: #0284c7 !important;
-        border: 1px solid #bae6fd !important;
+    .aura-kpi-card,
+    .aura-kpi-card * {
+        min-width: 0;
     }
 
-    .dark .aura-mini-icon-blue {
-        background-color: rgba(2, 132, 199, 0.2) !important;
-        color: #38bdf8 !important;
-        border-color: rgba(2, 132, 199, 0.3) !important;
+    .aura-kpi-card:hover {
+        transform: translateY(-2px);
     }
 
-    .aura-mini-icon-slate {
-        background-color: #f8fafc !important;
-        color: #475569 !important;
-        border: 1px solid #e2e8f0 !important;
+    /* ZONA A: Cabecera fija a 40px sin solapamientos */
+    .aura-kpi-zone-a {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        min-height: 40px;
+        width: 100%;
+        flex-shrink: 0;
+        position: static !important;
+        margin: 0 !important;
     }
 
-    .dark .aura-mini-icon-slate {
-        background-color: rgba(148, 163, 184, 0.15) !important;
-        color: #94a3b8 !important;
-        border-color: rgba(148, 163, 184, 0.25) !important;
-    }
-
-    .aura-mini-info {
-        display: flex !important;
-        flex-direction: column !important;
-        line-height: 1.15 !important;
-    }
-
-    .aura-mini-num {
-        font-size: 1.35rem !important;
+    .aura-kpi-label {
+        font-size: 12px !important;
         font-weight: 800 !important;
-        color: #0f172a !important;
-        letter-spacing: -0.02em !important;
+        letter-spacing: 0.06em !important;
+        text-transform: uppercase !important;
+        line-height: 1.3 !important;
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        word-break: normal;
     }
 
-    .dark .aura-mini-num {
-        color: #ffffff !important;
+    /* ZONA B: Valor principal y subtexto con inicio uniforme en las 4 tarjetas */
+    .aura-kpi-zone-b {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex-shrink: 0;
     }
 
-    .aura-mini-label {
-        font-size: 0.75rem !important;
-        font-weight: 600 !important;
-        color: #64748b !important;
-        margin-top: 0.1rem !important;
+    .aura-kpi-num {
+        font-size: 48px !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.03em !important;
+        line-height: 1 !important;
+        display: block !important;
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum" 1;
+    }
+
+    .aura-kpi-subtext {
+        font-size: 13px !important;
+        line-height: 1.3 !important;
+        margin-top: 4px;
+        display: block;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    /* ZONA C: Contenido secundario (gráfico, botón, chips, anillo) */
+    .aura-kpi-zone-c {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex: 1 1 auto;
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* ZONA D: Pie pegado al fondo */
+    .aura-kpi-zone-d {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        flex-shrink: 0;
+    }
+
+    /* -------------------------------------------------------------
+       TARJETA 1: CITAS CONFIRMADAS HOY (Azul vibrante Aura)
+       ------------------------------------------------------------- */
+    .aura-kpi-card-1 {
+        background: #0284c7;
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+        color: #ffffff;
+        box-shadow: 0 14px 30px rgba(2, 132, 199, 0.35);
+    }
+
+    .aura-kpi-card-1 .aura-kpi-label {
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    .aura-kpi-card-1 .aura-kpi-num {
+        color: #ffffff;
+    }
+
+    .aura-kpi-card-1 .aura-kpi-subtext {
+        color: rgba(255, 255, 255, 0.90);
+    }
+
+    .aura-kpi-icon-box {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.22);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    /* Píldoras redondeadas del mini-gráfico de 7 días */
+    .aura-kpi-pills-trend {
+        display: flex;
+        align-items: flex-end;
+        gap: 6px;
+        height: 36px;
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    .aura-kpi-pill-bar {
+        width: 14px;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.38);
+        transition: height 0.2s ease, background 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .aura-kpi-pill-bar.aura-kpi-pill-today {
+        background: #ffffff !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* -------------------------------------------------------------
+       TARJETA 2: POR CONFIRMAR
+       ------------------------------------------------------------- */
+    .aura-kpi-card-2 {
+        background: #ffffff;
+        color: #0f172a;
+        box-shadow: 0 10px 34px rgba(10, 23, 48, 0.07);
+        border: 1px solid rgba(226, 232, 240, 0.85);
+    }
+
+    .dark .aura-kpi-card-2 {
+        background: #0c182d;
+        color: #f8fafc;
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 14px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .aura-kpi-card-2 .aura-kpi-label {
+        color: #0f172a;
+    }
+
+    .dark .aura-kpi-card-2 .aura-kpi-label {
+        color: #f8fafc;
+    }
+
+    .aura-kpi-card-2 .aura-kpi-num {
+        color: #0f172a;
+    }
+
+    .dark .aura-kpi-card-2 .aura-kpi-num {
+        color: #f8fafc;
+    }
+
+    .aura-kpi-card-2 .aura-kpi-subtext {
+        color: #64748b;
+    }
+
+    .dark .aura-kpi-card-2 .aura-kpi-subtext {
+        color: #94a3b8;
+    }
+
+    .aura-kpi-chip {
+        padding: 4px 10px;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: none;
+        flex-shrink: 0;
         white-space: nowrap !important;
     }
 
-    .dark .aura-mini-label {
-        color: #94a3b8 !important;
+    .aura-kpi-chip-amber {
+        background-color: #FEF3C7;
+        color: #B45309;
     }
 
-    /* --------------------------------------------------------------------------
-       MODERN DENTAL SAAS TABLE STYLING
-       -------------------------------------------------------------------------- */
-    .fi-ta {
+    .aura-kpi-chip-green {
+        background-color: #DCFCE7;
+        color: #166534;
+    }
+
+    .aura-kpi-btn-amber {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        min-height: 40px;
+        padding: 0 18px;
+        border-radius: 9999px;
+        background-color: #FEF3C7;
+        color: #B45309 !important;
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+        transition: all 0.15s ease;
+        width: fit-content;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin-top: 6px;
+    }
+
+    .aura-kpi-btn-amber:hover {
+        background-color: #FDE68A;
+        transform: translateY(-1px);
+    }
+
+    .aura-kpi-discreet-text {
+        font-size: 12px;
+        font-weight: 500;
+        color: #94a3b8;
+        display: block;
+        line-height: 1.4;
+        margin-top: 6px;
+    }
+
+    .dark .aura-kpi-discreet-text {
+        color: #64748b;
+    }
+
+    /* -------------------------------------------------------------
+       TARJETA 3: SERVICIOS CLÍNICOS
+       ------------------------------------------------------------- */
+    .aura-kpi-card-3 {
+        background: #ffffff;
+        color: #0f172a;
+        box-shadow: 0 10px 34px rgba(10, 23, 48, 0.07);
+        border: 1px solid rgba(226, 232, 240, 0.85);
+    }
+
+    .dark .aura-kpi-card-3 {
+        background: #0c182d;
+        color: #f8fafc;
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 14px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .aura-kpi-card-3 .aura-kpi-label {
+        color: #0f172a;
+    }
+
+    .dark .aura-kpi-card-3 .aura-kpi-label {
+        color: #f8fafc;
+    }
+
+    .aura-kpi-card-3 .aura-kpi-num {
+        color: #0f172a;
+    }
+
+    .dark .aura-kpi-card-3 .aura-kpi-num {
+        color: #f8fafc;
+    }
+
+    .aura-kpi-card-3 .aura-kpi-subtext {
+        color: #64748b;
+    }
+
+    .dark .aura-kpi-card-3 .aura-kpi-subtext {
+        color: #94a3b8;
+    }
+
+    .aura-kpi-chip-blue {
+        background-color: #E0F2FE;
+        color: #0284c7;
+    }
+
+    /* Lista de chips de servicios en máximo 2 filas */
+    .aura-kpi-services-zone {
+        width: 100%;
+    }
+
+    .aura-kpi-services-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+        margin-top: 6px;
+    }
+
+    .aura-kpi-services-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .aura-kpi-services-row-1 {
+        flex-wrap: nowrap;
+    }
+
+    .aura-kpi-services-row-2 {
+        flex-wrap: nowrap;
+    }
+
+    .aura-kpi-service-pill {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 9999px;
+        background-color: #F1F5F9;
+        color: #0F172A;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        box-sizing: border-box;
+        max-width: 100%;
+        min-width: 0;
+        flex: 0 1 auto;
+    }
+
+    /* En la segunda fila, el nombre se acorta responsivamente de forma prioritaria para que el +N nunca se solape ni se oculte */
+    .aura-kpi-service-pill-row2 {
+        max-width: calc(100% - 44px);
+        flex: 0 1 auto;
+        flex-shrink: 1;
+    }
+
+    .dark .aura-kpi-service-pill {
+        background-color: rgba(30, 41, 59, 0.7);
+        color: #e2e8f0;
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .aura-kpi-service-pill-more {
+        background-color: #E0F2FE;
+        color: #0284c7;
+        font-weight: 800;
+        border-color: rgba(14, 165, 233, 0.25);
+        flex-shrink: 0;
+        cursor: default;
+        padding: 5px 10px;
+    }
+
+    .dark .aura-kpi-service-pill-more {
+        background-color: rgba(14, 165, 233, 0.15);
+        color: #38bdf8;
+    }
+
+    /* -------------------------------------------------------------
+       TARJETA 4: OCUPACIÓN DE LA AGENDA HOY
+       (Gráfico a la izq, Número y % en el medio, Texto a la der)
+       ------------------------------------------------------------- */
+    .aura-kpi-card-4 {
+        background: #0A1730;
+        color: #ffffff;
+        box-shadow: 0 14px 30px rgba(10, 23, 48, 0.25);
+    }
+
+    .aura-kpi-card-4 .aura-kpi-label {
+        color: rgba(255, 255, 255, 0.92);
+    }
+
+    .aura-kpi-occupancy-zone {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 100%;
+        margin-top: 0;
+    }
+
+    .aura-kpi-occupancy-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+    }
+
+    .aura-kpi-ring-wrapper {
+        flex-shrink: 0;
+        width: 88px;
+        height: 88px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .aura-kpi-ring-svg {
+        transform: rotate(-90deg);
+        width: 88px;
+        height: 88px;
+    }
+
+    /* Contenedor de datos: % grande + subtexto al lado */
+    .aura-kpi-occupancy-data {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .aura-kpi-occupancy-val {
+        font-size: 48px !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
+        line-height: 1 !important;
+        letter-spacing: -0.03em !important;
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum" 1;
+        display: block;
+    }
+
+    .aura-kpi-subtext-occupancy {
+        font-size: 13px !important;
+        color: #9FB3D1 !important;
+        line-height: 1.25 !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        word-break: normal !important;
+        margin-top: 4px !important;
+        display: block;
+    }
+
+    .aura-kpi-free-text {
+        font-size: 13px;
+        color: #9FB3D1;
+        letter-spacing: 0.01em;
+    }
+
+    .aura-kpi-free-text strong {
+        color: #ffffff;
+        weight: 800;
+    }
+
+    /* ==========================================================================
+       SECCIÓN 5: ESPECIALISTAS Y ACCIONES DE CITAS POR ROL
+       ========================================================================== */
+
+    /* Panel de Especialistas */
+    .aura-specialists-card {
+        background: linear-gradient(170deg, #0A1730, #16294D) !important;
+        color: #ffffff !important;
+        border-radius: 32px !important;
+        padding: 26px !important;
+        box-shadow: 0 18px 40px rgba(10, 23, 48, 0.25) !important;
+        box-sizing: border-box !important;
         display: flex !important;
         flex-direction: column !important;
-        gap: 0.85rem !important;
+        justify-content: space-between !important;
+        min-height: 420px;
     }
 
-    .fi-ta-ctn {
-        border-radius: 1.25rem !important;
-        border: 1px solid #e2e8f0 !important;
-        background-color: #ffffff !important;
-        box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04) !important;
-        overflow: hidden !important;
+    .aura-specialists-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 20px;
     }
 
-    .dark .fi-ta-ctn {
-        border-color: rgba(255, 255, 255, 0.08) !important;
-        background-color: #0c182d !important;
-        box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.4) !important;
+    .aura-specialists-title {
+        font-size: 20px !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
+        margin: 0 !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.02em !important;
     }
 
-    /* Table Toolbar (Search & Filter bar) */
-    .fi-ta-header-toolbar {
-        padding: 0.85rem 1.15rem !important;
-        border-bottom: 1px solid #f1f5f9 !important;
-        background-color: #ffffff !important;
+    .aura-specialists-subtitle {
+        font-size: 13px !important;
+        color: #9FB3D1 !important;
+        margin: 4px 0 0 0 !important;
+        line-height: 1.3 !important;
+    }
+
+    .aura-specialists-shift-chip {
+        background: #DCFCE7 !important;
+        color: #166534 !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        padding: 4px 10px !important;
+        border-radius: 9999px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+
+    .aura-specialists-list {
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    .aura-specialists-list-scrollable {
+        max-height: 380px !important;
+        overflow-y: auto !important;
+        padding-right: 4px !important;
+    }
+
+    .aura-specialist-item-row {
+        background: #16294D !important;
+        border-radius: 20px !important;
+        padding: 12px !important;
         display: flex !important;
         align-items: center !important;
-        gap: 0.75rem !important;
+        gap: 12px !important;
+        transition: background 0.15s ease, transform 0.15s ease !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        box-sizing: border-box !important;
     }
 
-    .dark .fi-ta-header-toolbar {
-        background-color: #0c182d !important;
-        border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+    .aura-specialist-item-row:hover {
+        background: #1C3360 !important;
     }
 
-    /* Search input pill */
-    .fi-ta-search-field input {
-        border-radius: 0.85rem !important;
-        border: 1px solid #e2e8f0 !important;
-        font-size: 0.84rem !important;
-        background-color: #f8fafc !important;
-        padding-block: 0.55rem !important;
-        transition: all 0.2s ease !important;
+    .aura-specialist-item-row:focus-visible {
+        outline: 2px solid #0EA5E9 !important;
+        outline-offset: 2px !important;
     }
 
-    .fi-ta-search-field input:focus {
-        border-color: #0284c7 !important;
-        background-color: #ffffff !important;
-        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15) !important;
+    .aura-specialist-avatar {
+        width: 46px !important;
+        height: 46px !important;
+        border-radius: 9999px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+        font-weight: 800 !important;
+        font-size: 15px !important;
+        color: #0F172A !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
     }
 
-    .dark .fi-ta-search-field input {
-        background-color: rgba(15, 23, 42, 0.6) !important;
-        border-color: rgba(255, 255, 255, 0.1) !important;
-        color: #f8fafc !important;
+    .aura-specialist-info {
+        display: flex !important;
+        flex-direction: column !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+        gap: 2px !important;
     }
 
-    .dark .fi-ta-search-field input:focus {
-        border-color: #38bdf8 !important;
-        background-color: #0f172a !important;
-        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+    .aura-specialist-name {
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        line-height: 1.25 !important;
     }
 
-    /* Filter button next to search */
-    button[wire\\:click*="openFilters"],
-    .fi-ta-filter-trigger button,
-    .fi-ta-header-toolbar button:has(svg) {
-        border-radius: 0.85rem !important;
-        font-weight: 600 !important;
-        font-size: 0.825rem !important;
-        padding-inline: 1rem !important;
-        padding-block: 0.52rem !important;
-        transition: all 0.15s ease !important;
+    .aura-specialist-specialty {
+        font-size: 13px !important;
+        color: #9FB3D1 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        line-height: 1.25 !important;
     }
 
-    /* Table Header cells */
-    .fi-ta-header-cell {
-        background-color: #f8fafc !important;
-        color: #475569 !important;
-        font-size: 0.725rem !important;
+    .aura-specialist-status-col {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-end !important;
+        flex-shrink: 0 !important;
+        gap: 4px !important;
+        text-align: right !important;
+    }
+
+    .aura-specialist-chip {
+        font-size: 11px !important;
         font-weight: 700 !important;
-        letter-spacing: 0.05em !important;
-        text-transform: uppercase !important;
-        padding-block: 0.85rem !important;
-        padding-inline: 1rem !important;
-        border-bottom: 1px solid #e2e8f0 !important;
+        padding: 3px 8px !important;
+        border-radius: 9999px !important;
+        white-space: nowrap !important;
+        line-height: 1.2 !important;
     }
 
-    .dark .fi-ta-header-cell {
-        background-color: #0b1424 !important;
-        color: #94a3b8 !important;
-        border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+    .aura-specialist-citas-count {
+        font-size: 12px !important;
+        color: #9FB3D1 !important;
+        line-height: 1 !important;
+        font-weight: 500 !important;
     }
 
-    /* Table Rows */
-    .fi-ta-row {
-        transition: background-color 0.15s ease !important;
+    .aura-specialists-see-all {
+        margin-top: 10px;
+        text-align: center;
     }
 
-    .fi-ta-row:hover {
-        background-color: #f8fafc !important;
+    .aura-specialists-see-all a {
+        font-size: 12px;
+        font-weight: 700;
+        color: #38BDF8;
+        text-decoration: underline;
     }
 
-    .dark .fi-ta-row:hover {
-        background-color: rgba(30, 41, 59, 0.4) !important;
+    .aura-specialists-footer {
+        margin-top: 20px !important;
     }
 
-    .fi-ta-cell {
-        padding-block: 0.95rem !important;
-        padding-inline: 1rem !important;
-        border-bottom: 1px solid #f1f5f9 !important;
+    .aura-btn-specialists-action {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        min-height: 48px !important;
+        background: #0EA5E9 !important;
+        color: #0F172A !important;
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        border-radius: 9999px !important;
+        text-decoration: none !important;
+        transition: background 0.15s ease, transform 0.15s ease !important;
+        box-sizing: border-box !important;
     }
 
-    .dark .fi-ta-cell {
-        border-bottom-color: rgba(255, 255, 255, 0.04) !important;
+    .aura-btn-specialists-action:hover {
+        background: #38BDF8 !important;
+        transform: translateY(-1px) !important;
+    }
+
+    .aura-specialists-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 10px;
+        text-align: center;
+    }
+
+    .aura-specialists-empty-icon {
+        color: #64748B;
+        margin-bottom: 12px;
+    }
+
+    .aura-specialists-empty-text {
+        font-size: 14px;
+        color: #9FB3D1;
+        margin-bottom: 16px;
+    }
+
+    .aura-btn-specialist-add {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 18px;
+        background: #0EA5E9;
+        color: #0F172A;
+        font-weight: 700;
+        font-size: 13px;
+        border-radius: 9999px;
+        text-decoration: none;
+    }
+
+    /* Acciones individuales en las filas de citas */
+    .aura-feed-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .aura-row-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        padding: 4px 10px !important;
+        border-radius: 9999px !important;
+        border: none !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease !important;
+        white-space: nowrap !important;
+        line-height: 1.2 !important;
+    }
+
+    .aura-row-btn-confirm {
+        background: #DCFCE7 !important;
+        color: #166534 !important;
+    }
+    .aura-row-btn-confirm:hover {
+        background: #BBF7D0 !important;
+    }
+
+    .aura-row-btn-start {
+        background: #E0F2FE !important;
+        color: #0A74B8 !important;
+    }
+    .aura-row-btn-start:hover {
+        background: #BAE6FD !important;
+    }
+
+    .aura-row-btn-complete {
+        background: #DCFCE7 !important;
+        color: #166534 !important;
+    }
+    .aura-row-btn-complete:hover {
+        background: #BBF7D0 !important;
+    }
+
+    .aura-row-btn-reschedule {
+        background: #F1F5F9 !important;
+        color: #475569 !important;
+    }
+    .aura-row-btn-reschedule:hover {
+        background: #E2E8F0 !important;
+    }
+
+    .dark .aura-row-btn-reschedule {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: #CBD5E1 !important;
+    }
+
+    .aura-row-btn-cancel {
+        background: #FEE2E2 !important;
+        color: #991B1B !important;
+    }
+    .aura-row-btn-cancel:hover {
+        background: #FECACA !important;
+    }
+
+    /* Modal de Reprogramación */
+    .aura-reschedule-backdrop {
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(10, 23, 48, 0.6) !important;
+        backdrop-filter: blur(4px) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 9999 !important;
+    }
+
+    .aura-reschedule-modal {
+        background: #ffffff !important;
+        border-radius: 24px !important;
+        padding: 24px !important;
+        max-width: 400px !important;
+        width: 90% !important;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25) !important;
+        box-sizing: border-box !important;
+    }
+
+    .dark .aura-reschedule-modal {
+        background: #0f1c34 !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .aura-reschedule-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-bottom: 18px !important;
+    }
+
+    .aura-reschedule-title {
+        font-size: 18px !important;
+        font-weight: 800 !important;
+        color: #0A1730 !important;
+        margin: 0 !important;
+    }
+
+    .dark .aura-reschedule-title {
+        color: #ffffff !important;
+    }
+
+    .aura-reschedule-close {
+        background: none !important;
+        border: none !important;
+        font-size: 24px !important;
+        color: #64748B !important;
+        cursor: pointer !important;
+        line-height: 1 !important;
+    }
+
+    .aura-reschedule-body {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 14px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .aura-field-group {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+    }
+
+    .aura-label {
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #475569 !important;
+    }
+
+    .dark .aura-label {
+        color: #94A3B8 !important;
+    }
+
+    .aura-input {
+        width: 100% !important;
+        border-radius: 12px !important;
+        border: 1px solid #CBD5E1 !important;
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+        box-sizing: border-box !important;
+        background: #F8FAFC !important;
+        color: #0F172A !important;
+    }
+
+    .dark .aura-input {
+        background: #16294D !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
+        color: #ffffff !important;
+    }
+
+    .aura-reschedule-footer {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 10px !important;
+    }
+
+    .aura-btn-modal-cancel {
+        padding: 8px 16px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        background: #F1F5F9 !important;
+        color: #475569 !important;
+        border-radius: 9999px !important;
+        border: none !important;
+        cursor: pointer !important;
+    }
+
+    .dark .aura-btn-modal-cancel {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: #CBD5E1 !important;
+    }
+
+    .aura-btn-modal-save {
+        padding: 8px 18px !important;
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        background: #0EA5E9 !important;
+        color: #0F172A !important;
+        border-radius: 9999px !important;
+        border: none !important;
+        cursor: pointer !important;
     }
 </style>
 
