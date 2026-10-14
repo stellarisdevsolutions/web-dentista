@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\AppointmentStatus;
 use App\Models\Appointment;
 use App\Models\Dentist;
 use App\Models\User;
@@ -59,7 +60,9 @@ class DashboardSpecialistsService
             $appointmentsCount = $appointments->count();
 
             // Calcular estado según citas en curso y volumen de citas hoy
-            $hasInConsultation = $appointments->contains(fn (Appointment $app) => $app->status === 'in_progress');
+            $hasInConsultation = $appointments->contains(function (Appointment $app): bool {
+                return $app->status === AppointmentStatus::InProgress || $app->status === 'in_progress';
+            });
 
             if ($hasInConsultation) {
                 $statusKey = 'in_consultation';

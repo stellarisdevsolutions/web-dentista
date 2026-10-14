@@ -63,17 +63,17 @@ class AppointmentResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('Appointments');
+        return 'Agenda';
     }
 
     public static function getModelLabel(): string
     {
-        return __('Appointment');
+        return 'Cita';
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('Appointments');
+        return 'Citas';
     }
 
     public static function form(Schema $schema): Schema

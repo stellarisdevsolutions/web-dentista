@@ -70,6 +70,10 @@
                         : mb_substr($appointment->patient_name, 0, 2);
                     $initials = mb_strtoupper($initials);
 
+                    $statusKey = $appointment->status instanceof \App\Enums\AppointmentStatus
+                        ? $appointment->status->value
+                        : (string) $appointment->status;
+
                     $statusMap = [
                         'confirmed' => ['label' => 'Confirmada', 'class' => 'aura-status-confirmed', 'dot' => '#10b981'],
                         'pending' => ['label' => 'Por Confirmar', 'class' => 'aura-status-pending', 'dot' => '#f59e0b'],
@@ -78,7 +82,7 @@
                         'cancelled' => ['label' => 'Cancelada', 'class' => 'aura-status-cancelled', 'dot' => '#ef4444'],
                         'no_show' => ['label' => 'No Asistió', 'class' => 'aura-status-noshow', 'dot' => '#ef4444'],
                     ];
-                    $statusInfo = $statusMap[$appointment->status] ?? ['label' => ucfirst($appointment->status), 'class' => 'aura-status-completed', 'dot' => '#64748b'];
+                    $statusInfo = $statusMap[$statusKey] ?? ['label' => ucfirst($statusKey), 'class' => 'aura-status-completed', 'dot' => '#64748b'];
                 @endphp
 
                 <div class="aura-feed-row">

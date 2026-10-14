@@ -77,6 +77,10 @@
         --aura-slate-border: #E6ECF4;
         --aura-slate-text: #5B6B86;
         --aura-group-label: #6F83A6;
+        --aura-header-bg: #F3F7FC;
+        --aura-row-hover: #E0F2FE;
+        --aura-card-radius: 28px;
+        --aura-card-shadow: 0 10px 34px rgba(10, 23, 48, 0.07);
     }
 
     /* Fondo general del canvas tipo aplicación moderna */
@@ -170,6 +174,9 @@
             position: sticky !important;
             top: 16px !important;
             margin: 16px !important;
+            width: var(--sidebar-width) !important;
+            min-width: var(--sidebar-width) !important;
+            flex-shrink: 0 !important;
             height: calc(100dvh - 32px) !important;
             border-radius: 28px !important;
             border: 1px solid var(--sidebar-border) !important;
@@ -177,6 +184,13 @@
             z-index: 30 !important;
             transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
             overflow: hidden !important;  /* El contenedor no scrollea: el scroll es solo interno del nav */
+        }
+
+        .fi-body-has-topbar .fi-sidebar.fi-sidebar-open {
+            width: var(--sidebar-width) !important;
+            min-width: var(--sidebar-width) !important;
+            max-width: var(--sidebar-width) !important;
+            flex-shrink: 0 !important;
         }
 
         /* Encabezado del sidebar FIJO en la parte superior (NUNCA se desplaza con el scroll) */
@@ -781,8 +795,12 @@
        5. ESTADO COLAPSADO (ALINEACIÓN PERFECTA AL CENTRO + SQUIRCLE CUADRADO)
        -------------------------------------------------------------------------- */
     @media (min-width: 1024px) {
-        .fi-sidebar:not(.fi-sidebar-open) {
+        .fi-sidebar:not(.fi-sidebar-open),
+        html.fi-sidebar-force-collapsed .fi-sidebar {
             width: var(--collapsed-sidebar-width) !important;
+            min-width: var(--collapsed-sidebar-width) !important;
+            max-width: var(--collapsed-sidebar-width) !important;
+            flex-shrink: 0 !important;
             align-items: center !important;
         }
 
@@ -3123,8 +3141,893 @@
         background: #0EA5E9 !important;
         color: #0F172A !important;
         border-radius: 9999px !important;
+    }
+
+    /* ==========================================================================
+       AGENDA / APPOINTMENTS LIST VIEW - MODERN PILL ROWS & FILTER CARD
+       ========================================================================== */
+
+    /* Hide redundant default tabs when agenda custom filter card is rendered */
+    .fi-resource-appointments .fi-tabs,
+    .agenda-page .fi-tabs {
+        display: none !important;
+    }
+
+    /* Primary button for header actions */
+    .fi-resource-appointments .fi-header-actions .fi-btn-primary,
+    .agenda-page .fi-header-actions .fi-btn-primary {
+        background-color: #0EA5E9 !important;
+        color: #0F172A !important;
+        font-weight: 800 !important;
+        border-radius: 9999px !important;
+        min-height: 46px !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35) !important;
         border: none !important;
+        transition: transform 0.15s ease, opacity 0.15s ease !important;
+    }
+
+    .fi-resource-appointments .fi-header-actions .fi-btn-primary:hover,
+    .agenda-page .fi-header-actions .fi-btn-primary:hover {
+        opacity: 0.95 !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* Subheading debajo de Agenda */
+    .fi-resource-appointments .fi-header-subheading,
+    .agenda-page .fi-header-subheading {
+        color: #5B6B86 !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        margin-top: 4px !important;
+    }
+
+    .dark .fi-resource-appointments .fi-header-subheading,
+    .dark .agenda-page .fi-header-subheading {
+        color: #9FB3D1 !important;
+    }
+
+    /* Table Container Card */
+    /* Contenedor unificado: Fusión de la barra de filtros y la tabla en una sola tarjeta cápsula */
+    .agenda-filter-card {
+        border-radius: 28px 28px 0 0 !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid rgba(226, 232, 240, 0.9) !important;
+        border-bottom: none !important;
+        padding: 20px 24px !important;
+        box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05) !important;
+    }
+
+    .dark .agenda-filter-card {
+        background-color: #0c182d !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        border-bottom: none !important;
+        box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .agenda-filter-container {
+        margin-bottom: 0 !important;
+    }
+
+    /* ==========================================================================
+       AGENDA TABLE & FILTER CARD - AURA DENTAL UNIFIED DESIGN SYSTEM
+       ========================================================================== */
+
+    /* Contenedor Unificado Real: La tarjeta de la tabla contiene todo con radio 28px */
+    .fi-resource-appointments .fi-ta-ctn,
+    .agenda-table-card .fi-ta-ctn {
+        position: relative !important;
+        border-radius: var(--aura-card-radius, 28px) !important;
+        box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 1px 3px 0 rgba(15, 23, 42, 0.03) !important;
+        border: 1px solid rgba(226, 232, 240, 0.9) !important;
+        background-color: #FFFFFF !important;
+        overflow: hidden !important;
+    }
+
+    .dark .fi-resource-appointments .fi-ta-ctn,
+    .dark .agenda-table-card .fi-ta-ctn {
+        background-color: #0A1730 !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    /* La cabecera nativa de la tabla aloja el bloque de filtros y pestañas sin paddings extraños */
+    .fi-resource-appointments .fi-ta-header,
+    .agenda-table-card .fi-ta-header {
+        display: block !important;
+        padding: 0 !important;
+        border-bottom: none !important;
+        background: transparent !important;
+    }
+
+    .agenda-filter-container {
+        position: relative !important;
+        width: 100%;
+        padding: 20px 24px 16px 24px !important;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+    }
+
+    /* ==========================================================================
+       AGENDA TABLE LOADER OVERLAY
+       ========================================================================== */
+    .agenda-table-loader-overlay {
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        height: 100vh !important;
+        max-height: 1200px !important;
+        z-index: 50 !important;
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding-top: 50px !important;
+        background: rgba(255, 255, 255, 0.8) !important;
+        backdrop-filter: blur(3px) !important;
+        -webkit-backdrop-filter: blur(3px) !important;
+        box-sizing: border-box !important;
+        pointer-events: all !important;
+    }
+
+    .agenda-table-loader-overlay[style*="display: none"],
+    .agenda-table-loader-overlay[style*="display:none"],
+    .agenda-table-loader-overlay[hidden] {
+        display: none !important;
+    }
+
+    .dark .agenda-table-loader-overlay {
+        background: rgba(10, 23, 48, 0.85) !important;
+        backdrop-filter: blur(4px) !important;
+        -webkit-backdrop-filter: blur(4px) !important;
+    }
+
+    .agenda-loader-card {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 auto !important;
+        gap: 12px !important;
+        padding: 12px 24px !important;
+        border-radius: 9999px !important;
+        background-color: #FFFFFF !important;
+        color: #0F172A !important;
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        box-shadow: 0 10px 30px rgba(10, 23, 48, 0.12) !important;
+        border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    }
+
+    .dark .agenda-loader-card {
+        background-color: #16294D !important;
+        color: #FFFFFF !important;
+        border-color: rgba(255, 255, 255, 0.12) !important;
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .agenda-loader-spinner {
+        width: 20px !important;
+        height: 20px !important;
+        animation: aura-spin 0.85s linear infinite !important;
+        color: #0EA5E9 !important;
+        flex-shrink: 0 !important;
+    }
+
+    .agenda-nav-micro-spinner {
+        display: inline-flex;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-left: 2px !important;
+        margin-right: 2px !important;
+    }
+
+    .agenda-nav-micro-spinner[style*="display: none"],
+    .agenda-nav-micro-spinner[style*="display:none"],
+    .agenda-nav-micro-spinner[hidden] {
+        display: none !important;
+    }
+
+    @keyframes aura-spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .dark .agenda-filter-container {
+        border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+        background-color: transparent !important;
+    }
+
+    .agenda-filter-card {
+        width: 100% !important;
+    }
+
+    .agenda-filter-row-1 {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    /* Date Navigator Pill */
+    .agenda-date-nav {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        padding: 4px 6px !important;
+        border-radius: 18px !important;
+        background-color: #F3F7FC !important;
+        border: 1px solid transparent !important;
+        flex-shrink: 0 !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .dark .agenda-date-nav {
+        background-color: #16294D !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .agenda-date-nav-dimmed {
+        opacity: 0.45 !important;
+        pointer-events: none !important;
+    }
+
+    .agenda-nav-btn {
+        width: 36px !important;
+        height: 36px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 12px !important;
+        border: none !important;
+        background: transparent !important;
+        color: #1E293B !important;
+        font-weight: 800 !important;
+        font-size: 18px !important;
         cursor: pointer !important;
+        user-select: none !important;
+        transition: background-color 0.15s ease, color 0.15s ease !important;
+    }
+
+    .agenda-nav-btn:hover {
+        background-color: #E2E8F0 !important;
+    }
+
+    .dark .agenda-nav-btn {
+        color: #FFFFFF !important;
+    }
+
+    .dark .agenda-nav-btn:hover {
+        background-color: #1C3360 !important;
+    }
+
+    .agenda-date-label {
+        padding: 0 8px !important;
+        font-weight: 800 !important;
+        color: #0F172A !important;
+        font-size: 14px !important;
+        white-space: nowrap !important;
+        user-select: none !important;
+    }
+
+    .dark .agenda-date-label {
+        color: #FFFFFF !important;
+    }
+
+    .agenda-cal-btn {
+        position: relative !important;
+        width: 36px !important;
+        height: 36px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 12px !important;
+        cursor: pointer !important;
+        transition: background-color 0.15s ease !important;
+    }
+
+    .agenda-cal-btn:hover {
+        background-color: #E2E8F0 !important;
+    }
+
+    .dark .agenda-cal-btn:hover {
+        background-color: #1C3360 !important;
+    }
+
+    .agenda-cal-icon {
+        width: 18px !important;
+        height: 18px !important;
+        min-width: 18px !important;
+        max-width: 18px !important;
+        display: block !important;
+        color: #0284C7 !important;
+    }
+
+    .dark .agenda-cal-icon {
+        color: #38BDF8 !important;
+    }
+
+    .agenda-date-hidden-input {
+        position: absolute !important;
+        inset: 0 !important;
+        opacity: 0 !important;
+        cursor: pointer !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .agenda-today-btn {
+        height: 36px !important;
+        padding: 0 12px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 12px !important;
+        border: none !important;
+        background: transparent !important;
+        color: #0284C7 !important;
+        font-weight: 800 !important;
+        font-size: 13px !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease !important;
+    }
+
+    .agenda-today-btn:hover {
+        background-color: #E0F2FE !important;
+    }
+
+    .dark .agenda-today-btn {
+        color: #38BDF8 !important;
+    }
+
+    .dark .agenda-today-btn:hover {
+        background-color: #1C3360 !important;
+    }
+
+    /* Specialist Selector */
+    .agenda-specialist-wrapper {
+        flex: 1 1 220px !important;
+        min-width: 220px !important;
+    }
+
+    .agenda-specialist-select {
+        width: 100% !important;
+        height: 46px !important;
+        border-radius: 16px !important;
+        border: 1px solid transparent !important;
+        background-color: #F3F7FC !important;
+        padding: 0 16px !important;
+        color: #1E293B !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        cursor: pointer !important;
+        outline: none !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .agenda-specialist-select:focus {
+        border-color: #0EA5E9 !important;
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15) !important;
+    }
+
+    .dark .agenda-specialist-select {
+        background-color: #16294D !important;
+        color: #FFFFFF !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .dark .agenda-specialist-select:focus {
+        border-color: #0EA5E9 !important;
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25) !important;
+    }
+
+    .dark .agenda-specialist-select option {
+        background-color: #0A1730 !important;
+        color: #FFFFFF !important;
+    }
+
+    /* Tabs & Search Row */
+    .agenda-tabs-row {
+        margin-top: 16px !important;
+        padding-top: 14px !important;
+        border-top: 1px solid #F1F5F9 !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 12px !important;
+    }
+
+    .dark .agenda-tabs-row {
+        border-top-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .agenda-tabs-group {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    /* Tab Buttons */
+    .agenda-tab-btn {
+        height: 38px !important;
+        padding: 0 16px !important;
+        border-radius: 9999px !important;
+        font-size: 12px !important;
+        font-weight: 800 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        border: 1px solid transparent !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease !important;
+        background-color: #F3F7FC !important;
+        color: #475569 !important;
+    }
+
+    .agenda-tab-btn:hover {
+        background-color: #E2E8F0 !important;
+        color: #1E293B !important;
+    }
+
+    .agenda-tab-btn.active {
+        background-color: #0EA5E9 !important;
+        color: #0F172A !important;
+        box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35) !important;
+        border-color: transparent !important;
+    }
+
+    .dark .agenda-tab-btn {
+        background-color: #16294D !important;
+        color: #9FB3D1 !important;
+        border-color: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    .dark .agenda-tab-btn:hover {
+        background-color: #1C3360 !important;
+        color: #FFFFFF !important;
+    }
+
+    .dark .agenda-tab-btn.active {
+        background-color: #0EA5E9 !important;
+        color: #0F172A !important;
+        box-shadow: 0 4px 16px rgba(14, 165, 233, 0.45) !important;
+    }
+
+    /* Tab Badge Counts */
+    .agenda-tab-badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-width: 22px !important;
+        height: 20px !important;
+        padding: 0 6px !important;
+        border-radius: 9999px !important;
+        font-size: 11px !important;
+        font-weight: 900 !important;
+        line-height: 1 !important;
+        transition: all 0.15s ease !important;
+    }
+
+    .agenda-tab-btn.active .agenda-tab-badge {
+        background-color: rgba(15, 23, 42, 0.15) !important;
+        color: #0F172A !important;
+    }
+
+    /* Badges when inactive (Light) */
+    .agenda-tab-btn:not(.active) .badge-all {
+        background-color: #E2E8F0 !important;
+        color: #334155 !important;
+    }
+    .agenda-tab-btn:not(.active) .badge-pending {
+        background-color: #FEF3C7 !important;
+        color: #B45309 !important;
+    }
+    .agenda-tab-btn:not(.active) .badge-confirmed {
+        background-color: #DCFCE7 !important;
+        color: #166534 !important;
+    }
+    .agenda-tab-btn:not(.active) .badge-cancelled {
+        background-color: #FEE2E2 !important;
+        color: #B91C1C !important;
+    }
+
+    /* Badges when inactive (Dark) */
+    .dark .agenda-tab-btn:not(.active) .badge-all {
+        background-color: rgba(255, 255, 255, 0.12) !important;
+        color: #9FB3D1 !important;
+    }
+    .dark .agenda-tab-btn:not(.active) .badge-pending {
+        background-color: rgba(245, 158, 11, 0.22) !important;
+        color: #FDE68A !important;
+    }
+    .dark .agenda-tab-btn:not(.active) .badge-confirmed {
+        background-color: rgba(16, 185, 129, 0.22) !important;
+        color: #34D399 !important;
+    }
+    .dark .agenda-tab-btn:not(.active) .badge-cancelled {
+        background-color: rgba(239, 68, 68, 0.22) !important;
+        color: #FCA5A5 !important;
+    }
+
+    /* Integrated Search Field */
+    .agenda-integrated-search {
+        flex: 1 1 240px !important;
+        max-width: 320px !important;
+        min-width: 190px !important;
+    }
+
+    .agenda-search-input-wrapper {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+
+    .agenda-search-icon {
+        position: absolute !important;
+        left: 14px !important;
+        pointer-events: none !important;
+        width: 15px !important;
+        height: 15px !important;
+        display: block !important;
+        color: #94A3B8 !important;
+    }
+
+    .dark .agenda-search-icon {
+        color: #6F83A6 !important;
+    }
+
+    .agenda-search-input {
+        width: 100% !important;
+        height: 38px !important;
+        border-radius: 9999px !important;
+        border: 1px solid #E2E8F0 !important;
+        background-color: #F8FAFC !important;
+        padding-left: 36px !important;
+        padding-right: 14px !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #1E293B !important;
+        outline: none !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .agenda-search-input:focus {
+        border-color: #0EA5E9 !important;
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15) !important;
+        background-color: #FFFFFF !important;
+    }
+
+    .dark .agenda-search-input {
+        background-color: #16294D !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        color: #FFFFFF !important;
+    }
+
+    .dark .agenda-search-input::placeholder {
+        color: #6F83A6 !important;
+    }
+
+    .dark .agenda-search-input:focus {
+        border-color: #0EA5E9 !important;
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25) !important;
+        background-color: #1C3360 !important;
+    }
+
+    /* Search Active Banner */
+    .agenda-search-banner {
+        background-color: #E0F2FE !important;
+        color: #0A74B8 !important;
+        border-radius: 16px !important;
+        padding: 12px 18px !important;
+        margin-top: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        border: 1px solid rgba(14, 165, 233, 0.2) !important;
+    }
+
+    .dark .agenda-search-banner {
+        background-color: rgba(14, 165, 233, 0.15) !important;
+        color: #38BDF8 !important;
+        border-color: rgba(56, 189, 248, 0.3) !important;
+    }
+
+    .agenda-search-banner-text {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    .agenda-search-banner-clear {
+        border: none !important;
+        background: transparent !important;
+        color: #0A74B8 !important;
+        text-decoration: underline !important;
+        font-size: 12px !important;
+        font-weight: 800 !important;
+        cursor: pointer !important;
+        margin-left: 16px !important;
+    }
+
+    .dark .agenda-search-banner-clear {
+        color: #38BDF8 !important;
+    }
+
+    /* Padding lateral interno para que las columnas no queden pegadas a los bordes */
+    .fi-resource-appointments .fi-ta-table,
+    .agenda-table-card .fi-ta-table {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+        width: 100% !important;
+    }
+
+    .fi-resource-appointments thead th:first-child,
+    .fi-resource-appointments tbody td:first-child,
+    .agenda-table-card thead th:first-child,
+    .agenda-table-card tbody td:first-child {
+        padding-left: 24px !important;
+    }
+
+    .fi-resource-appointments thead th:last-child,
+    .fi-resource-appointments tbody td:last-child,
+    .agenda-table-card thead th:last-child,
+    .agenda-table-card tbody td:last-child {
+        padding-right: 24px !important;
+    }
+
+    /* Cabecera de columnas: fondo #F8FAFC (como filas del escritorio), texto #5B6B86, 12px, mayúsculas, peso 700, letter-spacing .06em */
+    .fi-resource-appointments thead th,
+    .fi-resource-appointments .fi-ta-header-cell,
+    .agenda-table-card thead th {
+        background-color: #F8FAFC !important;
+        color: #5B6B86 !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.06em !important;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+        padding-top: 14px !important;
+        padding-bottom: 14px !important;
+    }
+
+    .fi-resource-appointments thead th button,
+    .fi-resource-appointments thead th span {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.06em !important;
+        color: #5B6B86 !important;
+    }
+
+    .dark .fi-resource-appointments thead th,
+    .dark .fi-resource-appointments .fi-ta-header-cell,
+    .dark .agenda-table-card thead th,
+    .dark .fi-resource-appointments thead th button,
+    .dark .fi-resource-appointments thead th span {
+        background-color: #081326 !important;
+        color: #9FB3D1 !important;
+        border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* Filas: altura mínima de 68px, contenido centrado verticalmente, hover idéntico al Escritorio (#f1f5f9 / #16294D) */
+    .fi-resource-appointments .fi-ta-row,
+    .agenda-table-card .fi-ta-row {
+        min-height: 68px !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease !important;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.6) !important;
+        background-color: #FFFFFF !important;
+    }
+
+    .fi-resource-appointments .fi-ta-row td,
+    .agenda-table-card .fi-ta-row td {
+        min-height: 68px !important;
+        height: 68px !important;
+        vertical-align: middle !important;
+    }
+
+    .fi-resource-appointments .fi-ta-row:hover,
+    .agenda-table-card .fi-ta-row:hover {
+        background-color: #F1F5F9 !important;
+    }
+
+    .dark .fi-resource-appointments .fi-ta-row,
+    .dark .agenda-table-card .fi-ta-row {
+        background-color: #0A1730 !important;
+        border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .dark .fi-resource-appointments .fi-ta-row:hover,
+    .dark .agenda-table-card .fi-ta-row:hover {
+        background-color: #16294D !important;
+    }
+
+    .fi-resource-appointments .fi-ta-row.fi-selected,
+    .fi-resource-appointments .fi-ta-row[aria-selected="true"],
+    .agenda-table-card .fi-ta-row.fi-selected,
+    .agenda-table-card .fi-ta-row[aria-selected="true"] {
+        background-color: #E0F2FE !important;
+    }
+
+    .dark .fi-resource-appointments .fi-ta-row.fi-selected,
+    .dark .fi-resource-appointments .fi-ta-row[aria-selected="true"],
+    .dark .agenda-table-card .fi-ta-row.fi-selected,
+    .dark .agenda-table-card .fi-ta-row[aria-selected="true"] {
+        background-color: #1C3360 !important;
+    }
+
+    /* Cell typography tokens */
+    .agenda-time-text {
+        color: #0F172A;
+    }
+
+    .dark .agenda-time-text {
+        color: #FFFFFF !important;
+    }
+
+    .agenda-subline {
+        color: #5B6B86;
+        font-size: 13px;
+    }
+
+    .dark .agenda-subline {
+        color: #9FB3D1 !important;
+    }
+
+    .agenda-treatment-cell {
+        font-weight: 700;
+        font-size: 13px;
+        color: #0F172A;
+    }
+
+    .dark .agenda-treatment-cell {
+        color: #F1F5F9 !important;
+    }
+
+    .agenda-specialist-name {
+        color: #0A74B8;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .dark .agenda-specialist-name {
+        color: #38BDF8 !important;
+    }
+
+    .agenda-patient-phone {
+        color: #5B6B86;
+    }
+
+    .dark .agenda-patient-phone {
+        color: #9FB3D1 !important;
+    }
+
+    /* Status badge alias support */
+    .aura-status-in_progress {
+        background: rgba(14, 165, 233, 0.12) !important;
+        color: #0284c7 !important;
+        border: 1px solid rgba(14, 165, 233, 0.25) !important;
+    }
+
+    .dark .aura-status-in_progress {
+        background: rgba(14, 165, 233, 0.18) !important;
+        color: #38bdf8 !important;
+        border-color: rgba(14, 165, 233, 0.3) !important;
+    }
+
+    .aura-status-no_show {
+        background: rgba(239, 68, 68, 0.12) !important;
+        color: #b91c1c !important;
+        border: 1px solid rgba(239, 68, 68, 0.25) !important;
+    }
+
+    .dark .aura-status-no_show {
+        background: rgba(239, 68, 68, 0.18) !important;
+        color: #fca5a5 !important;
+        border-color: rgba(239, 68, 68, 0.3) !important;
+    }
+
+    /* Actions buttons */
+    .fi-resource-appointments .fi-ta-row .fi-icon-btn {
+        color: #64748B !important;
+        border-radius: 10px !important;
+        transition: all 0.15s ease !important;
+    }
+
+    .fi-resource-appointments .fi-ta-row .fi-icon-btn:hover {
+        background-color: #E0F2FE !important;
+        color: #0A74B8 !important;
+    }
+
+    .dark .fi-resource-appointments .fi-ta-row .fi-icon-btn {
+        color: #9FB3D1 !important;
+    }
+
+    .dark .fi-resource-appointments .fi-ta-row .fi-icon-btn:hover {
+        background-color: #16294D !important;
+        color: #38BDF8 !important;
+    }
+
+    /* Empty state */
+    .dark .fi-resource-appointments .fi-ta-empty-state {
+        background-color: transparent !important;
+    }
+
+    .dark .fi-resource-appointments .fi-ta-empty-state-heading {
+        color: #9FB3D1 !important;
+    }
+
+    .dark .fi-resource-appointments .fi-ta-empty-state-icon-ctn {
+        background-color: #16294D !important;
+        color: #6F83A6 !important;
+    }
+
+    /* Pagination */
+    .fi-resource-appointments .fi-ta-pagination,
+    .agenda-table-card .fi-ta-pagination {
+        padding: 14px 24px !important;
+        border-top: 1px solid rgba(226, 232, 240, 0.8) !important;
+        background-color: #FFFFFF !important;
+    }
+
+    .dark .fi-resource-appointments .fi-ta-pagination,
+    .dark .agenda-table-card .fi-ta-pagination {
+        border-top-color: rgba(255, 255, 255, 0.08) !important;
+        background-color: #081326 !important;
+        color: #9FB3D1 !important;
+    }
+
+    .dark .fi-resource-appointments .fi-ta-pagination select,
+    .dark .agenda-table-card .fi-ta-pagination select {
+        background-color: #16294D !important;
+        color: #FFFFFF !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Buscador nativo de la tabla: ancho min(360px, 100%), ellipsis */
+    .fi-resource-appointments .fi-ta-search-field,
+    .fi-resource-appointments .fi-ta-search-field .fi-input-wrp {
+        width: min(360px, 100%) !important;
+        max-width: 360px !important;
+    }
+
+    .fi-resource-appointments .fi-ta-search-field input {
+        text-overflow: ellipsis !important;
+    }
+
+    /* Tratamiento duplicado: oculto en escritorio, visible solo en pantallas pequeñas (< 768px) */
+    .patient-sub-treatment {
+        display: none !important;
+    }
+
+    @media (max-width: 767px) {
+        .patient-sub-treatment {
+            display: block !important;
+        }
+    }
+
+    /* Botón Nueva Cita en el encabezado */
+    .fi-resource-appointments .agenda-create-action-btn,
+    .fi-resource-appointments .fi-page-header .fi-ac-action[href*="appointments/create"],
+    .fi-resource-appointments .fi-page-header .fi-ac-action[wire\:click*="create"] {
+        border-radius: 9999px !important;
+        background-color: #0EA5E9 !important;
+        color: #0F172A !important;
+        font-weight: 800 !important;
+        min-height: 48px !important;
+        padding-inline: 24px !important;
+        box-shadow: 0 10px 24px rgba(14, 165, 233, 0.40) !important;
+        border: none !important;
+        font-size: 14px !important;
     }
 </style>
 

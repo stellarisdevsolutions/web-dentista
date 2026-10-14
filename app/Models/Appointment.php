@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\AppointmentStatus;
+use Carbon\Carbon;
 use Database\Factories\AppointmentFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,7 +28,50 @@ class Appointment extends Model
             'appointment_date' => 'date',
             'duration_minutes' => 'integer',
             'is_first_visit' => 'boolean',
+            'status' => AppointmentStatus::class,
         ];
+    }
+
+    /**
+     * Scope query to appointments for a specific date.
+     */
+    public function scopeForDate(Builder $query, Carbon|string $date): void
+    {
+        $dateString = $date instanceof Carbon ? $date->toDateString() : $date;
+        $query->whereDate('appointment_date', $dateString);
+    }
+
+    /**
+     * Scope query to active appointments (excluding cancelled and no-show).
+     */
+    public function scopeActive(Builder $query): void
+    {
+        $query->whereNotIn('status', [AppointmentStatus::Cancelled, AppointmentStatus::NoShow]);
+    }
+
+    /**
+     * Scope query to appointments belonging to a specific dentist.
+     */
+    public function scopeForDentist(Builder $query, int $dentistId): void
+    {
+        $query->where('dentist_id', $dentistId);
+    }
+
+    /**
+     * Check if a time slot has collisions with another active appointment for a given dentist.
+     */
+    public static function hasConflict(int $dentistId, string|Carbon $date, string $time, ?int $ignoreAppointmentId = null): bool
+    {
+        $dateString = $date instanceof Carbon ? $date->toDateString() : $date;
+        $timeString = trim($time);
+
+        return self::query()
+            ->where('dentist_id', $dentistId)
+            ->when($ignoreAppointmentId, fn (Builder $q) => $q->where('id', '!=', $ignoreAppointmentId))
+            ->whereDate('appointment_date', $dateString)
+            ->where('appointment_time', $timeString)
+            ->active()
+            ->exists();
     }
 
     public function service(): BelongsTo
