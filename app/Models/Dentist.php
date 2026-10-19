@@ -303,10 +303,12 @@ class Dentist extends Model
     protected static function booted(): void
     {
         static::saving(function (Dentist $dentist) {
-            if (blank($dentist->slug) && filled($dentist->name)) {
-                $dentist->slug = static::generateUniqueSlug($dentist->name, $dentist->id);
-            } elseif (filled($dentist->slug)) {
+            if (blank($dentist->slug)) {
+                $dentist->slug = static::generateUniqueSlug($dentist->name ?? 'especialista', $dentist->id);
+            } elseif ($dentist->isDirty('slug')) {
                 $dentist->slug = static::generateUniqueSlug($dentist->slug, $dentist->id);
+            } elseif ($dentist->isDirty('name')) {
+                $dentist->slug = static::generateUniqueSlug($dentist->name, $dentist->id);
             }
         });
     }
