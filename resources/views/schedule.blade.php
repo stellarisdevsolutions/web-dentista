@@ -295,12 +295,8 @@
                                                     data-dentist-id="{{ $doc->id }}"
                                                     class="dentist-select-card p-3 rounded-xl border border-slate-200 hover:border-sky-300 bg-white cursor-pointer transition-all flex items-center gap-3"
                                                 >
-                                                    <div class="w-9 h-9 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs flex-shrink-0 overflow-hidden">
-                                                        @if($doc->photo)
-                                                            <img src="{{ asset('storage/'.$doc->photo) }}" alt="{{ $doc->name }}" class="w-full h-full object-cover">
-                                                        @else
-                                                            {{ substr($doc->name, 0, 1) }}
-                                                        @endif
+                                                    <div class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs flex-shrink-0 overflow-hidden shadow-2xs">
+                                                        <img src="{{ $doc->photo_url }}" alt="{{ $doc->name }}" class="w-full h-full object-cover aspect-square">
                                                     </div>
                                                     <div class="min-w-0">
                                                         <p class="text-xs font-bold text-slate-900 truncate">{{ $doc->name }}</p>

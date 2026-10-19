@@ -26,12 +26,14 @@ class DentistsTable
             ->emptyStateDescription('Comienza añadiendo los doctores y cirujanos de la clínica.')
             ->emptyStateIcon('heroicon-o-user-group')
             ->columns([
-                ImageColumn::make('photo')
+                ImageColumn::make('photo_url')
                     ->label('Foto')
-                    ->circular()
-                    ->size(46)
-                    ->disk('public')
-                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name='.urlencode($record->name).'&color=0EA5E9&background=E0F2FE&bold=true'),
+                    ->square()
+                    ->size(48)
+                    ->extraImgAttributes([
+                        'class' => 'rounded-xl object-cover shadow-2xs border border-slate-200 dark:border-white/10 aspect-square',
+                    ])
+                    ->defaultImageUrl(fn (Dentist $record) => 'https://ui-avatars.com/api/?name='.urlencode($record->name).'&color=0EA5E9&background=E0F2FE&bold=true'),
 
                 TextColumn::make('name')
                     ->label('Especialista')

@@ -100,7 +100,7 @@ class ListDentists extends ListRecords
                 'phone' => $dentist->phone,
                 'license_number' => $dentist->license_number,
                 'bio' => $dentist->bio,
-                'photo_url' => $dentist->photo ? $dentist->photo_url : null,
+                'photo_url' => $dentist->photo_url,
                 'is_active' => (bool) $dentist->is_active,
                 'order' => $dentist->order,
                 'services' => $dentist->services->map(fn ($s) => [

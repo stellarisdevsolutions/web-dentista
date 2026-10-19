@@ -275,11 +275,19 @@ class Dentist extends Model
     public function getPhotoUrlAttribute(): string
     {
         if (! empty($this->photo)) {
-            return str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')
-                ? $this->photo
-                : asset('storage/'.$this->photo);
+            if (str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')) {
+                return $this->photo;
+            }
+
+            return asset('storage/'.ltrim($this->photo, '/'));
         }
 
-        return 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80';
+        return match ($this->slug) {
+            'dr-julian-vance' => 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80',
+            'dr-elena-rostova' => 'https://images.unsplash.com/photo-1594824813589-f5424729c15d?auto=format&fit=crop&w=800&q=80',
+            'dr-marcus-sterling' => 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=800&q=80',
+            'dr-sofia-chen' => 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=800&q=80',
+            default => 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80',
+        };
     }
 }

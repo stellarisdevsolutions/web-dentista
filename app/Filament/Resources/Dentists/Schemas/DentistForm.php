@@ -215,15 +215,21 @@ class DentistForm
                                     ->columnSpan(['default' => 12, 'lg' => 4, 'xl' => 3])
                                     ->schema([
                                         FileUpload::make('photo')
-                                            ->label('Fotografía Oficial')
+                                            ->label('Fotografía Oficial (1:1)')
                                             ->image()
-                                            ->avatar()
+                                            ->imageCropAspectRatio('1:1')
                                             ->imageEditor()
-                                            ->circleCropper()
+                                            ->imageEditorAspectRatios([
+                                                null,
+                                                '1:1',
+                                            ])
+                                            ->imageResizeMode('cover')
+                                            ->imageResizeTargetWidth('800')
+                                            ->imageResizeTargetHeight('800')
+                                            ->imagePreviewHeight('220')
                                             ->directory('dentists')
                                             ->disk('public')
-                                            ->alignCenter()
-                                            ->helperText('Formato JPG, PNG o WebP (400×400 px recom.).'),
+                                            ->helperText('Formato recomendado 1:1 cuadrado (800×800 px). Se recortará en proporción 1:1 y se optimizará automáticamente a WebP.'),
 
                                         Toggle::make('is_active')
                                             ->label('Disponible para Citas en la Web')
