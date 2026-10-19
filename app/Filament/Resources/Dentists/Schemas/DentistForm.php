@@ -209,7 +209,7 @@ class DentistForm
                     ->schema([
                         Grid::make(['default' => 1, 'lg' => 12])
                             ->schema([
-                                // Columna Izquierda: Fotografía y Controles Rápidos (Avatar Card SaaS)
+                                // Columna Izquierda: Fotografía Oficial (Avatar Card SaaS)
                                 Grid::make(1)
                                     ->columnSpan(['default' => 12, 'lg' => 4, 'xl' => 3])
                                     ->schema([
@@ -229,21 +229,9 @@ class DentistForm
                                             ->directory('dentists')
                                             ->disk('public')
                                             ->helperText('Formato 1:1 cuadrado (800×800 px). Si se deja vacío, se mostrarán las iniciales con fondo celeste como en Agenda. Se optimiza automáticamente a WebP.'),
-
-                                        Toggle::make('is_active')
-                                            ->label('Disponible para Citas en la Web')
-                                            ->helperText('Habilita este doctor en el selector de reservas públicas de la clínica.')
-                                            ->default(true),
-
-                                        TextInput::make('order')
-                                            ->label('Orden de Visualización')
-                                            ->prefixIcon('heroicon-o-arrows-up-down')
-                                            ->numeric()
-                                            ->default(0)
-                                            ->helperText('Prioridad en el listado público del equipo médico.'),
                                     ]),
 
-                                // Columna Derecha: Campos de Identidad y Contacto
+                                // Columna Derecha: Campos de Identidad, Contacto y Disponibilidad
                                 Grid::make(['default' => 1, 'sm' => 2])
                                     ->columnSpan(['default' => 12, 'lg' => 8, 'xl' => 9])
                                     ->schema([
@@ -292,6 +280,18 @@ class DentistForm
                                             ->placeholder('+1 (555) 234-5678')
                                             ->nullable()
                                             ->maxLength(50),
+
+                                        TextInput::make('order')
+                                            ->label('Orden de Visualización')
+                                            ->prefixIcon('heroicon-o-arrows-up-down')
+                                            ->numeric()
+                                            ->default(0)
+                                            ->helperText('Prioridad en el listado público del equipo médico.'),
+
+                                        Toggle::make('is_active')
+                                            ->label('Disponible para Citas en la Web')
+                                            ->helperText('Habilita este doctor en el selector de reservas públicas de la clínica.')
+                                            ->default(true),
                                     ]),
                             ]),
                     ]),
