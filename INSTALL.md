@@ -120,7 +120,19 @@ php artisan storage:link
 
 ---
 
-### Paso 6: Compilar los Assets Frontend
+### Paso 6: Optimización de Imágenes y Conversión a WebP
+
+El proyecto integra **Intervention Image v4** para convertir automáticamente cualquier imagen subida en Filament a `.webp` (resolución máxima de 1600px y calidad óptima 82%, ahorrando hasta un 95% de peso).
+
+Para optimizar las imágenes existentes en lote y actualizar las referencias en la base de datos:
+
+```bash
+php artisan images:optimize
+```
+
+---
+
+### Paso 7: Compilar los Assets Frontend
 
 Compila el CSS de Tailwind v4 y los bundles de Vite:
 
