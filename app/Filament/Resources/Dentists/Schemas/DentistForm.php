@@ -229,7 +229,8 @@ class DentistForm
                                             ->imagePreviewHeight('220')
                                             ->directory('dentists')
                                             ->disk('public')
-                                            ->helperText('Formato recomendado 1:1 cuadrado (800×800 px). Se recortará en proporción 1:1 y se optimizará automáticamente a WebP.'),
+                                            ->hintIcon('heroicon-o-camera', tooltip: 'Puedes recortar en 1:1 con el lápiz o eliminar para mostrar iniciales como en Agenda')
+                                            ->helperText('Formato 1:1 cuadrado (800×800 px). Si se deja vacío, se mostrarán las iniciales con fondo celeste como en Agenda. Se optimiza automáticamente a WebP.'),
 
                                         Toggle::make('is_active')
                                             ->label('Disponible para Citas en la Web')

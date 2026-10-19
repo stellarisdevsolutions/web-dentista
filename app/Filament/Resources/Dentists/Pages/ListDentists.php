@@ -93,7 +93,7 @@ class ListDentists extends ListRecords
             return [
                 'id' => $dentist->id,
                 'name' => $dentist->name,
-                'initials' => strtoupper($initials),
+                'initials' => $dentist->initials,
                 'title' => $dentist->title,
                 'specialty' => $dentist->specialty,
                 'email' => $dentist->email,

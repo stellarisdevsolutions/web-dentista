@@ -136,12 +136,16 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     @foreach($service->dentists as $doc)
                                         <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center gap-4">
-                                            <div class="w-16 h-16 rounded-2xl overflow-hidden bg-slate-200 border-2 border-white shadow-md flex-shrink-0">
-                                                <img 
-                                                    src="{{ $doc->photo_url ?? 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80' }}" 
-                                                    alt="{{ $doc->name }}" 
-                                                    class="w-full h-full object-cover"
-                                                />
+                                            <div class="w-16 h-16 rounded-2xl overflow-hidden bg-[#0EA5E9] text-[#0F172A] border-2 border-white shadow-md flex-shrink-0 flex items-center justify-center select-none">
+                                                @if($doc->photo_url)
+                                                    <img 
+                                                        src="{{ $doc->photo_url }}" 
+                                                        alt="{{ $doc->name }}" 
+                                                        class="w-full h-full object-cover"
+                                                    />
+                                                @else
+                                                    <span class="font-extrabold text-xl">{{ $doc->initials }}</span>
+                                                @endif
                                             </div>
                                             <div>
                                                 <h4 class="font-extrabold text-slate-900 text-sm">{{ $doc->name }}</h4>

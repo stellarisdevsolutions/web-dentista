@@ -272,7 +272,7 @@ class Dentist extends Model
         return $this->belongsToMany(Service::class)->withTimestamps();
     }
 
-    public function getPhotoUrlAttribute(): string
+    public function getPhotoUrlAttribute(): ?string
     {
         if (! empty($this->photo)) {
             if (str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')) {
@@ -282,12 +282,20 @@ class Dentist extends Model
             return asset('storage/'.ltrim($this->photo, '/'));
         }
 
-        return match ($this->slug) {
-            'dr-julian-vance' => 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80',
-            'dr-elena-rostova' => 'https://images.unsplash.com/photo-1594824813589-f5424729c15d?auto=format&fit=crop&w=800&q=80',
-            'dr-marcus-sterling' => 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=800&q=80',
-            'dr-sofia-chen' => 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=800&q=80',
-            default => 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80',
-        };
+        return null;
+    }
+
+    public function getInitialsAttribute(): string
+    {
+        $clean = preg_replace('/^(Dr\.|Dra\.|Doctor|Doctora)\s+/i', '', trim((string) $this->name));
+        $clean = preg_replace('/(,\s*(DDS|DMD|PhD|MD|MS))$/i', '', (string) $clean);
+        $words = preg_split('/\s+/', trim((string) $clean));
+        if (empty($words) || empty($words[0])) {
+            return 'DR';
+        }
+        $first = mb_substr($words[0], 0, 1, 'UTF-8');
+        $last = count($words) > 1 ? mb_substr(end($words), 0, 1, 'UTF-8') : '';
+
+        return mb_strtoupper($first.$last);
     }
 }

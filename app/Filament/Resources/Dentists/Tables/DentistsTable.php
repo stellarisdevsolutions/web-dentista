@@ -3,10 +3,12 @@
 namespace App\Filament\Resources\Dentists\Tables;
 
 use App\Models\Dentist;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Notifications\Notification;
 use Filament\Support\Enums\FontWeight;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TernaryFilter;
@@ -26,14 +28,9 @@ class DentistsTable
             ->emptyStateDescription('Comienza añadiendo los doctores y cirujanos de la clínica.')
             ->emptyStateIcon('heroicon-o-user-group')
             ->columns([
-                ImageColumn::make('photo_url')
+                TextColumn::make('photo')
                     ->label('Foto')
-                    ->square()
-                    ->size(48)
-                    ->extraImgAttributes([
-                        'class' => 'rounded-xl object-cover shadow-2xs border border-slate-200 dark:border-white/10 aspect-square',
-                    ])
-                    ->defaultImageUrl(fn (Dentist $record) => 'https://ui-avatars.com/api/?name='.urlencode($record->name).'&color=0EA5E9&background=E0F2FE&bold=true'),
+                    ->view('filament.resources.dentists.columns.photo-column'),
 
                 TextColumn::make('name')
                     ->label('Especialista')
@@ -88,6 +85,44 @@ class DentistsTable
                     ->falseLabel('No disponibles'),
             ])
             ->recordActions([
+                Action::make('change_photo')
+                    ->label('Cambiar foto')
+                    ->icon('heroicon-o-camera')
+                    ->iconButton()
+                    ->color('info')
+                    ->tooltip('Cambiar fotografía')
+                    ->modalHeading(fn (Dentist $record): string => "Cambiar fotografía de {$record->name}")
+                    ->modalDescription('Sube o actualiza la fotografía 1:1 del especialista. Si la eliminas, se mostrarán las iniciales con fondo celeste estilo Agenda.')
+                    ->modalSubmitActionLabel('Guardar fotografía')
+                    ->schema([
+                        FileUpload::make('photo')
+                            ->label('Fotografía Oficial (1:1)')
+                            ->image()
+                            ->imageCropAspectRatio('1:1')
+                            ->imageEditor()
+                            ->imageEditorAspectRatios([
+                                null,
+                                '1:1',
+                            ])
+                            ->imageResizeMode('cover')
+                            ->imageResizeTargetWidth('800')
+                            ->imageResizeTargetHeight('800')
+                            ->directory('dentists')
+                            ->disk('public')
+                            ->default(fn (Dentist $record) => $record->photo)
+                            ->helperText('Formato 1:1 cuadrado (800×800 px). Se convertirá automáticamente a WebP.'),
+                    ])
+                    ->action(function (Dentist $record, array $data): void {
+                        $record->update([
+                            'photo' => $data['photo'] ?? null,
+                        ]);
+
+                        Notification::make()
+                            ->title('Fotografía actualizada correctamente')
+                            ->success()
+                            ->send();
+                    }),
+
                 EditAction::make()
                     ->iconButton()
                     ->tooltip('Editar especialista'),

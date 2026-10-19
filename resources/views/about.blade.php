@@ -236,6 +236,7 @@
                                 $dentistData = [
                                     'id' => $dentist->id,
                                     'name' => $dentist->name,
+                                    'initials' => $dentist->initials,
                                     'specialty' => $dentist->specialty,
                                     'photo_url' => $dentist->photo_url,
                                     'bio' => $dentist->bio,
@@ -246,10 +247,16 @@
                                 <div class="flex flex-col h-full">
                                     <!-- Doctor Image (1:1) -->
                                     <div 
-                                        class="aspect-square w-full overflow-hidden relative bg-slate-100 cursor-pointer"
+                                        class="aspect-square w-full overflow-hidden relative bg-slate-100 cursor-pointer flex items-center justify-center select-none"
                                         @click="activeDentist = {{ Js::from($dentistData) }}; isDentistModalOpen = true"
                                     >
-                                        <img src="{{ $dentist->photo_url }}" alt="{{ $dentist->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                                        @if($dentist->photo_url)
+                                            <img src="{{ $dentist->photo_url }}" alt="{{ $dentist->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                                        @else
+                                            <div class="w-full h-full bg-[#0EA5E9] text-[#0F172A] font-black text-6xl sm:text-7xl flex items-center justify-center tracking-tight group-hover:scale-105 transition-transform duration-500">
+                                                {{ $dentist->initials }}
+                                            </div>
+                                        @endif
                                     </div>
 
                                     <div class="p-5 flex flex-col flex-1">
@@ -354,8 +361,15 @@
                             <!-- Avatar + Identity Section (overlapping banner) -->
                             <div class="flex flex-col sm:flex-row items-center sm:items-end gap-5 -mt-14 sm:-mt-16 pb-5 border-b border-slate-100">
                                 <!-- Doctor Photo (1:1) -->
-                                <div class="w-28 h-28 sm:w-32 sm:h-32 aspect-square rounded-2xl overflow-hidden bg-white p-1 border-4 border-white shadow-xl flex-shrink-0 relative z-10">
-                                    <img :src="activeDentist?.photo_url" :alt="activeDentist?.name" class="w-full h-full object-cover rounded-xl" />
+                                <div class="w-28 h-28 sm:w-32 sm:h-32 aspect-square rounded-2xl overflow-hidden bg-white p-1 border-4 border-white shadow-xl flex-shrink-0 relative z-10 flex items-center justify-center">
+                                    <template x-if="activeDentist?.photo_url">
+                                        <img :src="activeDentist?.photo_url" :alt="activeDentist?.name" class="w-full h-full object-cover rounded-xl" />
+                                    </template>
+                                    <template x-if="!activeDentist?.photo_url">
+                                        <div class="w-full h-full rounded-xl bg-[#0EA5E9] text-[#0F172A] font-black text-3xl sm:text-4xl flex items-center justify-center select-none shadow-inner">
+                                            <span x-text="activeDentist?.initials"></span>
+                                        </div>
+                                    </template>
                                 </div>
 
                                 <!-- Doctor Name & Specialty -->

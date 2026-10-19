@@ -156,17 +156,28 @@
                     <!-- TARJETA PERFIL PRINCIPAL -->
                     <div class="p-5 rounded-2xl bg-white dark:bg-[#0A1730] border border-slate-200/90 dark:border-white/10 shadow-sm transition-all">
                         <div class="flex items-start gap-4">
-                            <!-- Foto o Avatar -->
-                            <template x-if="data?.photo_url">
-                                <img :src="data.photo_url"
-                                     :alt="data?.name"
-                                     class="w-16 h-16 rounded-2xl object-cover ring-2 ring-sky-500/30 shrink-0 shadow-md">
-                            </template>
-                            <template x-if="!data?.photo_url">
-                                <div style="width: 64px; height: 64px; border-radius: 16px; background-color: #0EA5E9; color: #0F172A; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; user-select: none;"
-                                     x-text="data?.initials">
-                                </div>
-                            </template>
+                            <!-- Foto o Avatar con botón de cambiar -->
+                            <div class="relative group/drawer-avatar shrink-0">
+                                <template x-if="data?.photo_url">
+                                    <img :src="data.photo_url"
+                                         :alt="data?.name"
+                                         class="w-16 h-16 rounded-2xl object-cover ring-2 ring-sky-500/30 shrink-0 shadow-md">
+                                </template>
+                                <template x-if="!data?.photo_url">
+                                    <div style="width: 64px; height: 64px; border-radius: 16px; background-color: #0EA5E9; color: #0F172A; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; user-select: none;"
+                                         x-text="data?.initials">
+                                    </div>
+                                </template>
+
+                                <a :href="data?.edit_url"
+                                   title="Cambiar fotografía del especialista"
+                                   class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-slate-900/90 hover:bg-sky-600 text-white flex items-center justify-center shadow-md transition-colors border-2 border-white dark:border-slate-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </a>
+                            </div>
 
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center justify-between gap-2">
