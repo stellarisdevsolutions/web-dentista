@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Enums\UserRole;
 use App\Filament\Resources\Services\Pages\CreateService;
+use App\Filament\Resources\Services\Pages\ListServices;
+use App\Models\Dentist;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -132,5 +134,48 @@ class ServiceSlugAndValidationTest extends TestCase
         $this->assertNotNull($service);
         $this->assertEquals('Blanqueamiento Premium', $service->name);
         $this->assertNotNull($service->image);
+    }
+
+    public function test_list_services_get_service_details_returns_payload_for_slide_over_drawer(): void
+    {
+        $user = User::factory()->create([
+            'role' => UserRole::Admin,
+        ]);
+
+        $this->actingAs($user);
+
+        $dentist = Dentist::factory()->create([
+            'name' => 'Dr. Robert Martinez',
+        ]);
+
+        $service = Service::create([
+            'name' => 'Diseño de Sonrisa 3D',
+            'slug' => 'diseno-de-sonrisa-3d',
+            'category' => 'Estética Avanzada',
+            'short_description' => 'Simulación digital de sonrisa',
+            'description' => 'Fases clínicas completas y fotografía dental de alta resolución.',
+            'price' => 500.00,
+            'duration_minutes' => 90,
+            'allows_online_booking' => true,
+            'is_featured' => true,
+            'is_active' => true,
+            'order' => 2,
+        ]);
+
+        $service->dentists()->attach($dentist->id);
+
+        $component = Livewire::test(ListServices::class);
+        $details = $component->instance()->getServiceDetails($service->id);
+
+        $this->assertNotNull($details);
+        $this->assertEquals($service->id, $details['id']);
+        $this->assertEquals('Diseño de Sonrisa 3D', $details['name']);
+        $this->assertEquals('diseno-de-sonrisa-3d', $details['slug']);
+        $this->assertEquals('Estética Avanzada', $details['category']);
+        $this->assertEquals('$500.00', $details['formatted_price']);
+        $this->assertEquals(90, $details['duration_minutes']);
+        $this->assertCount(1, $details['dentists']);
+        $this->assertEquals('Dr. Robert Martinez', $details['dentists'][0]['name']);
+        $this->assertStringContainsString('/admin/services/'.$service->id.'/edit', $details['edit_url']);
     }
 }

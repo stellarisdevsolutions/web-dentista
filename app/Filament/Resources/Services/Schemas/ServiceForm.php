@@ -63,18 +63,13 @@ class ServiceForm
                                             ->placeholder('ej. Blanqueamiento Dental Láser')
                                             ->required()
                                             ->maxLength(255)
-                                            ->live(onBlur: true)
+                                            ->columnSpanFull()
+                                            ->live(debounce: 300)
                                             ->afterStateUpdated(function (?string $state, callable $set, ?string $operation, ?Service $record): void {
                                                 if ($operation === 'create' && filled($state)) {
                                                     $set('slug', Service::generateUniqueSlug($state, $record?->id));
                                                 }
                                             }),
-
-                                        TextInput::make('category')
-                                            ->label('Categoría')
-                                            ->prefixIcon('heroicon-o-tag')
-                                            ->placeholder('ej. Odontología Estética, Ortodoncia')
-                                            ->maxLength(100),
 
                                         TextInput::make('slug')
                                             ->label('Enlace Web / Slug (URL)')
@@ -91,13 +86,18 @@ class ServiceForm
                                                 }
                                             })
                                             ->dehydrateStateUsing(fn (?string $state, ?Service $record) => blank($state) ? null : Service::generateUniqueSlug($state, $record?->id))
-                                            ->helperText('Slug híbrido: se genera automáticamente desde el nombre al crear, pero puedes personalizarlo. Al actualizar el nombre, el enlace original se preserva para no romper URLs ni SEO.'),
+                                            ->helperText('Enlace permanente para la web. Al crear se genera automáticamente en vivo según el nombre. En edición se conserva intacto aunque modifiques el nombre, con opción a editarlo manualmente.'),
+
+                                        TextInput::make('category')
+                                            ->label('Categoría')
+                                            ->prefixIcon('heroicon-o-tag')
+                                            ->placeholder('ej. Odontología Estética, Ortodoncia')
+                                            ->maxLength(100),
 
                                         TextInput::make('short_description')
                                             ->label('Descripción Breve')
                                             ->prefixIcon('heroicon-o-document-text')
                                             ->placeholder('Resumen para las tarjetas del sitio web y catálogo...')
-                                            ->columnSpanFull()
                                             ->maxLength(255),
                                     ]),
                             ]),

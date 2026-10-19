@@ -3,9 +3,7 @@
 namespace App\Filament\Resources\Services\Tables;
 
 use App\Models\Service;
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\ImageColumn;
@@ -21,6 +19,10 @@ class ServicesTable
     {
         return $table
             ->defaultSort('order', 'asc')
+            ->recordClasses(fn (Service $record): string => "cursor-pointer service-row service-row-{$record->id}")
+            ->recordAction(null)
+            ->recordUrl(null)
+            ->header(view('filament.resources.services.table-header'))
             ->emptyStateHeading('No hay tratamientos registrados')
             ->emptyStateDescription('Comienza añadiendo los servicios y procedimientos odontológicos de la clínica.')
             ->emptyStateIcon('heroicon-o-sparkles')
@@ -86,13 +88,12 @@ class ServicesTable
                     ->label('Destacado en Inicio'),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                EditAction::make()
+                    ->iconButton()
+                    ->tooltip('Editar tratamiento'),
+                DeleteAction::make()
+                    ->iconButton()
+                    ->tooltip('Eliminar tratamiento'),
             ]);
     }
 }
