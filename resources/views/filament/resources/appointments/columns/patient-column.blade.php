@@ -12,7 +12,10 @@
     $treatment = $record->service?->name;
 @endphp
 
-<div style="display: flex; align-items: center; gap: 12px; padding: 4px 0; min-width: 0;">
+<div data-appointment-id="{{ $record->id }}"
+     @click.stop="$dispatch('open-appointment-drawer', { id: {{ $record->id }} })"
+     class="cursor-pointer"
+     style="display: flex; align-items: center; gap: 12px; padding: 4px 0; min-width: 0; width: 100%;">
     <!-- Avatar cuadrado 44x44px con radio 14px, fondo #0EA5E9, texto #0F172A, peso 800, iniciales centradas -->
     <div style="width: 44px; height: 44px; min-width: 44px; max-width: 44px; border-radius: 14px; background-color: #0EA5E9; color: #0F172A; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; user-select: none;">
         {{ $initials }}

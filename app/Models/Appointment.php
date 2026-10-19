@@ -109,6 +109,33 @@ class Appointment extends Model
     }
 
     /**
+     * Format a time string (e.g. '14:00' or '14:00:00') according to config('app.time_format').
+     */
+    public static function formatTime(?string $time): string
+    {
+        if (empty($time)) {
+            return '--:--';
+        }
+
+        try {
+            $carbon = Carbon::parse($time);
+            $is12h = config('app.time_format', '12h') === '12h';
+
+            return $carbon->format($is12h ? 'h:i A' : 'H:i');
+        } catch (\Throwable) {
+            return $time;
+        }
+    }
+
+    /**
+     * Get the formatted appointment time based on the active app time format (12h vs 24h).
+     */
+    public function getFormattedTimeAttribute(): string
+    {
+        return self::formatTime($this->appointment_time);
+    }
+
+    /**
      * WhatsApp URL to contact the patient directly in Spanish.
      */
     public function getWhatsAppUrlAttribute(): string
@@ -118,7 +145,7 @@ class Appointment extends Model
         $serviceName = $this->service?->name ?? 'Consulta Odontológica';
         $clinicName = config('app.name', 'Clínica Dental Aura');
 
-        $message = "Hola {$this->patient_name}, le saludamos de {$clinicName}. Le escribimos para coordinar su cita de {$serviceName} (Ref: {$this->code}) programada para el {$dateFormatted} a las {$this->appointment_time}. ¿Nos confirma su asistencia?";
+        $message = "Hola {$this->patient_name}, le saludamos de {$clinicName}. Le escribimos para coordinar su cita de {$serviceName} (Ref: {$this->code}) programada para el {$dateFormatted} a las {$this->formatted_time}. ¿Nos confirma su asistencia?";
 
         return "https://wa.me/{$phone}?text=".urlencode($message);
     }

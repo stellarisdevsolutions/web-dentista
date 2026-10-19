@@ -25,7 +25,9 @@ class AppointmentsTable
             ->defaultSort('appointment_time', 'asc')
             ->defaultPaginationPageOption(15)
             ->paginationPageOptions([15, 25, 50])
-            ->recordAction('view_details')
+            ->recordClasses(fn (Appointment $record): string => "cursor-pointer agenda-row appointment-row-{$record->id}")
+            ->recordAction(null)
+            ->recordUrl(null)
             ->searchable(false)
             ->header(view('filament.resources.appointments.pages.agenda-filter-card'))
             ->modifyQueryUsing(function (Builder $query) use ($table): void {
@@ -68,14 +70,22 @@ class AppointmentsTable
             ->columns([
                 TextColumn::make('patient_name')
                     ->label('Paciente')
+                    ->extraAttributes(fn (Appointment $record): array => [
+                        'class' => 'cursor-pointer',
+                        'x-on:click' => "\$dispatch('open-appointment-drawer', { id: {$record->id} })",
+                    ])
                     ->view('filament.resources.appointments.columns.patient-column'),
 
                 TextColumn::make('appointment_time')
                     ->label('Fecha y hora')
                     ->sortable()
+                    ->extraAttributes(fn (Appointment $record): array => [
+                        'class' => 'cursor-pointer',
+                        'x-on:click' => "\$dispatch('open-appointment-drawer', { id: {$record->id} })",
+                    ])
                     ->html()
                     ->formatStateUsing(function (Appointment $record): string {
-                        $time = e($record->appointment_time);
+                        $time = e($record->formatted_time);
                         $dateFormatted = $record->appointment_date
                             ? str_replace('.', '', $record->appointment_date->locale('es')->isoFormat('ddd D MMM'))
                             : '—';
@@ -98,6 +108,10 @@ class AppointmentsTable
                     ->label('Tratamiento')
                     ->placeholder('—')
                     ->visibleFrom('lg')
+                    ->extraAttributes(fn (Appointment $record): array => [
+                        'class' => 'cursor-pointer',
+                        'x-on:click' => "\$dispatch('open-appointment-drawer', { id: {$record->id} })",
+                    ])
                     ->html()
                     ->formatStateUsing(fn ($state) => $state ? '<span class="agenda-treatment-cell">'.e($state).'</span>' : '<span class="text-slate-400">—</span>'),
 
@@ -105,6 +119,10 @@ class AppointmentsTable
                     ->label('Especialista')
                     ->placeholder('Por asignar')
                     ->hidden(fn (): bool => auth()->user()?->isDentist() ?? false)
+                    ->extraAttributes(fn (Appointment $record): array => [
+                        'class' => 'cursor-pointer',
+                        'x-on:click' => "\$dispatch('open-appointment-drawer', { id: {$record->id} })",
+                    ])
                     ->html()
                     ->formatStateUsing(function (Appointment $record): string {
                         if (! $record->dentist) {
@@ -119,24 +137,13 @@ class AppointmentsTable
 
                 TextColumn::make('status')
                     ->label('Estado')
+                    ->extraAttributes(fn (Appointment $record): array => [
+                        'class' => 'cursor-pointer',
+                        'x-on:click' => "\$dispatch('open-appointment-drawer', { id: {$record->id} })",
+                    ])
                     ->view('filament.resources.appointments.columns.status-column'),
             ])
             ->recordActions([
-                // Acción de detalle con panel lateral: invisible como botón para no ocupar texto en la fila, pero activa al pulsar cualquier fila
-                Action::make('view_details')
-                    ->label('Ver detalle')
-                    ->icon(Heroicon::OutlinedEye)
-                    ->color('gray')
-                    ->slideOver()
-                    ->modalWidth('md')
-                    ->modalHeading(fn (Appointment $record): string => "Detalles de cita · {$record->code}")
-                    ->modalSubmitAction(false)
-                    ->modalCancelActionLabel('Cerrar')
-                    ->modalContent(fn (Appointment $record) => view('filament.resources.appointments.slide-over-detail', ['record' => $record]))
-                    ->extraModalFooterActions(fn (Appointment $record): array => self::getDetailModalActions($record))
-                    ->extraAttributes(['style' => 'display: none !important;', 'class' => 'hidden']),
-
-                // Botón icono lápiz: solo para admin y secretaria, según política de autorización
                 Action::make('edit')
                     ->label('Editar')
                     ->icon(Heroicon::OutlinedPencilSquare)

@@ -107,7 +107,7 @@ class WelcomeBannerWidget extends Widget
                         ->first();
                 }
 
-                $nextTime = $nextAppt?->appointment_time ? Carbon::parse($nextAppt->appointment_time)->format('H:i') : '--:--';
+                $nextTime = Appointment::formatTime($nextAppt?->appointment_time);
                 $pacientesText = $myTodayCount === 1 ? '1 paciente' : "{$myTodayCount} pacientes";
                 $subtitle = "Tienes {$pacientesText} hoy. Tu próxima cita es a las {$nextTime}.";
             }

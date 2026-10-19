@@ -1,0 +1,13 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/* ==========================================================================
+   AURA DENTAL STUDIO - MODULAR MEDICAL DESIGN SYSTEM
+   ========================================================================== */
+@import './modules/tokens.css';
+@import './modules/layout.css';
+@import './modules/widgets.css';
+@import './modules/specialists.css';
+@import './modules/agenda.css';

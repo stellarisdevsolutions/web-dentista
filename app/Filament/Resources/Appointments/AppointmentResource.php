@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Appointments;
 
+use App\Enums\AppointmentStatus;
 use App\Filament\Resources\Appointments\Pages\CreateAppointment;
 use App\Filament\Resources\Appointments\Pages\EditAppointment;
 use App\Filament\Resources\Appointments\Pages\ListAppointments;
@@ -42,16 +43,14 @@ class AppointmentResource extends Resource
     {
         /** @var Appointment $record */
         $isSpanish = app()->getLocale() === 'es';
-        $statusLabels = [
-            'pending' => $isSpanish ? 'Pendiente' : 'Pending',
-            'confirmed' => $isSpanish ? 'Confirmada' : 'Confirmed',
-            'completed' => $isSpanish ? 'Completada' : 'Completed',
-            'cancelled' => $isSpanish ? 'Cancelada' : 'Cancelled',
-        ];
+
+        $statusLabel = $record->status instanceof AppointmentStatus
+            ? $record->status->label()
+            : (AppointmentStatus::tryFrom((string) $record->status)?->label() ?? (string) $record->status);
 
         return [
-            $isSpanish ? 'Fecha' : 'Date' => "{$record->appointment_date->format('d/m/Y')} {$record->appointment_time}",
-            $isSpanish ? 'Estado' : 'Status' => $statusLabels[$record->status] ?? $record->status,
+            $isSpanish ? 'Fecha' : 'Date' => "{$record->appointment_date->format('d/m/Y')} {$record->formatted_time}",
+            $isSpanish ? 'Estado' : 'Status' => $statusLabel,
             $isSpanish ? 'Tratamiento' : 'Service' => $record->service?->name ?? '-',
         ];
     }
@@ -95,7 +94,7 @@ class AppointmentResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery();
+        $query = parent::getEloquentQuery()->with(['service', 'dentist']);
         /** @var User|null $user */
         $user = auth()->user();
 

@@ -54,17 +54,17 @@ class DentistResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('Dentists');
+        return 'Especialistas';
     }
 
     public static function getModelLabel(): string
     {
-        return __('Dentist');
+        return 'Especialista';
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('Dentists');
+        return 'Especialistas';
     }
 
     public static function form(Schema $schema): Schema

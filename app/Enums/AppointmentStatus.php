@@ -26,22 +26,22 @@ enum AppointmentStatus: string
     public function badgeBackground(): string
     {
         return match ($this) {
-            self::Pending => '#FEF3C7',
-            self::Confirmed => '#DCFCE7',
-            self::InProgress => '#E0F2FE',
-            self::Completed => '#E6ECF4',
-            self::Cancelled, self::NoShow => '#FEE2E2',
+            self::Pending => '#F59E0B',
+            self::Confirmed => '#10B981',
+            self::InProgress => '#0EA5E9',
+            self::Completed => '#475569',
+            self::Cancelled, self::NoShow => '#EF4444',
         };
     }
 
     public function badgeColor(): string
     {
         return match ($this) {
-            self::Pending => '#B45309',
-            self::Confirmed => '#166534',
-            self::InProgress => '#0A74B8',
-            self::Completed => '#5B6B86',
-            self::Cancelled, self::NoShow => '#B91C1C',
+            self::Pending => '#FFFFFF',
+            self::Confirmed => '#FFFFFF',
+            self::InProgress => '#0F172A',
+            self::Completed => '#FFFFFF',
+            self::Cancelled, self::NoShow => '#FFFFFF',
         };
     }
 

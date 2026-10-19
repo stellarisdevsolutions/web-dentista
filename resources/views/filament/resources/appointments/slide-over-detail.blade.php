@@ -94,7 +94,7 @@
             <div>
                 <span class="text-xs text-slate-400">Horario y duración</span>
                 <p class="font-extrabold text-slate-900 dark:text-white text-sm mt-0.5">
-                    {{ $record->appointment_time }} <span class="font-normal text-slate-400">· {{ $duration }}</span>
+                    {{ $record->formatted_time }} <span class="font-normal text-slate-400">· {{ $duration }}</span>
                 </p>
             </div>
         </div>

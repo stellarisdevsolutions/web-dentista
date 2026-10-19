@@ -159,9 +159,11 @@ class WelcomeBannerWidgetTest extends TestCase
             'status' => 'confirmed',
         ]);
 
+        $expectedTime = Appointment::formatTime('10:30');
+
         $test = Livewire::actingAs($dentistUser)
             ->test(WelcomeBannerWidget::class)
-            ->assertSee('Tienes 2 pacientes hoy. Tu próxima cita es a las 10:30.')
+            ->assertSee("Tienes 2 pacientes hoy. Tu próxima cita es a las {$expectedTime}.")
             ->assertSee('Ver mi agenda')
             ->assertSee('Mis pacientes')
             ->assertSee('mis citas hoy')

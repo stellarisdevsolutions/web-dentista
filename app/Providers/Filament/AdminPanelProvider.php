@@ -32,6 +32,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
+            ->font('Manrope')
             ->brandName('Aura Dental Studio')
             ->brandLogo(fn () => view('filament.admin.logo'))
             ->brandLogoHeight('auto')

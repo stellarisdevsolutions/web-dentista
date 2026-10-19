@@ -138,7 +138,7 @@ class DentalClinicPublicTest extends TestCase
 
         $dentist->services()->attach($service->id);
 
-        $appointmentDate = Carbon::tomorrow()->format('Y-m-d');
+        $appointmentDate = Carbon::now()->next(Carbon::MONDAY)->format('Y-m-d');
 
         $payload = [
             'service_id' => $service->id,
@@ -160,7 +160,8 @@ class DentalClinicPublicTest extends TestCase
             'appointment' => [
                 'service' => 'Limpieza Dental Ultrasonido',
                 'dentist' => 'Dr. Carlos Mendoza',
-                'time' => '10:30',
+                'time' => Appointment::formatTime('10:30'),
+                'time_raw' => '10:30',
                 'patient_name' => 'Ana Sofía Ruiz',
             ],
         ]);
@@ -1164,6 +1165,121 @@ class DentalClinicPublicTest extends TestCase
         $this->assertDatabaseMissing('appointments', [
             'patient_email' => 'choque1200@example.com',
             'appointment_time' => '12:00',
+        ]);
+    }
+
+    public function test_available_slots_unified_only_includes_specialists_qualified_for_service(): void
+    {
+        $monday = Carbon::now()->next(Carbon::MONDAY)->toDateString();
+        $tuesday = Carbon::now()->next(Carbon::TUESDAY)->toDateString();
+
+        $service = Service::create([
+            'name' => 'Ortodoncia Exclusiva Test',
+            'slug' => 'ortodoncia-exclusiva-test',
+            'duration_minutes' => 45,
+            'is_active' => true,
+        ]);
+
+        $dentistMondayOnly = Dentist::create([
+            'name' => 'Dra. Solo Lunes',
+            'slug' => 'dra-solo-lunes-test',
+            'is_active' => true,
+            'working_days' => ['monday'],
+            'working_hours_start' => '09:00:00',
+            'working_hours_end' => '13:00:00',
+        ]);
+
+        $dentistTuesdayOnly = Dentist::create([
+            'name' => 'Dr. Solo Martes',
+            'slug' => 'dr-solo-martes-test',
+            'is_active' => true,
+            'working_days' => ['tuesday'],
+            'working_hours_start' => '09:00:00',
+            'working_hours_end' => '17:00:00',
+        ]);
+
+        // Attach ONLY Dra. Solo Lunes to the service
+        $service->dentists()->attach([$dentistMondayOnly->id]);
+
+        // On Tuesday, Dr. Solo Martes is working, but does NOT perform this service.
+        // Unified slots for $service on Tuesday MUST NOT include Dr. Solo Martes.
+        $resTuesday = $this->getJson("/api/appointments/available-slots?date={$tuesday}&service_id={$service->id}");
+        $resTuesday->assertSuccessful();
+        $this->assertFalse($resTuesday->json('has_available_slots'));
+        $this->assertEmpty($resTuesday->json('slots'));
+
+        // On Monday, Dra. Solo Lunes works and is qualified for this service.
+        $resMonday = $this->getJson("/api/appointments/available-slots?date={$monday}&service_id={$service->id}");
+        $resMonday->assertSuccessful();
+        $this->assertTrue($resMonday->json('has_available_slots'));
+        $this->assertNotEmpty($resMonday->json('slots'));
+    }
+
+    public function test_booking_with_unqualified_specialist_is_rejected_with_422(): void
+    {
+        $monday = Carbon::now()->next(Carbon::MONDAY)->toDateString();
+
+        $service = Service::create([
+            'name' => 'Implante Quirurgico Test',
+            'slug' => 'implante-quirurgico-test',
+            'duration_minutes' => 45,
+            'is_active' => true,
+        ]);
+
+        $qualifiedDentist = Dentist::create([
+            'name' => 'Dr. Cirujano Calificado',
+            'slug' => 'dr-cirujano-calificado',
+            'is_active' => true,
+            'working_days' => ['monday'],
+            'working_hours_start' => '09:00:00',
+            'working_hours_end' => '17:00:00',
+        ]);
+
+        $unqualifiedDentist = Dentist::create([
+            'name' => 'Dra. No Hace Implantes',
+            'slug' => 'dra-no-hace-implantes',
+            'is_active' => true,
+            'working_days' => ['monday'],
+            'working_hours_start' => '09:00:00',
+            'working_hours_end' => '17:00:00',
+        ]);
+
+        $service->dentists()->attach([$qualifiedDentist->id]);
+
+        // Try booking with unqualified dentist
+        $response = $this->postJson('/appointments', [
+            'service_id' => $service->id,
+            'dentist_id' => $unqualifiedDentist->id,
+            'appointment_date' => $monday,
+            'appointment_time' => '10:00',
+            'patient_name' => 'Paciente Rechazado',
+            'patient_email' => 'rechazado@example.com',
+            'patient_phone' => '+1555444555',
+            'is_first_visit' => 0,
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['dentist_id']);
+        $this->assertDatabaseMissing('appointments', [
+            'patient_email' => 'rechazado@example.com',
+        ]);
+
+        // Booking with qualified dentist succeeds
+        $successResponse = $this->postJson('/appointments', [
+            'service_id' => $service->id,
+            'dentist_id' => $qualifiedDentist->id,
+            'appointment_date' => $monday,
+            'appointment_time' => '10:00',
+            'patient_name' => 'Paciente Aceptado',
+            'patient_email' => 'aceptado@example.com',
+            'patient_phone' => '+1555444666',
+            'is_first_visit' => 0,
+        ]);
+
+        $successResponse->assertStatus(201);
+        $this->assertDatabaseHas('appointments', [
+            'patient_email' => 'aceptado@example.com',
+            'dentist_id' => $qualifiedDentist->id,
         ]);
     }
 }

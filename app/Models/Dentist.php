@@ -51,9 +51,10 @@ class Dentist extends Model
      *
      * @return array<int, array{time: string, shift: string, available: bool}>
      */
-    public function getSlotsForDate(string $date, int $durationMinutes = 45): array
+    public function getSlotsForDate(string $date, int $durationMinutes = 45, ?int $excludeAppointmentId = null): array
     {
         $carbonDate = Carbon::parse($date);
+        $date = $carbonDate->toDateString();
         $dayName = strtolower($carbonDate->format('l'));
 
         if (! $this->isAvailableOn($dayName)) {
@@ -63,7 +64,8 @@ class Dentist extends Model
         // Get already booked appointments for this dentist on this date with their time boundaries
         $existingAppointments = $this->appointments()
             ->whereDate('appointment_date', $date)
-            ->whereIn('status', ['confirmed', 'pending'])
+            ->whereNotIn('status', ['cancelled', 'no_show'])
+            ->when($excludeAppointmentId, fn ($q) => $q->where('id', '!=', $excludeAppointmentId))
             ->get()
             ->map(function (Appointment $app) use ($date) {
                 $start = Carbon::createFromFormat('Y-m-d H:i', "{$date} ".substr((string) $app->appointment_time, 0, 5));
@@ -124,13 +126,14 @@ class Dentist extends Model
      * Check if this dentist has sufficient consecutive free time for a treatment duration
      * at a specific date and time, without overflowing shift boundaries or overlapping appointments.
      */
-    public function isTimeSlotAvailable(string $date, string $time, int $durationMinutes = 45): bool
+    public function isTimeSlotAvailable(string $date, string $time, int $durationMinutes = 45, ?int $excludeAppointmentId = null): bool
     {
         if (! $this->is_active) {
             return false;
         }
 
         $carbonDate = Carbon::parse($date);
+        $date = $carbonDate->toDateString();
         $dayName = strtolower($carbonDate->format('l'));
 
         if (! $this->isAvailableOn($dayName)) {
@@ -186,7 +189,8 @@ class Dentist extends Model
         // Check collision with existing active appointments
         $hasOverlap = $this->appointments()
             ->whereDate('appointment_date', $date)
-            ->whereIn('status', ['confirmed', 'pending'])
+            ->whereNotIn('status', ['cancelled', 'no_show'])
+            ->when($excludeAppointmentId, fn ($q) => $q->where('id', '!=', $excludeAppointmentId))
             ->get()
             ->contains(function (Appointment $app) use ($date, $slotStart, $slotEnd) {
                 $appStart = Carbon::createFromFormat('Y-m-d H:i', "{$date} ".substr((string) $app->appointment_time, 0, 5));
@@ -203,7 +207,7 @@ class Dentist extends Model
     /**
      * Helper to generate time slot intervals for a single shift.
      *
-     * @param  array<int, array{time: string, shift: string, available: bool}>  $slots
+     * @param  array<int, array{time: string, shift: string, available: bool, reason?: string|null}>  $slots
      * @param  array<int, array{start: Carbon, end: Carbon}>  $existingAppointments
      */
     private function generateShiftSlots(
@@ -227,9 +231,17 @@ class Dentist extends Model
 
             // Check collision with existing appointments across the full duration
             $isColliding = false;
+            $reason = null;
             foreach ($existingAppointments as $app) {
                 if ($slotStart->lt($app['end']) && $slotEnd->gt($app['start'])) {
                     $isColliding = true;
+                    $is12h = config('app.time_format', '12h') === '12h';
+                    $fmt = $is12h ? 'h:i A' : 'H:i';
+                    if ($slotStart->gte($app['start']) && $slotStart->lt($app['end'])) {
+                        $reason = "Cita ya agendada ({$app['start']->format($fmt)} a {$app['end']->format($fmt)})";
+                    } else {
+                        $reason = "No disponible: con {$durationMinutes} min terminaría a las {$slotEnd->format($fmt)}, chocando con la cita de las {$app['start']->format($fmt)}";
+                    }
                     break;
                 }
             }
@@ -238,6 +250,7 @@ class Dentist extends Model
                 'time' => $timeStr,
                 'shift' => $shift,
                 'available' => ! $isColliding,
+                'reason' => $reason,
             ];
 
             $current->addMinutes($stepMinutes);

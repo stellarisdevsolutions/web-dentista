@@ -8,7 +8,10 @@
     $statusKey = $status?->value ?? (string) $record->status;
 @endphp
 
-<div style="display: inline-flex; align-items: center;">
+<div data-appointment-id="{{ $record->id }}"
+     @click.stop="$dispatch('open-appointment-drawer', { id: {{ $record->id }} })"
+     class="cursor-pointer"
+     style="display: flex; align-items: center; width: 100%;">
     <span class="aura-status-badge aura-status-{{ $statusKey }}" style="user-select: none;">
         {{ $label }}
     </span>

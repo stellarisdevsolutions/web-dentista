@@ -91,7 +91,7 @@
                 <div class="flex items-center justify-between">
                     <span class="text-slate-500">Horario:</span>
                     <span class="font-semibold text-slate-900 dark:text-white">
-                        {{ $record->appointment_time }} <span class="font-normal text-slate-400">({{ $record->duration_minutes }} minutos)</span>
+                        {{ $record->formatted_time }} <span class="font-normal text-slate-400">({{ $record->duration_minutes }} minutos)</span>
                     </span>
                 </div>
             </div>

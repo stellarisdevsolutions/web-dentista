@@ -12,6 +12,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentBookingController extends Controller
 {
@@ -64,6 +65,20 @@ class AppointmentBookingController extends Controller
         if ($dentistId) {
             $dentist = Dentist::findOrFail($dentistId);
 
+            // Verify dentist performs this treatment if service has specialists assigned
+            if ($service->dentists()->exists() && ! $service->dentists()->where('dentists.id', $dentistId)->exists()) {
+                $errorResponse = [
+                    'message' => 'El especialista seleccionado no realiza este tratamiento.',
+                    'errors' => ['dentist_id' => ['El especialista seleccionado no realiza este tratamiento.']],
+                ];
+
+                if ($request->wantsJson() || $request->ajax()) {
+                    return response()->json($errorResponse, 422);
+                }
+
+                return back()->withErrors($errorResponse['errors'])->withInput();
+            }
+
             if (! $dentist->isTimeSlotAvailable($date, $time, $duration)) {
                 $errorResponse = [
                     'message' => 'El especialista seleccionado no tiene disponibilidad en este horario. Por favor selecciona otro turno.',
@@ -78,11 +93,14 @@ class AppointmentBookingController extends Controller
             }
         } else {
             // Unified Booking (New Patient or Returning Patient choosing "Primer disponible"):
-            // 1. Get qualified active dentists for this treatment
-            $candidates = $service->dentists()->where('is_active', true)->get();
-            if ($candidates->isEmpty()) {
-                $candidates = Dentist::where('is_active', true)->get();
-            }
+            // 1. Get qualified active dentists strictly for this treatment with pre-counted active appointments
+            $candidates = $service->dentists()->exists()
+                ? $service->dentists()->where('is_active', true)
+                    ->withCount(['appointments' => fn ($q) => $q->whereDate('appointment_date', $date)->whereIn('status', ['confirmed', 'pending'])])
+                    ->get()
+                : Dentist::where('is_active', true)
+                    ->withCount(['appointments' => fn ($q) => $q->whereDate('appointment_date', $date)->whereIn('status', ['confirmed', 'pending'])])
+                    ->get();
 
             // 2. Filter dentists who have enough consecutive free time without shift/appointment collisions
             $availableCandidates = $candidates->filter(function (Dentist $doc) use ($date, $time, $duration) {
@@ -104,32 +122,27 @@ class AppointmentBookingController extends Controller
 
             // 3. Intelligent Load Balancing:
             // Assign to the dentist with the fewest active appointments on that specific date
-            $assignedDentist = $availableCandidates
-                ->sortBy(function (Dentist $doc) use ($date) {
-                    return $doc->appointments()
-                        ->whereDate('appointment_date', $date)
-                        ->whereIn('status', ['confirmed', 'pending'])
-                        ->count();
-                })
-                ->first();
+            $assignedDentist = $availableCandidates->sortBy('appointments_count')->first();
 
             $dentistId = $assignedDentist->id;
         }
 
-        $appointment = Appointment::create([
-            'service_id' => $service->id,
-            'dentist_id' => $dentistId,
-            'patient_name' => $validated['patient_name'],
-            'patient_email' => $validated['patient_email'],
-            'patient_phone' => $validated['patient_phone'],
-            'appointment_date' => $validated['appointment_date'],
-            'appointment_time' => $validated['appointment_time'],
-            'duration_minutes' => $service->duration_minutes ?? 45,
-            'is_first_visit' => (bool) ($validated['is_first_visit'] ?? false),
-            'symptoms' => $validated['symptoms'] ?? null,
-            'preferred_locale' => app()->getLocale(),
-            'status' => 'pending',
-        ]);
+        $appointment = DB::transaction(function () use ($service, $dentistId, $validated) {
+            return Appointment::create([
+                'service_id' => $service->id,
+                'dentist_id' => $dentistId,
+                'patient_name' => $validated['patient_name'],
+                'patient_email' => $validated['patient_email'],
+                'patient_phone' => $validated['patient_phone'],
+                'appointment_date' => $validated['appointment_date'],
+                'appointment_time' => $validated['appointment_time'],
+                'duration_minutes' => $service->duration_minutes ?? 45,
+                'is_first_visit' => (bool) ($validated['is_first_visit'] ?? false),
+                'symptoms' => $validated['symptoms'] ?? null,
+                'preferred_locale' => app()->getLocale(),
+                'status' => 'pending',
+            ]);
+        });
 
         $clinic = ClinicSetting::first();
         $dentist = $appointment->dentist;
@@ -145,7 +158,7 @@ class AppointmentBookingController extends Controller
             ."🦷 *Tratamiento:* {$service->name}\n"
             ."👨‍⚕️ *Especialista:* {$dentistName}\n"
             ."📅 *Fecha:* {$formattedDate}\n"
-            ."⏰ *Horario:* {$appointment->appointment_time}\n"
+            ."⏰ *Horario:* {$appointment->formatted_time}\n"
             ."📱 *Teléfono:* {$appointment->patient_phone}\n\n"
             .'¿Podrían confirmarme los detalles para mi consulta? ¡Muchas gracias!';
 
@@ -161,7 +174,8 @@ class AppointmentBookingController extends Controller
                 'service' => $service->name,
                 'dentist' => $dentistName,
                 'date' => $formattedDate,
-                'time' => $appointment->appointment_time,
+                'time' => $appointment->formatted_time,
+                'time_raw' => $appointment->appointment_time,
                 'duration' => $appointment->duration_minutes.' min',
                 'patient_name' => $appointment->patient_name,
             ],
@@ -230,13 +244,41 @@ class AppointmentBookingController extends Controller
 
         if ($dentistId) {
             $dentist = Dentist::findOrFail($dentistId);
+
+            // If a service was specified and has specialists assigned, verify dentist performs it
+            if ($service && $service->dentists()->exists() && ! $service->dentists()->where('dentists.id', $dentistId)->exists()) {
+                return response()->json([
+                    'date' => $date,
+                    'dentist_id' => $dentistId,
+                    'service_id' => $serviceId,
+                    'slots' => [],
+                    'morning_slots' => [],
+                    'afternoon_slots' => [],
+                    'has_available_slots' => false,
+                    'error' => 'El especialista seleccionado no realiza este tratamiento.',
+                ]);
+            }
+
             $slots = $dentist->getSlotsForDate($date, $durationMinutes);
         } else {
-            // Aggregate slots across specialists for this service or all active
-            if ($service && $service->dentists()->where('is_active', true)->exists()) {
+            // Aggregate slots strictly across active specialists qualified for this service
+            if ($service && $service->dentists()->exists()) {
                 $dentists = $service->dentists()->where('is_active', true)->get();
             } else {
+                // If service is null or has no explicit specialist assignments, fallback to all active dentists
                 $dentists = Dentist::where('is_active', true)->get();
+            }
+
+            if ($dentists->isEmpty()) {
+                return response()->json([
+                    'date' => $date,
+                    'dentist_id' => null,
+                    'service_id' => $serviceId,
+                    'slots' => [],
+                    'morning_slots' => [],
+                    'afternoon_slots' => [],
+                    'has_available_slots' => false,
+                ]);
             }
 
             $aggregatedSlots = [];
@@ -254,6 +296,12 @@ class AppointmentBookingController extends Controller
             ksort($aggregatedSlots);
             $slots = array_values($aggregatedSlots);
         }
+
+        $slots = array_map(function ($slot) {
+            $slot['label'] = Appointment::formatTime($slot['time']);
+
+            return $slot;
+        }, $slots);
 
         $morningSlots = array_values(array_filter($slots, fn ($s) => ($s['shift'] ?? '') === 'morning'));
         $afternoonSlots = array_values(array_filter($slots, fn ($s) => ($s['shift'] ?? '') === 'afternoon'));

@@ -14,6 +14,8 @@
             <!-- Navegador de Fecha (Optimista con respuesta instantánea 0ms y protección anti-rebote) -->
             <div class="agenda-date-nav {{ $searchActive ? 'agenda-date-nav-dimmed' : '' }}"
                  wire:ignore.self
+                 @agenda-reset-filters.window="resetToToday()"
+                 @agenda-filters-cleared.window="resetToToday($event.detail?.date)"
                  x-data="{
                     clientDate: @js($this->selectedDate),
                     dateLabel: @js($this->getFormattedDateLabel()),
@@ -72,6 +74,21 @@
                         this.dispatchDate();
                     },
 
+                    resetToToday(dateStr) {
+                        clearTimeout(this.debounceTimer);
+                        this.debounceTimer = null;
+                        if (dateStr) {
+                            this.clientDate = dateStr;
+                        } else {
+                            let now = new Date();
+                            this.clientDate = this.toYmd(now);
+                        }
+                        this.updateLabel();
+                        if (this.$refs.dateInput) {
+                            this.$refs.dateInput.value = this.clientDate;
+                        }
+                    },
+
                     goToToday() {
                         let now = new Date();
                         this.clientDate = this.toYmd(now);
@@ -84,6 +101,21 @@
                         this.clientDate = e.target.value;
                         this.updateLabel();
                         this.dispatchDate();
+                        if (e.target && typeof e.target.blur === 'function') {
+                            e.target.blur();
+                        }
+                    },
+
+                    openCalendar() {
+                        try {
+                            if (this.$refs.dateInput && typeof this.$refs.dateInput.showPicker === 'function') {
+                                this.$refs.dateInput.showPicker();
+                            } else if (this.$refs.dateInput) {
+                                this.$refs.dateInput.focus();
+                            }
+                        } catch (err) {
+                            // Fallback silencioso en caso de bloqueo o re-activación
+                        }
                     },
 
                     dispatchDate() {
@@ -121,8 +153,10 @@
                     ›
                 </button>
 
-                <!-- Icono de Calendario (selector de fecha) -->
-                <div class="agenda-cal-btn" title="Elegir fecha">
+                <!-- Icono de Calendario (selector de fecha con showPicker instantáneo) -->
+                <div class="agenda-cal-btn"
+                     @click="openCalendar()"
+                     title="Elegir fecha">
                     <svg class="agenda-cal-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                         <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -130,7 +164,9 @@
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
                     <input type="date"
+                           x-ref="dateInput"
                            :value="clientDate"
+                           @click.stop="openCalendar()"
                            @change="onDateInput($event)"
                            aria-label="Elegir fecha"
                            class="agenda-date-hidden-input" />
@@ -158,15 +194,54 @@
                     </select>
                 </div>
             @endif
+
+            <!-- Botón Limpiar Filtros (Visible solo cuando hay filtros activos) -->
+            @if($this->hasActiveFilters())
+                <button type="button"
+                        @click="$dispatch('agenda-reset-filters')"
+                        wire:click="clearAllFilters"
+                        class="agenda-clear-filters-btn"
+                        title="Restablecer todos los filtros">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                    <span>Limpiar filtros</span>
+                </button>
+            @endif
         </div>
 
         <!-- Fila 2: Pestañas de Estado (Píldoras) + Buscador a la derecha -->
         <div class="agenda-tabs-row">
-            <div class="agenda-tabs-group">
+            <div class="agenda-tabs-group"
+                 wire:ignore.self
+                 @agenda-reset-filters.window="currentTab = 'all'"
+                 @agenda-filters-cleared.window="currentTab = 'all'"
+                 x-data="{
+                     currentTab: @js($activeTab),
+                     activeRequests: 0,
+                     select(tab) {
+                         if (this.currentTab === tab) return;
+                         this.currentTab = tab;
+                         this.activeRequests++;
+                         $wire.selectTab(tab).finally(() => {
+                             this.activeRequests = Math.max(0, this.activeRequests - 1);
+                         });
+                     },
+                     init() {
+                         this.currentTab = @js($activeTab);
+                         $watch('$wire.activeTab', (newTab) => {
+                             if (this.activeRequests === 0 && newTab) {
+                                 this.currentTab = newTab;
+                             }
+                         });
+                     }
+                 }">
                 <!-- Todas -->
                 <button type="button"
-                        wire:click="selectTab('all')"
-                        class="agenda-tab-btn {{ $activeTab === 'all' ? 'active' : '' }}">
+                        @click.prevent="select('all')"
+                        class="agenda-tab-btn"
+                        :class="{ 'active': currentTab === 'all' }">
                     <span>Todas</span>
                     <span class="agenda-tab-badge badge-all">
                         {{ $tabCounts['all'] ?? 0 }}
@@ -175,8 +250,9 @@
 
                 <!-- Pendientes -->
                 <button type="button"
-                        wire:click="selectTab('pending')"
-                        class="agenda-tab-btn {{ $activeTab === 'pending' ? 'active' : '' }}">
+                        @click.prevent="select('pending')"
+                        class="agenda-tab-btn"
+                        :class="{ 'active': currentTab === 'pending' }">
                     <span>Pendientes</span>
                     <span class="agenda-tab-badge badge-pending">
                         {{ $tabCounts['pending'] ?? 0 }}
@@ -185,8 +261,9 @@
 
                 <!-- Confirmadas -->
                 <button type="button"
-                        wire:click="selectTab('confirmed')"
-                        class="agenda-tab-btn {{ $activeTab === 'confirmed' ? 'active' : '' }}">
+                        @click.prevent="select('confirmed')"
+                        class="agenda-tab-btn"
+                        :class="{ 'active': currentTab === 'confirmed' }">
                     <span>Confirmadas</span>
                     <span class="agenda-tab-badge badge-confirmed">
                         {{ $tabCounts['confirmed'] ?? 0 }}
@@ -195,8 +272,9 @@
 
                 <!-- Canceladas -->
                 <button type="button"
-                        wire:click="selectTab('cancelled')"
-                        class="agenda-tab-btn {{ $activeTab === 'cancelled' ? 'active' : '' }}">
+                        @click.prevent="select('cancelled')"
+                        class="agenda-tab-btn"
+                        :class="{ 'active': currentTab === 'cancelled' }">
                     <span>Canceladas</span>
                     <span class="agenda-tab-badge badge-cancelled">
                         {{ $tabCounts['cancelled'] ?? 0 }}
@@ -239,7 +317,7 @@
 
     <!-- Overlay Loader para la Tabla (Único) -->
     <div wire:loading
-         wire:target="selectedDate, previousDay, nextDay, goToToday, dentistId, selectTab, tableSearch, clearSearch"
+         wire:target="selectedDate, previousDay, nextDay, goToToday, dentistId, selectTab, tableSearch, clearSearch, clearAllFilters"
          class="agenda-table-loader-overlay"
          style="display: none;">
         <div class="agenda-loader-card">
@@ -250,4 +328,38 @@
             <span>Cargando citas...</span>
         </div>
     </div>
+
+    <!-- Slide-over Instantáneo (0ms con Skeleton Loader y Manejo de Error) -->
+    @include('filament.resources.appointments.slide-over-drawer')
+
+    <!-- Interceptor para que cualquier clic en la fila (espacio vacío, estado, etc.) abra el detalle, respetando las acciones -->
+    <script>
+        (function() {
+            function handleRowClick(event) {
+                // Si el clic fue en un botón, enlace, input o menú de acciones, ignorar
+                if (event.target.closest('button, a, input, select, textarea, .fi-ta-actions, [data-filament-dropdown-trigger]')) {
+                    return;
+                }
+
+                // Buscar la fila de la cita en la tabla
+                const row = event.target.closest('tr');
+                if (!row) return;
+
+                // Extraer el ID desde la clase appointment-row-X o desde data-appointment-id
+                const match = (row.className || '').match(/appointment-row-(\d+)/);
+                const appointmentId = match ? match[1] : row.querySelector('[data-appointment-id]')?.getAttribute('data-appointment-id');
+                if (!appointmentId) return;
+
+                window.dispatchEvent(new CustomEvent('open-appointment-drawer', {
+                    detail: { id: parseInt(appointmentId, 10) }
+                }));
+            }
+
+            if (!window._agendaRowClickAttached) {
+                window._agendaRowClickAttached = true;
+                document.addEventListener('click', handleRowClick, true);
+            }
+        })();
+    </script>
 </div>
+

@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Filament\Resources\Appointments\Pages\ListAppointments;
 use App\Models\Appointment;
 use App\Models\Dentist;
+use App\Models\Service;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -286,5 +287,238 @@ class AppointmentsAgendaTest extends TestCase
         Livewire::actingAs($admin)
             ->test(ListAppointments::class)
             ->assertTableActionVisible('edit', $appointment);
+    }
+
+    public function test_row_clicking_opens_slide_over_detail_and_does_not_navigate_to_edit_url(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        $appointment = Appointment::factory()->create([
+            'appointment_date' => Carbon::today()->toDateString(),
+            'code' => 'CIT-2026-TEST1',
+        ]);
+
+        $test = Livewire::actingAs($admin)
+            ->test(ListAppointments::class);
+
+        // Row clicks are handled by a client-side Alpine drawer, not a Filament action
+        $table = $test->instance()->getTable();
+        $this->assertNull($table->getRecordAction($appointment));
+        $this->assertNull($table->getRecordUrl($appointment));
+
+        // The Livewire method that the Alpine drawer calls must return appointment data
+        $details = $test->instance()->getAppointmentDetails($appointment->id);
+        $this->assertNotNull($details);
+        $this->assertEquals($appointment->id, $details['id']);
+        $this->assertEquals('CIT-2026-TEST1', $details['code']);
+    }
+
+    public function test_clear_all_filters_resets_date_to_today_dentist_tab_and_search(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        $dentist = Dentist::factory()->create();
+        $pastDate = Carbon::today()->subDays(5)->toDateString();
+        $today = Carbon::today()->toDateString();
+
+        $test = Livewire::actingAs($admin)
+            ->test(ListAppointments::class)
+            ->set('dentistId', $dentist->id)
+            ->set('activeTab', 'cancelled')
+            ->set('selectedDate', $pastDate)
+            ->set('tableSearch', 'Consulta');
+
+        $this->assertTrue($test->instance()->hasActiveFilters());
+
+        $test->call('clearAllFilters');
+
+        $this->assertEquals($today, $test->get('selectedDate'));
+        $this->assertNull($test->get('dentistId'));
+        $this->assertEquals('all', $test->get('activeTab'));
+        $this->assertEquals('', $test->get('tableSearch'));
+        $this->assertFalse($test->instance()->hasActiveFilters());
+        $test->assertDispatched('agenda-filters-cleared');
+    }
+
+    public function test_reschedule_initial_data_and_slot_generation(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        $dentist = Dentist::factory()->create([
+            'is_active' => true,
+            'working_days' => ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
+            'working_hours_start' => '09:00:00',
+            'working_hours_end' => '18:00:00',
+        ]);
+        $service = Service::factory()->create([
+            'is_active' => true,
+            'duration_minutes' => 30,
+        ]);
+        $service->dentists()->attach($dentist);
+
+        $test = Livewire::actingAs($admin)
+            ->test(ListAppointments::class);
+
+        $catalogs = $test->instance()->getRescheduleInitialData();
+        $this->assertArrayHasKey('services', $catalogs);
+        $this->assertArrayHasKey('dentists', $catalogs);
+        $this->assertFalse($catalogs['is_dentist_user']);
+
+        // Check slots generation for next Monday
+        $nextMonday = Carbon::now()->next(Carbon::MONDAY)->toDateString();
+        $slotsData = $test->instance()->getRescheduleAvailableSlots($nextMonday, $dentist->id, $service->id);
+
+        $this->assertTrue($slotsData['has_available_slots']);
+        $this->assertNotEmpty($slotsData['morning_slots']);
+        $this->assertNotEmpty($slotsData['afternoon_slots']);
+        $this->assertEquals('09:00 AM', $slotsData['morning_slots'][0]['label']);
+    }
+
+    public function test_drawer_reschedule_with_treatment_and_specialist_change(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+        $dentistA = Dentist::factory()->create(['is_active' => true]);
+        $dentistB = Dentist::factory()->create([
+            'is_active' => true,
+            'working_days' => ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
+            'working_hours_start' => '09:00:00',
+            'working_hours_end' => '18:00:00',
+        ]);
+
+        $service1 = Service::factory()->create(['duration_minutes' => 30]);
+        $service2 = Service::factory()->create(['duration_minutes' => 60]);
+
+        $nextMonday = Carbon::now()->next(Carbon::MONDAY)->toDateString();
+        $appointment = Appointment::factory()->create([
+            'dentist_id' => $dentistA->id,
+            'service_id' => $service1->id,
+            'appointment_date' => Carbon::today()->toDateString(),
+            'appointment_time' => '10:00',
+            'duration_minutes' => 30,
+        ]);
+
+        $test = Livewire::actingAs($admin)
+            ->test(ListAppointments::class);
+
+        $result = $test->instance()->drawerReschedule(
+            $appointment->id,
+            $nextMonday,
+            '15:00',
+            $service2->id,
+            $dentistB->id
+        );
+
+        $this->assertTrue($result['success']);
+        $appointment->refresh();
+        $this->assertEquals($nextMonday, $appointment->appointment_date->toDateString());
+        $this->assertEquals('15:00', substr($appointment->appointment_time, 0, 5));
+        $this->assertEquals($service2->id, $appointment->service_id);
+        $this->assertEquals($dentistB->id, $appointment->dentist_id);
+        $this->assertEquals(60, $appointment->duration_minutes);
+    }
+
+    public function test_drawer_reschedule_with_unified_slots_strictly_uses_qualified_dentists_and_assigns_available_specialist(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+
+        $dentistBusy = Dentist::factory()->create([
+            'is_active' => true,
+            'working_days' => ['monday'],
+            'working_hours_start' => '09:00:00',
+            'working_hours_end' => '17:00:00',
+        ]);
+
+        $dentistFree = Dentist::factory()->create([
+            'is_active' => true,
+            'working_days' => ['monday'],
+            'working_hours_start' => '09:00:00',
+            'working_hours_end' => '17:00:00',
+        ]);
+
+        $dentistOtherService = Dentist::factory()->create([
+            'is_active' => true,
+            'working_days' => ['tuesday'],
+            'working_hours_start' => '09:00:00',
+            'working_hours_end' => '17:00:00',
+        ]);
+
+        $serviceTarget = Service::factory()->create(['duration_minutes' => 45]);
+        $serviceTarget->dentists()->attach([$dentistBusy->id, $dentistFree->id]);
+
+        $nextMonday = Carbon::now()->next(Carbon::MONDAY)->toDateString();
+        $nextTuesday = Carbon::now()->next(Carbon::TUESDAY)->toDateString();
+
+        // Mark dentistBusy as busy on next Monday at 10:00
+        Appointment::factory()->create([
+            'dentist_id' => $dentistBusy->id,
+            'service_id' => $serviceTarget->id,
+            'appointment_date' => $nextMonday,
+            'appointment_time' => '10:00',
+            'duration_minutes' => 45,
+            'status' => 'confirmed',
+        ]);
+
+        $appointmentToReschedule = Appointment::factory()->create([
+            'dentist_id' => $dentistBusy->id,
+            'service_id' => $serviceTarget->id,
+            'appointment_date' => Carbon::today()->toDateString(),
+            'appointment_time' => '14:00',
+            'duration_minutes' => 45,
+            'status' => 'confirmed',
+        ]);
+
+        $test = Livewire::actingAs($admin)->test(ListAppointments::class);
+
+        // 1. Verify Tuesday has NO slots for serviceTarget (since dentistOtherService is not attached to serviceTarget)
+        $tuesdaySlots = $test->instance()->getRescheduleAvailableSlots($nextTuesday, null, $serviceTarget->id, $appointmentToReschedule->id);
+        $this->assertFalse($tuesdaySlots['has_available_slots']);
+
+        // 2. Reschedule with null dentistId ("Primer especialista disponible") at 10:00 on Monday
+        // Since dentistBusy is booked at 10:00, it MUST automatically assign dentistFree!
+        $res = $test->instance()->drawerReschedule(
+            $appointmentToReschedule->id,
+            $nextMonday,
+            '10:00',
+            $serviceTarget->id,
+            null
+        );
+
+        $this->assertTrue($res['success']);
+        $appointmentToReschedule->refresh();
+        $this->assertEquals($dentistFree->id, $appointmentToReschedule->dentist_id);
+    }
+
+    public function test_drawer_reschedule_rejects_unqualified_dentist(): void
+    {
+        $admin = User::factory()->create(['role' => UserRole::Admin]);
+
+        $qualifiedDentist = Dentist::factory()->create(['is_active' => true]);
+        $unqualifiedDentist = Dentist::factory()->create(['is_active' => true]);
+
+        $service = Service::factory()->create(['duration_minutes' => 45]);
+        $service->dentists()->attach([$qualifiedDentist->id]);
+
+        $appointment = Appointment::factory()->create([
+            'dentist_id' => $qualifiedDentist->id,
+            'service_id' => $service->id,
+        ]);
+
+        $test = Livewire::actingAs($admin)->test(ListAppointments::class);
+
+        $nextMonday = Carbon::now()->next(Carbon::MONDAY)->toDateString();
+
+        // Check slots call returns error
+        $slots = $test->instance()->getRescheduleAvailableSlots($nextMonday, $unqualifiedDentist->id, $service->id, $appointment->id);
+        $this->assertFalse($slots['has_available_slots']);
+        $this->assertEquals('El especialista seleccionado no realiza este tratamiento.', $slots['error']);
+
+        // Check drawerReschedule rejects with error
+        $res = $test->instance()->drawerReschedule(
+            $appointment->id,
+            $nextMonday,
+            '10:00',
+            $service->id,
+            $unqualifiedDentist->id
+        );
+
+        $this->assertFalse($res['success']);
+        $this->assertEquals('El especialista seleccionado no realiza este tratamiento.', $res['error']);
     }
 }

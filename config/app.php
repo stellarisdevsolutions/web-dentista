@@ -65,7 +65,9 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'America/Caracas'),
+
+    'time_format' => env('APP_TIME_FORMAT') ?: '12h',
 
     /*
     |--------------------------------------------------------------------------

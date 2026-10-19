@@ -1,0 +1,107 @@
+/* ==========================================================================
+       AURA DENTAL STUDIO - MODERN NAVY MEDICAL THEME (POLISHED SQUIRCLE DOCK)
+       ========================================================================== */
+
+    :root {
+        --sidebar-width: 17rem;
+        --collapsed-sidebar-width: 4.75rem;
+        --sidebar-bg: #0A1730;               /* Color base: #0A1730 (azul marino) */
+        --sidebar-bg-hover: #16294D;         /* Hover: fondo #16294D */
+        --sidebar-border: rgba(255, 255, 255, 0.06);
+        --accent-blue-active: #0A74B8;
+        --accent-blue-gradient: linear-gradient(90deg, #0A74B8, #0EA5E9);
+        --accent-cyan: #0EA5E9;
+
+        /* Aura System Design Tokens */
+        --aura-navy: #0A1730;
+        --aura-cyan: #0EA5E9;
+        --aura-sky: #38BDF8;
+        --aura-muted: #9FB3D1;
+        --aura-amber: #FDE68A;
+        --aura-blue-dark: #0A74B8;
+        --aura-blue-soft: #7DD3FC;
+        --aura-blue-tint: #CFE3F4;
+        --aura-slate-border: #E6ECF4;
+        --aura-slate-text: #5B6B86;
+        --aura-group-label: #6F83A6;
+        --aura-header-bg: #F3F7FC;
+        --aura-row-hover: #E0F2FE;
+        --aura-card-radius: 28px;
+        --aura-card-shadow: 0 10px 34px rgba(10, 23, 48, 0.07);
+    }
+
+    /* Fondo general del canvas tipo aplicación moderna */
+    .fi-body {
+        background-color: #f1f5f9 !important;
+    }
+
+    .dark .fi-body {
+        background-color: #050b14 !important;
+    }
+
+    /* Screen reader only utility (accesible para lectores de pantalla, invisible visualmente) */
+    .sr-only,
+    .fi-sr-only {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+    }
+
+    /* --------------------------------------------------------------------------
+       1. SCROLL ESTILO CELULAR (SLIM MOBILE OVERLAY SCROLLBAR - iOS / ANDROID)
+       -------------------------------------------------------------------------- */
+    /* Scroll en el Sidebar (transparente con cápsula translúcida fina) */
+    .fi-sidebar-nav::-webkit-scrollbar {
+        width: 4px !important;
+        height: 4px !important;
+        background: transparent !important;
+    }
+
+    .fi-sidebar-nav::-webkit-scrollbar-track {
+        background: transparent !important;
+    }
+
+    .fi-sidebar-nav::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.22) !important;
+        border-radius: 9999px !important;
+    }
+
+    .fi-sidebar-nav::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.45) !important;
+    }
+
+    .fi-sidebar-nav {
+        scrollbar-width: thin !important;
+        scrollbar-color: rgba(255, 255, 255, 0.22) transparent !important;
+    }
+
+    /* Scroll en la Página Principal y Widgets */
+    ::-webkit-scrollbar {
+        width: 5px !important;
+        height: 5px !important;
+        background: transparent !important;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent !important;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.35) !important;
+        border-radius: 9999px !important;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(100, 116, 139, 0.6) !important;
+    }
+
+    html, body {
+        scrollbar-width: thin !important;
+        scrollbar-color: rgba(148, 163, 184, 0.35) transparent !important;
+    }

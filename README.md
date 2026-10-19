@@ -17,9 +17,11 @@ Sitio web moderno y sistema de gestión de contenidos (CMS) para una **Clínica 
 
 ## 📋 Documentación y Especificaciones
 
-Para consultar la arquitectura técnica completa, esquema de base de datos, estándares de citas médicas y directrices de diseño, revisa:
+Para consultar la guía detallada de instalación, arquitectura técnica completa y directrices:
 
-👉 [**`CLINIC_SPECIFICATION.md`**](./CLINIC_SPECIFICATION.md)
+* 👉 [**`INSTALL.md`**](./INSTALL.md) — Guía completa de instalación y despliegue local paso a paso.
+* 👉 [**`CLINIC_SPECIFICATION.md`**](./CLINIC_SPECIFICATION.md) — Arquitectura técnica y modelo de datos.
+* 👉 [**`ALGORITMO_RESERVAS.md`**](./ALGORITMO_RESERVAS.md) — Lógica de turnos, horarios y asignación de citas.
 
 ---
 
@@ -36,6 +38,7 @@ Para consultar la arquitectura técnica completa, esquema de base de datos, est�
    cp .env.example .env
    php artisan key:generate
    ```
+   > **Nota sobre Zona Horaria:** Configura `APP_TIMEZONE` en tu `.env` con la zona horaria local de la clínica (ej. `America/Caracas`, `America/Bogota`, `America/Lima`). Esto garantiza que la agenda médica, el selector de citas y los reportes calculen el día actual de forma exacta.
 
 3. **Migraciones y Enlace de Almacenamiento:**
    ```bash

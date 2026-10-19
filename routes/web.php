@@ -18,8 +18,8 @@ Route::get('/services/{slug}', [HomeController::class, 'serviceDetail']);
 // Contact page and direct message submission
 Route::get('/contacto', [HomeController::class, 'contact'])->name('contact');
 Route::get('/contact', [HomeController::class, 'contact']);
-Route::post('/contacto', [HomeController::class, 'contactSubmit'])->name('contact.submit');
-Route::post('/contact', [HomeController::class, 'contactSubmit']);
+Route::post('/contacto', [HomeController::class, 'contactSubmit'])->middleware('throttle:15,1')->name('contact.submit');
+Route::post('/contact', [HomeController::class, 'contactSubmit'])->middleware('throttle:15,1');
 
 // Dedicated Blog pages
 Route::get('/blog', [HomeController::class, 'blog'])->name('blog.index');
@@ -30,6 +30,6 @@ Route::get('/reservar', [AppointmentBookingController::class, 'schedule'])->name
 Route::get('/schedule', [AppointmentBookingController::class, 'schedule'])->name('appointments.schedule');
 
 // Appointment booking endpoints
-Route::post('/appointments', [AppointmentBookingController::class, 'store'])->name('appointments.store');
-Route::get('/api/services/{service}/dentists', [AppointmentBookingController::class, 'dentistsForService'])->name('api.services.dentists');
-Route::get('/api/appointments/available-slots', [AppointmentBookingController::class, 'availableSlots'])->name('api.appointments.slots');
+Route::post('/appointments', [AppointmentBookingController::class, 'store'])->middleware('throttle:20,1')->name('appointments.store');
+Route::get('/api/services/{service}/dentists', [AppointmentBookingController::class, 'dentistsForService'])->middleware('throttle:60,1')->name('api.services.dentists');
+Route::get('/api/appointments/available-slots', [AppointmentBookingController::class, 'availableSlots'])->middleware('throttle:60,1')->name('api.appointments.slots');

@@ -20,6 +20,29 @@
 </head>
 <body class="font-sans antialiased bg-[#f0f7ff] text-slate-900 selection:bg-sky-500 selection:text-white" x-data="{ mobileMenuOpen: false }">
 
+    <!-- MODERN FLOATING TOAST NOTIFICATION -->
+    <div id="bookingToast"
+         role="alert"
+         aria-live="polite"
+         class="fixed top-5 right-4 sm:right-6 z-[100] max-w-sm w-[calc(100%-2rem)] sm:w-auto min-w-[300px] sm:min-w-[340px] pointer-events-none transition-all duration-300 ease-out transform -translate-y-6 opacity-0 scale-95"
+         style="display: none;">
+        <div id="bookingToastCard" class="pointer-events-auto bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-2xl p-4 shadow-2xl flex items-start gap-3.5 transition-all">
+            <div id="bookingToastIconWrap" class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 bg-amber-100 text-amber-600">
+                <!-- Icon via JS -->
+            </div>
+            <div class="flex-1 min-w-0 pr-1">
+                <h5 id="bookingToastTitle" class="text-xs font-black text-slate-900 tracking-tight">Selección requerida</h5>
+                <p id="bookingToastMessage" class="text-xs text-slate-600 mt-0.5 leading-snug"></p>
+            </div>
+            <button type="button" onclick="hideToast()" class="text-slate-400 hover:text-slate-600 p-1 -mr-1 rounded-lg transition-colors" title="Cerrar notificación">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+
     <!-- GLOBAL NAVBAR -->
     @include('partials.navbar')
 
@@ -217,7 +240,7 @@
                                             <div>
                                                 <h4 class="text-xs sm:text-sm font-bold text-slate-900">¿Deseas elegir a tu dentista de preferencia?</h4>
                                                 <p class="text-[11px] text-slate-500 mt-0.5" id="returningDentistSelectedLabel">
-                                                    Actualmente mostrando: <strong class="text-sky-600">Primer especialista disponible</strong> (todos los horarios combinados).
+                                                    Actualmente mostrando: <strong class="text-sky-600">Primer especialista disponible</strong> (horarios combinados de especialistas calificados).
                                                 </p>
                                             </div>
                                         </div>
@@ -261,7 +284,7 @@
                                                 </div>
                                                 <div class="min-w-0">
                                                     <p class="text-xs font-bold text-slate-900 truncate">Primer disponible</p>
-                                                    <p class="text-[10px] text-slate-500">Horarios combinados</p>
+                                                    <p class="text-[10px] text-slate-500">Especialistas calificados</p>
                                                 </div>
                                             </div>
 
@@ -269,6 +292,7 @@
                                                 <div
                                                     onclick="selectWizardDentist({{ $doc->id }}, '{{ addslashes($doc->name) }}')"
                                                     id="dentist-card-{{ $doc->id }}"
+                                                    data-dentist-id="{{ $doc->id }}"
                                                     class="dentist-select-card p-3 rounded-xl border border-slate-200 hover:border-sky-300 bg-white cursor-pointer transition-all flex items-center gap-3"
                                                 >
                                                     <div class="w-9 h-9 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs flex-shrink-0 overflow-hidden">
@@ -600,6 +624,101 @@
 
     <!-- WIZARD INTERACTIVE JAVASCRIPT -->
     <script>
+        const serviceDentistsMap = @json($services->mapWithKeys(fn($s) => [$s->id => $s->dentists->pluck('id')->all()]));
+
+        let toastTimeout = null;
+
+        function showToast(message, type = 'warning', title = null) {
+            const toast = document.getElementById('bookingToast');
+            const card = document.getElementById('bookingToastCard');
+            const iconWrap = document.getElementById('bookingToastIconWrap');
+            const titleEl = document.getElementById('bookingToastTitle');
+            const msgEl = document.getElementById('bookingToastMessage');
+
+            if (!toast || !card) return;
+
+            if (toastTimeout) {
+                clearTimeout(toastTimeout);
+            }
+
+            const icons = {
+                warning: `
+                    <svg class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                    </svg>`,
+                error: `
+                    <svg class="w-5 h-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>`,
+                info: `
+                    <svg class="w-5 h-5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>`,
+                success: `
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>`
+            };
+
+            const styles = {
+                warning: {
+                    border: 'border-amber-300 shadow-amber-500/10 ring-1 ring-amber-400/20',
+                    bgIcon: 'bg-amber-100 text-amber-600',
+                    defaultTitle: 'Selección requerida'
+                },
+                error: {
+                    border: 'border-rose-300 shadow-rose-500/10 ring-1 ring-rose-400/20',
+                    bgIcon: 'bg-rose-100 text-rose-600',
+                    defaultTitle: 'Atención'
+                },
+                info: {
+                    border: 'border-sky-300 shadow-sky-500/10 ring-1 ring-sky-400/20',
+                    bgIcon: 'bg-sky-100 text-sky-600',
+                    defaultTitle: 'Información'
+                },
+                success: {
+                    border: 'border-emerald-300 shadow-emerald-500/10 ring-1 ring-emerald-400/20',
+                    bgIcon: 'bg-emerald-100 text-emerald-600',
+                    defaultTitle: 'Completado'
+                }
+            };
+
+            const cfg = styles[type] || styles.warning;
+
+            card.className = `pointer-events-auto bg-white/95 backdrop-blur-md border ${cfg.border} rounded-2xl p-4 shadow-2xl flex items-start gap-3.5 transition-all`;
+            iconWrap.className = `w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${cfg.bgIcon}`;
+            iconWrap.innerHTML = icons[type] || icons.warning;
+
+            titleEl.textContent = title || cfg.defaultTitle;
+            msgEl.textContent = message;
+
+            toast.style.display = 'block';
+            requestAnimationFrame(() => {
+                toast.classList.remove('-translate-y-6', 'opacity-0', 'scale-95');
+                toast.classList.add('translate-y-0', 'opacity-100', 'scale-100');
+            });
+
+            toastTimeout = setTimeout(() => {
+                hideToast();
+            }, 4200);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('bookingToast');
+            if (!toast) return;
+
+            toast.classList.remove('translate-y-0', 'opacity-100', 'scale-100');
+            toast.classList.add('-translate-y-6', 'opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 300);
+        }
+
         let currentWizardStep = 1;
         let isFirstVisit = 1;
         let selectedService = {
@@ -633,16 +752,26 @@
         let carouselBaseDate = parseYMD(selectedDate);
         let currentDateSlotCount = null;
 
-        function formatTime12h(time24) {
+        const appTimeFormat = '{{ config('app.time_format', '12h') }}';
+
+        function formatTime(time24) {
             if (!time24) return '';
             const parts = time24.split(':');
             let h = parseInt(parts[0], 10);
             const m = parts[1] || '00';
+            if (appTimeFormat === '24h') {
+                const hFormatted = h < 10 ? `0${h}` : `${h}`;
+                return `${hFormatted}:${m}`;
+            }
             const ampm = h >= 12 ? 'PM' : 'AM';
             h = h % 12;
             if (h === 0) h = 12;
             const hFormatted = h < 10 ? `0${h}` : `${h}`;
             return `${hFormatted}:${m} ${ampm}`;
+        }
+
+        function formatTime12h(time24) {
+            return formatTime(time24);
         }
 
         function openDatePickerModal() {
@@ -778,11 +907,34 @@
             const summaryDuration = document.getElementById('summarySelectedDuration');
             if (summaryName) summaryName.textContent = name;
             if (summaryDuration) summaryDuration.textContent = `${selectedService.duration} min`;
+
+            // Filter returning patient dentist cards for this specific service
+            const qualifiedDentistIds = (serviceDentistsMap && serviceDentistsMap[id]) || [];
+            document.querySelectorAll('.dentist-select-card[data-dentist-id]').forEach(card => {
+                const docId = parseInt(card.getAttribute('data-dentist-id'), 10);
+                const isQualified = qualifiedDentistIds.length === 0 || qualifiedDentistIds.includes(docId);
+                card.style.display = isQualified ? '' : 'none';
+            });
+
+            // If selectedDentist was set, check if still qualified; if not, reset to first available
+            if (selectedDentist.id && qualifiedDentistIds.length > 0 && !qualifiedDentistIds.includes(parseInt(selectedDentist.id, 10))) {
+                resetToFirstAvailableDentist();
+                showToast(`Se cambió a "Primer especialista disponible" porque el doctor previo no realiza ${name}.`, 'info', 'Especialista ajustado');
+            } else if (!selectedDentist.id) {
+                const label = document.getElementById('returningDentistSelectedLabel');
+                if (label) {
+                    label.innerHTML = `Actualmente mostrando: <strong class="text-sky-600">Primer especialista disponible</strong> (horarios unificados del equipo de ${name}).`;
+                }
+            }
         }
 
         function goToWizardStep(step) {
             if (step === 2 && !selectedService.id) {
-                alert('Por favor selecciona un tratamiento dental para continuar.');
+                showToast('Por favor selecciona un tratamiento dental para continuar.', 'warning', 'Tratamiento requerido');
+                const servicesBox = document.getElementById('stepView1');
+                if (servicesBox) {
+                    servicesBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
                 return;
             }
 
@@ -947,7 +1099,7 @@
             if (label) {
                 label.innerHTML = id
                     ? `Especialista seleccionado: <strong class="text-sky-600">${name}</strong>`
-                    : `Actualmente mostrando: <strong class="text-sky-600">Primer especialista disponible</strong> (todos los horarios combinados).`;
+                    : `Actualmente mostrando: <strong class="text-sky-600">Primer especialista disponible</strong> (horarios unificados del equipo de ${selectedService.name || 'este tratamiento'}).`;
             }
             if (btnText) {
                 btnText.textContent = id ? 'Cambiar Odontólogo' : 'Elegir Odontólogo';
@@ -1039,7 +1191,7 @@
             slots.forEach(slot => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.textContent = formatTime12h(slot.time);
+                btn.textContent = slot.label || formatTime(slot.time);
                 btn.dataset.time = slot.time;
                 btn.disabled = !slot.available;
 
@@ -1067,7 +1219,11 @@
 
         function validateAndGoToStep3() {
             if (!selectedTime) {
-                alert('Por favor selecciona un horario disponible para continuar.');
+                showToast('Por favor selecciona un horario disponible para continuar.', 'warning', 'Horario requerido');
+                const slotsHeading = document.getElementById('scheduleMorningSlots');
+                if (slotsHeading) {
+                    slotsHeading.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
                 return;
             }
 
@@ -1078,7 +1234,7 @@
             document.getElementById('finalSummaryPatientType').textContent = (isFirstVisit === 1)
                 ? 'Paciente Nuevo (Primera visita)'
                 : 'Paciente Recurrente (Ficha clínica)';
-            document.getElementById('finalSummaryDateTime').textContent = `${selectedDate} a las ${selectedTime}`;
+            document.getElementById('finalSummaryDateTime').textContent = `${selectedDate} a las ${formatTime(selectedTime)}`;
 
             goToWizardStep(3);
         }
@@ -1124,6 +1280,7 @@
                     submitBtn.disabled = false;
                     submitText.textContent = 'Confirmar y Agendar Cita »';
                     spinner.classList.add('hidden');
+                    showToast(errMsg, 'error', 'No se pudo agendar');
                     return;
                 }
 
@@ -1135,12 +1292,13 @@
                 document.getElementById('successCodeDisplay').textContent = data.code || 'CIT-CONFIRMADA';
                 document.getElementById('successCardService').textContent = data.appointment?.service || selectedService.name;
                 document.getElementById('successCardDentist').textContent = data.appointment?.dentist || selectedDentist.name;
-                document.getElementById('successCardDateTime').textContent = `${data.appointment?.date || selectedDate} • ${data.appointment?.time || selectedTime}`;
+                document.getElementById('successCardDateTime').textContent = `${data.appointment?.date || selectedDate} • ${data.appointment?.time || formatTime(selectedTime)}`;
 
                 if (data.whatsapp_url) {
                     document.getElementById('btnWhatsappConfirmation').href = data.whatsapp_url;
                 }
 
+                hideToast();
                 window.scrollTo({ top: 300, behavior: 'smooth' });
             } catch (err) {
                 errorBox.textContent = 'Error de conexión con el servidor. Por favor verifica tu conexión y vuelve a intentar.';
@@ -1148,6 +1306,7 @@
                 submitBtn.disabled = false;
                 submitText.textContent = 'Confirmar y Agendar Cita »';
                 spinner.classList.add('hidden');
+                showToast('Error de conexión con el servidor. Intenta nuevamente.', 'error', 'Error de conexión');
             }
         }
 
