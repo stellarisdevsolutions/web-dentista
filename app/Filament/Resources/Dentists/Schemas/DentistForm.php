@@ -285,8 +285,11 @@ class DentistForm
                                             ->label('Orden de Visualización')
                                             ->prefixIcon('heroicon-o-arrows-up-down')
                                             ->numeric()
+                                            ->nullable()
+                                            ->placeholder('0')
                                             ->default(0)
-                                            ->helperText('Prioridad en el listado público del equipo médico.'),
+                                            ->dehydrateStateUsing(fn ($state) => (int) ($state ?? 0))
+                                            ->helperText('Opcional. Entre más bajo el número, primero aparecerá (ej. 1 va antes que 2). Si se deja vacío, será 0.'),
 
                                         Toggle::make('is_active')
                                             ->label('Disponible para Citas en la Web')
