@@ -157,18 +157,16 @@
                     <div class="p-5 rounded-2xl bg-white dark:bg-[#0A1730] border border-slate-200/90 dark:border-white/10 shadow-sm transition-all">
                         <div class="flex items-start gap-4">
                             <!-- Foto o Avatar -->
-                            <div class="shrink-0">
-                                <template x-if="data?.photo_url">
-                                    <img :src="data.photo_url"
-                                         :alt="data?.name"
-                                         class="w-16 h-16 rounded-2xl object-cover ring-2 ring-sky-500/30 shrink-0 shadow-md">
-                                </template>
-                                <template x-if="!data?.photo_url">
-                                    <div style="width: 64px; height: 64px; border-radius: 16px; background-color: #0EA5E9; color: #0F172A; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; user-select: none;"
-                                         x-text="data?.initials">
-                                    </div>
-                                </template>
-                            </div>
+                            <template x-if="data?.photo_url">
+                                <img :src="data.photo_url"
+                                     :alt="data?.name"
+                                     class="w-16 h-16 rounded-2xl object-cover ring-2 ring-sky-500/30 shrink-0 shadow-md">
+                            </template>
+                            <template x-if="!data?.photo_url">
+                                <div style="width: 64px; height: 64px; border-radius: 16px; background-color: #0EA5E9; color: #0F172A; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; user-select: none;"
+                                     x-text="data?.initials">
+                                </div>
+                            </template>
 
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center justify-between gap-2">
