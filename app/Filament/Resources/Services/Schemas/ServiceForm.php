@@ -81,6 +81,25 @@ class ServiceForm
                                                 }
                                             }),
 
+                                        TextInput::make('category')
+                                            ->label('Categoría')
+                                            ->prefixIcon('heroicon-o-tag')
+                                            ->placeholder('ej. Odontología Estética, Ortodoncia')
+                                            ->datalist(fn (): array => Service::query()
+                                                ->whereNotNull('category')
+                                                ->where('category', '!=', '')
+                                                ->distinct()
+                                                ->pluck('category')
+                                                ->toArray())
+                                            ->helperText('Selecciona de las sugerencias o escribe una nueva.')
+                                            ->maxLength(100),
+
+                                        TextInput::make('short_description')
+                                            ->label('Descripción Breve')
+                                            ->prefixIcon('heroicon-o-document-text')
+                                            ->placeholder('Resumen para las tarjetas del sitio web y catálogo...')
+                                            ->maxLength(255),
+
                                         TextInput::make('slug')
                                             ->label('Enlace Web / Slug (URL)')
                                             ->prefixIcon('heroicon-o-link')
@@ -115,18 +134,6 @@ class ServiceForm
                                                 ? 'Modo edición activado: personaliza el enlace a tu gusto (sin acentos ni espacios; las colisiones se resuelven solas).'
                                                 : 'Generado automáticamente según el nombre. Protegido contra cambios accidentales (pulsa el lápiz para personalizar).'
                                             ),
-
-                                        TextInput::make('category')
-                                            ->label('Categoría')
-                                            ->prefixIcon('heroicon-o-tag')
-                                            ->placeholder('ej. Odontología Estética, Ortodoncia')
-                                            ->maxLength(100),
-
-                                        TextInput::make('short_description')
-                                            ->label('Descripción Breve')
-                                            ->prefixIcon('heroicon-o-document-text')
-                                            ->placeholder('Resumen para las tarjetas del sitio web y catálogo...')
-                                            ->maxLength(255),
                                     ]),
                             ]),
                     ]),
@@ -175,11 +182,21 @@ class ServiceForm
                                     ->helperText('Tarifa estándar de referencia.'),
 
                                 TextInput::make('duration_minutes')
-                                    ->label('Duración Estándar (Minutos)')
+                                    ->label('Duración Estándar')
                                     ->prefixIcon('heroicon-o-clock')
                                     ->numeric()
+                                    ->suffix('min')
+                                    ->required()
+                                    ->minValue(30)
+                                    ->step(15)
+                                    ->rule('multiple_of:15')
+                                    ->validationMessages([
+                                        'required' => 'La duración del tratamiento es obligatoria.',
+                                        'min' => 'La duración mínima debe ser de al menos 30 minutos.',
+                                        'multiple_of' => 'La duración debe especificarse en saltos de 15 minutos (30, 45, 60, 75, 90, etc.).',
+                                    ])
                                     ->default(45)
-                                    ->helperText('Tiempo bloqueado en la agenda.'),
+                                    ->helperText('Requerido. Mínimo 30 min, en intervalos de 15 min (30, 45, 60, 75, 90...).'),
 
                                 TextInput::make('order')
                                     ->label('Orden de Visualización')

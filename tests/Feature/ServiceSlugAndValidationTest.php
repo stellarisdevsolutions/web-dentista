@@ -197,4 +197,50 @@ class ServiceSlugAndValidationTest extends TestCase
 
         $response->assertSee($expectedPrefix);
     }
+
+    public function test_filament_create_service_validates_duration_rules(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create([
+            'role' => UserRole::Admin,
+        ]);
+
+        $this->actingAs($user);
+
+        $file = UploadedFile::fake()->image('treatment.jpg', 1200, 900);
+
+        // 1. duration_minutes < 30 fails
+        Livewire::test(CreateService::class)
+            ->fillForm([
+                'name' => 'Limpieza Express',
+                'slug' => 'limpieza-express',
+                'image' => $file,
+                'duration_minutes' => 20,
+            ])
+            ->call('create')
+            ->assertHasErrors(['data.duration_minutes']);
+
+        // 2. duration_minutes non-multiple of 15 fails (e.g. 40)
+        Livewire::test(CreateService::class)
+            ->fillForm([
+                'name' => 'Limpieza Express',
+                'slug' => 'limpieza-express',
+                'image' => $file,
+                'duration_minutes' => 40,
+            ])
+            ->call('create')
+            ->assertHasErrors(['data.duration_minutes']);
+
+        // 3. duration_minutes valid (e.g. 45 min) succeeds
+        Livewire::test(CreateService::class)
+            ->fillForm([
+                'name' => 'Limpieza Express',
+                'slug' => 'limpieza-express',
+                'image' => $file,
+                'duration_minutes' => 45,
+            ])
+            ->call('create')
+            ->assertHasNoErrors(['data.duration_minutes']);
+    }
 }
