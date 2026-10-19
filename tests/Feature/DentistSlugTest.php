@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\UserRole;
 use App\Filament\Resources\Dentists\Pages\CreateDentist;
+use App\Filament\Resources\Dentists\Pages\ListDentists;
 use App\Models\Dentist;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -115,5 +116,31 @@ class DentistSlugTest extends TestCase
         $dentist = Dentist::where('name', 'Dra. Sofía Mendoza Peña')->first();
         $this->assertNotNull($dentist);
         $this->assertEquals('dra-sofia-mendoza-pena', $dentist->slug);
+    }
+
+    public function test_dentist_table_is_active_toggle_sends_notification_toast(): void
+    {
+        $user = User::factory()->create([
+            'role' => UserRole::Admin,
+        ]);
+
+        $this->actingAs($user);
+
+        $dentist = Dentist::factory()->create([
+            'name' => 'Dr. Fernando Gomez',
+            'is_active' => true,
+        ]);
+
+        Livewire::test(ListDentists::class)
+            ->call('updateTableColumnState', 'is_active', (string) $dentist->getKey(), false)
+            ->assertNotified('Disponibilidad pausada');
+
+        $this->assertFalse($dentist->fresh()->is_active);
+
+        Livewire::test(ListDentists::class)
+            ->call('updateTableColumnState', 'is_active', (string) $dentist->getKey(), true)
+            ->assertNotified('Disponibilidad activada');
+
+        $this->assertTrue($dentist->fresh()->is_active);
     }
 }

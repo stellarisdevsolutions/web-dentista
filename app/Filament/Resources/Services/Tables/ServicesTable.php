@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Services\Tables;
 use App\Models\Service;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Notifications\Notification;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -67,13 +68,37 @@ class ServicesTable
                     ->sortable(),
 
                 ToggleColumn::make('allows_online_booking')
-                    ->label('Reserva Web'),
+                    ->label('Reserva Web')
+                    ->afterStateUpdated(function (Service $record, bool $state): void {
+                        Notification::make()
+                            ->title($state ? 'Reserva online habilitada' : 'Reserva online pausada')
+                            ->body($state ? "Los pacientes pueden reservar '{$record->name}' en la web." : "Se pausó la reserva online para '{$record->name}'.")
+                            ->color($state ? 'success' : 'gray')
+                            ->icon($state ? 'heroicon-o-globe-alt' : 'heroicon-o-pause-circle')
+                            ->send();
+                    }),
 
                 ToggleColumn::make('is_featured')
-                    ->label('Destacado'),
+                    ->label('Destacado')
+                    ->afterStateUpdated(function (Service $record, bool $state): void {
+                        Notification::make()
+                            ->title($state ? 'Tratamiento destacado' : 'Tratamiento no destacado')
+                            ->body($state ? "'{$record->name}' ahora se muestra en la portada web." : "'{$record->name}' se quitó de la portada web.")
+                            ->color($state ? 'success' : 'gray')
+                            ->icon($state ? 'heroicon-o-star' : 'heroicon-o-minus-circle')
+                            ->send();
+                    }),
 
                 ToggleColumn::make('is_active')
-                    ->label('Activo'),
+                    ->label('Activo')
+                    ->afterStateUpdated(function (Service $record, bool $state): void {
+                        Notification::make()
+                            ->title($state ? 'Tratamiento activado' : 'Tratamiento desactivado')
+                            ->body($state ? "'{$record->name}' está activo en el catálogo y sistema." : "'{$record->name}' se desactivó del catálogo.")
+                            ->color($state ? 'success' : 'gray')
+                            ->icon($state ? 'heroicon-o-check-circle' : 'heroicon-o-pause-circle')
+                            ->send();
+                    }),
 
                 TextColumn::make('order')
                     ->label('Orden')

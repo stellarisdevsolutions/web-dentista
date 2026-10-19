@@ -243,4 +243,41 @@ class ServiceSlugAndValidationTest extends TestCase
             ->call('create')
             ->assertHasNoErrors(['data.duration_minutes']);
     }
+
+    public function test_services_table_toggles_send_notification_toasts(): void
+    {
+        $user = User::factory()->create([
+            'role' => UserRole::Admin,
+        ]);
+
+        $this->actingAs($user);
+
+        $service = Service::factory()->create([
+            'name' => 'Implante Titanio',
+            'allows_online_booking' => true,
+            'is_featured' => false,
+            'is_active' => true,
+        ]);
+
+        // 1. Toggle allows_online_booking
+        Livewire::test(ListServices::class)
+            ->call('updateTableColumnState', 'allows_online_booking', (string) $service->getKey(), false)
+            ->assertNotified('Reserva online pausada');
+
+        $this->assertFalse($service->fresh()->allows_online_booking);
+
+        // 2. Toggle is_featured
+        Livewire::test(ListServices::class)
+            ->call('updateTableColumnState', 'is_featured', (string) $service->getKey(), true)
+            ->assertNotified('Tratamiento destacado');
+
+        $this->assertTrue($service->fresh()->is_featured);
+
+        // 3. Toggle is_active
+        Livewire::test(ListServices::class)
+            ->call('updateTableColumnState', 'is_active', (string) $service->getKey(), false)
+            ->assertNotified('Tratamiento desactivado');
+
+        $this->assertFalse($service->fresh()->is_active);
+    }
 }

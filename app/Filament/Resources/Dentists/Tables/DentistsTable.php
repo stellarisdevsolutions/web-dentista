@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Dentists\Tables;
 use App\Models\Dentist;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Notifications\Notification;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -68,7 +69,15 @@ class DentistsTable
                 ToggleColumn::make('is_active')
                     ->label('Disponible')
                     ->onColor('success')
-                    ->offColor('gray'),
+                    ->offColor('gray')
+                    ->afterStateUpdated(function (Dentist $record, bool $state): void {
+                        Notification::make()
+                            ->title($state ? 'Disponibilidad activada' : 'Disponibilidad pausada')
+                            ->body($state ? "{$record->name} ahora está disponible para citas." : "{$record->name} ya no recibirá nuevas citas.")
+                            ->color($state ? 'success' : 'gray')
+                            ->icon($state ? 'heroicon-o-check-circle' : 'heroicon-o-pause-circle')
+                            ->send();
+                    }),
 
                 TextColumn::make('order')
                     ->label('Orden')
