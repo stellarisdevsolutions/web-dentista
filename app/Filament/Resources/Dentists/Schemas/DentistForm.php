@@ -229,7 +229,6 @@ class DentistForm
                                             ->imagePreviewHeight('220')
                                             ->directory('dentists')
                                             ->disk('public')
-                                            ->hintIcon('heroicon-o-camera', tooltip: 'Puedes recortar en 1:1 con el lápiz o eliminar para mostrar iniciales como en Agenda')
                                             ->helperText('Formato 1:1 cuadrado (800×800 px). Si se deja vacío, se mostrarán las iniciales con fondo celeste como en Agenda. Se optimiza automáticamente a WebP.'),
 
                                         Toggle::make('is_active')

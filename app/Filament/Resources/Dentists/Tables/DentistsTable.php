@@ -3,11 +3,8 @@
 namespace App\Filament\Resources\Dentists\Tables;
 
 use App\Models\Dentist;
-use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\FileUpload;
-use Filament\Notifications\Notification;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -85,44 +82,6 @@ class DentistsTable
                     ->falseLabel('No disponibles'),
             ])
             ->recordActions([
-                Action::make('change_photo')
-                    ->label('Cambiar foto')
-                    ->icon('heroicon-o-camera')
-                    ->iconButton()
-                    ->color('info')
-                    ->tooltip('Cambiar fotografía')
-                    ->modalHeading(fn (Dentist $record): string => "Cambiar fotografía de {$record->name}")
-                    ->modalDescription('Sube o actualiza la fotografía 1:1 del especialista. Si la eliminas, se mostrarán las iniciales con fondo celeste estilo Agenda.')
-                    ->modalSubmitActionLabel('Guardar fotografía')
-                    ->schema([
-                        FileUpload::make('photo')
-                            ->label('Fotografía Oficial (1:1)')
-                            ->image()
-                            ->imageCropAspectRatio('1:1')
-                            ->imageEditor()
-                            ->imageEditorAspectRatios([
-                                null,
-                                '1:1',
-                            ])
-                            ->imageResizeMode('cover')
-                            ->imageResizeTargetWidth('800')
-                            ->imageResizeTargetHeight('800')
-                            ->directory('dentists')
-                            ->disk('public')
-                            ->default(fn (Dentist $record) => $record->photo)
-                            ->helperText('Formato 1:1 cuadrado (800×800 px). Se convertirá automáticamente a WebP.'),
-                    ])
-                    ->action(function (Dentist $record, array $data): void {
-                        $record->update([
-                            'photo' => $data['photo'] ?? null,
-                        ]);
-
-                        Notification::make()
-                            ->title('Fotografía actualizada correctamente')
-                            ->success()
-                            ->send();
-                    }),
-
                 EditAction::make()
                     ->iconButton()
                     ->tooltip('Editar especialista'),
