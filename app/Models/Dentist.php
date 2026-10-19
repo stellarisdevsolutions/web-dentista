@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Dentist extends Model
 {
@@ -297,5 +298,40 @@ class Dentist extends Model
         $last = count($words) > 1 ? mb_substr(end($words), 0, 1, 'UTF-8') : '';
 
         return mb_strtoupper($first.$last);
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (Dentist $dentist) {
+            if (blank($dentist->slug) && filled($dentist->name)) {
+                $dentist->slug = static::generateUniqueSlug($dentist->name, $dentist->id);
+            } elseif (filled($dentist->slug)) {
+                $dentist->slug = static::generateUniqueSlug($dentist->slug, $dentist->id);
+            }
+        });
+    }
+
+    /**
+     * Generate a clean, URL-safe, accent-free, and collision-free unique slug.
+     * E.g. "Juan José" -> "juan-jose", and if it already exists -> "juan-jose-1", "juan-jose-2".
+     */
+    public static function generateUniqueSlug(string $name, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($name);
+        if (empty($baseSlug)) {
+            $baseSlug = 'especialista';
+        }
+
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (static::where('slug', $slug)
+            ->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))
+            ->exists()) {
+            $slug = "{$baseSlug}-{$counter}";
+            $counter++;
+        }
+
+        return $slug;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Dentists\Schemas;
 
+use App\Models\Dentist;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -10,7 +11,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Str;
 
 class DentistForm
 {
@@ -254,7 +254,13 @@ class DentistForm
                                             ->placeholder('ej. Dr. Marcus Sterling')
                                             ->required()
                                             ->live(onBlur: true)
-                                            ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state)))
+                                            ->afterStateUpdated(function (?string $state, callable $set, ?Dentist $record) {
+                                                if (blank($state)) {
+                                                    return;
+                                                }
+
+                                                $set('slug', Dentist::generateUniqueSlug($state, $record?->id));
+                                            })
                                             ->maxLength(255),
 
                                         TextInput::make('title')
@@ -304,7 +310,16 @@ class DentistForm
                                             ->unique(ignoreRecord: true)
                                             ->maxLength(255)
                                             ->columnSpanFull()
-                                            ->helperText('Identificador único para la URL de su perfil público y reservas online.'),
+                                            ->live(onBlur: true)
+                                            ->afterStateUpdated(function (?string $state, callable $set, ?Dentist $record) {
+                                                if (blank($state)) {
+                                                    return;
+                                                }
+
+                                                $set('slug', Dentist::generateUniqueSlug($state, $record?->id));
+                                            })
+                                            ->dehydrateStateUsing(fn (?string $state, ?Dentist $record) => blank($state) ? null : Dentist::generateUniqueSlug($state, $record?->id))
+                                            ->helperText('Identificador único para la URL (sin acentos ni espacios). Si el slug ya existe, se asigna automáticamente un correlativo (ej. juan-jose-1) evitando errores de duplicados.'),
                                     ]),
                             ]),
                     ]),
