@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Service extends Model
 {
@@ -65,5 +66,45 @@ class Service extends Model
         ];
 
         return $fallbacks[$this->slug] ?? 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80';
+    }
+
+    public function getFormattedPriceAttribute(): string
+    {
+        return $this->price ? '$'.number_format((float) $this->price, 2) : 'A consultar';
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (Service $service) {
+            if (blank($service->slug)) {
+                $service->slug = static::generateUniqueSlug($service->name ?? 'tratamiento', $service->id);
+            } elseif ($service->isDirty('slug')) {
+                $service->slug = static::generateUniqueSlug($service->slug, $service->id);
+            }
+        });
+    }
+
+    /**
+     * Generate a clean, URL-safe, accent-free, and collision-free unique slug.
+     * E.g. "Blanqueamiento Láser" -> "blanqueamiento-laser", and if collision -> "blanqueamiento-laser-1".
+     */
+    public static function generateUniqueSlug(string $name, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($name);
+        if (empty($baseSlug)) {
+            $baseSlug = 'tratamiento';
+        }
+
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (static::where('slug', $slug)
+            ->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))
+            ->exists()) {
+            $slug = "{$baseSlug}-{$counter}";
+            $counter++;
+        }
+
+        return $slug;
     }
 }

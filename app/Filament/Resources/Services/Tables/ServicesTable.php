@@ -2,14 +2,18 @@
 
 namespace App\Filament\Resources\Services\Tables;
 
+use App\Models\Service;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class ServicesTable
 {
@@ -17,20 +21,28 @@ class ServicesTable
     {
         return $table
             ->defaultSort('order', 'asc')
+            ->emptyStateHeading('No hay tratamientos registrados')
+            ->emptyStateDescription('Comienza añadiendo los servicios y procedimientos odontológicos de la clínica.')
+            ->emptyStateIcon('heroicon-o-sparkles')
             ->columns([
                 ImageColumn::make('image')
                     ->label('Imagen')
-                    ->disk('public'),
+                    ->disk('public')
+                    ->defaultImageUrl(fn (Service $record): string => $record->image_url)
+                    ->extraImgAttributes(['class' => 'rounded-xl object-cover shadow-xs border border-slate-200/80'])
+                    ->size(46),
 
                 TextColumn::make('name')
                     ->label('Tratamiento')
                     ->searchable()
                     ->sortable()
-                    ->weight('bold'),
+                    ->weight(FontWeight::Bold)
+                    ->description(fn (Service $record): string => $record->short_description ? Str::limit($record->short_description, 50) : '—'),
 
                 TextColumn::make('category')
                     ->label('Categoría')
                     ->badge()
+                    ->color('info')
                     ->searchable(),
 
                 TextColumn::make('price')
@@ -41,10 +53,19 @@ class ServicesTable
                 TextColumn::make('duration_minutes')
                     ->label('Duración')
                     ->suffix(' min')
+                    ->icon('heroicon-o-clock')
+                    ->sortable(),
+
+                TextColumn::make('dentists_count')
+                    ->counts('dentists')
+                    ->label('Especialistas')
+                    ->badge()
+                    ->color('success')
+                    ->icon('heroicon-o-user-group')
                     ->sortable(),
 
                 ToggleColumn::make('allows_online_booking')
-                    ->label('Reserva Online'),
+                    ->label('Reserva Web'),
 
                 ToggleColumn::make('is_featured')
                     ->label('Destacado'),
@@ -61,9 +82,12 @@ class ServicesTable
                     ->label('Estado Activo'),
                 TernaryFilter::make('allows_online_booking')
                     ->label('Reserva Online Permitida'),
+                TernaryFilter::make('is_featured')
+                    ->label('Destacado en Inicio'),
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
