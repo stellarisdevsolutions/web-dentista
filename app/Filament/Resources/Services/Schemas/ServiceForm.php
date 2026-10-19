@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\Services\Schemas;
 
 use App\Models\Service;
+use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -16,6 +18,10 @@ class ServiceForm
 {
     public static function configure(Schema $schema): Schema
     {
+        $appUrl = config('app.url', 'http://localhost:8000');
+        $host = preg_replace('#^https?://#', '', rtrim((string) $appUrl, '/'));
+        $urlPrefix = $host.'/servicios/';
+
         return $schema
             ->components([
                 // ==========================================
@@ -57,6 +63,10 @@ class ServiceForm
                                 Grid::make(['default' => 1, 'sm' => 2])
                                     ->columnSpan(['default' => 12, 'lg' => 8, 'xl' => 8])
                                     ->schema([
+                                        Hidden::make('is_slug_editable')
+                                            ->default(false)
+                                            ->dehydrated(false),
+
                                         TextInput::make('name')
                                             ->label('Nombre del Tratamiento')
                                             ->prefixIcon('heroicon-o-sparkles')
@@ -65,8 +75,8 @@ class ServiceForm
                                             ->maxLength(255)
                                             ->columnSpanFull()
                                             ->live(debounce: 300)
-                                            ->afterStateUpdated(function (?string $state, callable $set, ?string $operation, ?Service $record): void {
-                                                if ($operation === 'create' && filled($state)) {
+                                            ->afterStateUpdated(function (?string $state, callable $set, callable $get, ?string $operation, ?Service $record): void {
+                                                if ($operation === 'create' && filled($state) && ! $get('is_slug_editable')) {
                                                     $set('slug', Service::generateUniqueSlug($state, $record?->id));
                                                 }
                                             }),
@@ -74,11 +84,26 @@ class ServiceForm
                                         TextInput::make('slug')
                                             ->label('Enlace Web / Slug (URL)')
                                             ->prefixIcon('heroicon-o-link')
-                                            ->prefix('auradental.com/servicios/')
+                                            ->prefix($urlPrefix)
                                             ->required()
                                             ->unique(ignoreRecord: true)
                                             ->maxLength(255)
                                             ->columnSpanFull()
+                                            ->readOnly(fn (callable $get): bool => ! (bool) $get('is_slug_editable'))
+                                            ->extraInputAttributes(fn (callable $get): array => [
+                                                'class' => $get('is_slug_editable')
+                                                    ? 'bg-white dark:bg-slate-900 ring-2 ring-sky-500'
+                                                    : 'bg-slate-100/70 dark:bg-slate-900/60 cursor-default opacity-90',
+                                            ])
+                                            ->suffixAction(
+                                                Action::make('toggle_slug_edit')
+                                                    ->icon(fn (callable $get): string => $get('is_slug_editable') ? 'heroicon-m-check' : 'heroicon-m-pencil-square')
+                                                    ->tooltip(fn (callable $get): string => $get('is_slug_editable') ? 'Bloquear edición de enlace' : 'Personalizar enlace web')
+                                                    ->color(fn (callable $get): string => $get('is_slug_editable') ? 'success' : 'gray')
+                                                    ->action(function (callable $set, callable $get): void {
+                                                        $set('is_slug_editable', ! $get('is_slug_editable'));
+                                                    })
+                                            )
                                             ->live(onBlur: true)
                                             ->afterStateUpdated(function (?string $state, callable $set, ?Service $record): void {
                                                 if (filled($state)) {
@@ -86,7 +111,10 @@ class ServiceForm
                                                 }
                                             })
                                             ->dehydrateStateUsing(fn (?string $state, ?Service $record) => blank($state) ? null : Service::generateUniqueSlug($state, $record?->id))
-                                            ->helperText('Enlace permanente para la web. Al crear se genera automáticamente en vivo según el nombre. En edición se conserva intacto aunque modifiques el nombre, con opción a editarlo manualmente.'),
+                                            ->helperText(fn (callable $get): string => $get('is_slug_editable')
+                                                ? 'Modo edición activado: personaliza el enlace a tu gusto (sin acentos ni espacios; las colisiones se resuelven solas).'
+                                                : 'Generado automáticamente según el nombre. Protegido contra cambios accidentales (pulsa el lápiz para personalizar).'
+                                            ),
 
                                         TextInput::make('category')
                                             ->label('Categoría')

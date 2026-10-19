@@ -176,6 +176,25 @@ class ServiceSlugAndValidationTest extends TestCase
         $this->assertEquals(90, $details['duration_minutes']);
         $this->assertCount(1, $details['dentists']);
         $this->assertEquals('Dr. Robert Martinez', $details['dentists'][0]['name']);
+        $this->assertStringContainsString('/servicios/diseno-de-sonrisa-3d', $details['display_url']);
         $this->assertStringContainsString('/admin/services/'.$service->id.'/edit', $details['edit_url']);
+    }
+
+    public function test_service_form_renders_dynamic_prefix_from_app_url(): void
+    {
+        $user = User::factory()->create([
+            'role' => UserRole::Admin,
+        ]);
+
+        $this->actingAs($user);
+
+        $response = $this->get('/admin/services/create');
+        $response->assertSuccessful();
+
+        $appUrl = config('app.url', 'http://localhost:8000');
+        $host = preg_replace('#^https?://#', '', rtrim((string) $appUrl, '/'));
+        $expectedPrefix = $host.'/servicios/';
+
+        $response->assertSee($expectedPrefix);
     }
 }

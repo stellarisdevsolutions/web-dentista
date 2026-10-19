@@ -39,6 +39,10 @@ class ListServices extends ListRecords
                 return null;
             }
 
+            $appUrl = config('app.url', 'http://localhost:8000');
+            $host = preg_replace('#^https?://#', '', rtrim((string) $appUrl, '/'));
+            $displayUrl = $host.'/servicios/'.$service->slug;
+
             return [
                 'id' => $service->id,
                 'name' => $service->name,
@@ -63,6 +67,7 @@ class ListServices extends ListRecords
                     'photo_url' => $d->photo_url,
                 ])->values()->all(),
                 'public_url' => url('/servicios/'.$service->slug),
+                'display_url' => $displayUrl,
                 'edit_url' => ServiceResource::getUrl('edit', ['record' => $service->id]),
             ];
         } catch (\Throwable $e) {

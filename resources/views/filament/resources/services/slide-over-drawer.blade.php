@@ -204,7 +204,7 @@
                             </div>
                             <div class="min-w-0">
                                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">URL Pública</span>
-                                <span class="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 truncate block" x-text="'auradental.com/servicios/' + data.slug"></span>
+                                <span class="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 truncate block" x-text="data.display_url || (window.location.host + '/servicios/' + data.slug)"></span>
                             </div>
                         </div>
                         <template x-if="data.public_url">
