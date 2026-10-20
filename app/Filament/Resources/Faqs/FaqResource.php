@@ -19,6 +19,8 @@ class FaqResource extends Resource
 {
     protected static ?string $model = Faq::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQuestionMarkCircle;
 
     protected static ?int $navigationSort = 3;

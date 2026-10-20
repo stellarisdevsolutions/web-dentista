@@ -19,6 +19,8 @@ class BannerResource extends Resource
 {
     protected static ?string $model = Banner::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhoto;
 
     protected static ?int $navigationSort = 1;

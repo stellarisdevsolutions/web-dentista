@@ -19,6 +19,8 @@ class SmileCaseResource extends Resource
 {
     protected static ?string $model = SmileCase::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCamera;
 
     protected static ?int $navigationSort = 1;

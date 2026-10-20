@@ -19,6 +19,8 @@ class TestimonialResource extends Resource
 {
     protected static ?string $model = Testimonial::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleBottomCenterText;
 
     protected static ?int $navigationSort = 2;

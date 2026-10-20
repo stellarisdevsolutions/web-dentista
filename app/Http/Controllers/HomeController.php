@@ -10,6 +10,7 @@ use App\Models\Dentist;
 use App\Models\Faq;
 use App\Models\Post;
 use App\Models\Service;
+use App\Models\SiteSection;
 use App\Models\SmileCase;
 use App\Models\Testimonial;
 use Illuminate\Contracts\View\View;
@@ -31,6 +32,7 @@ class HomeController extends Controller
         $testimonials = Testimonial::where('is_active', true)->orderBy('order')->get();
         $faqs = Faq::where('is_active', true)->orderBy('order')->get();
         $posts = Post::where('is_published', true)->orderByDesc('published_at')->take(3)->get();
+        $sections = SiteSection::forPage('home')->get()->keyBy('section_key');
 
         return view('welcome', compact(
             'clinic',
@@ -40,7 +42,8 @@ class HomeController extends Controller
             'smileCases',
             'testimonials',
             'faqs',
-            'posts'
+            'posts',
+            'sections'
         ));
     }
 

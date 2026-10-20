@@ -57,39 +57,296 @@
     @keydown.window.ctrl.k.prevent="searchOpen = true"
     @keydown.window.cmd.k.prevent="searchOpen = true"
 >
-    <!-- 1. TOPBAR INFORMATIVO -->
+    <!-- 1. TOPBAR INFORMATIVO (Estilo Referencia: Urgencia + Email | Dirección + Redes) -->
     <div class="bg-[#0c1830] text-slate-300 text-[11px] font-medium border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-col sm:flex-row justify-between items-center gap-2">
-            <div class="flex items-center space-x-6 text-slate-300">
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span class="text-slate-400">Emergencias 24/7:</span>
-                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $navClinic->emergency_phone ?? $navClinic->phone) }}" class="font-bold text-white hover:text-sky-400 transition-colors">
-                        {{ $navClinic->emergency_phone ?? $navClinic->phone }}
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5 md:py-2">
+            
+            <!-- A. VISTA ESCRITORIO (md y superior): 2 Columnas completas en 1 sola fila horizontal -->
+            <div class="hidden md:flex justify-between items-center gap-4">
+                <!-- Lado Izquierdo: Teléfono de Emergencia + Correo Electrónico -->
+                <div class="flex items-center gap-6 text-slate-300">
+                    <!-- Teléfono de Emergencia -->
+                    <a 
+                        href="tel:{{ preg_replace('/[^0-9+]/', '', $navClinic->emergency_phone ?? $navClinic->phone) }}" 
+                        class="flex items-center gap-1.5 hover:text-white transition-colors group"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400 group-hover:scale-110 transition-transform">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                        <span>{{ app()->getLocale() === 'en' ? 'Emergency' : 'Urgencias' }}: <strong class="text-white group-hover:text-sky-300 font-semibold">{{ $navClinic->emergency_phone ?? $navClinic->phone }}</strong></span>
                     </a>
+
+                    <!-- Correo Electrónico -->
+                    @if(!empty($navClinic->email))
+                        <a 
+                            href="mailto:{{ $navClinic->email }}" 
+                            class="flex items-center gap-1.5 hover:text-white transition-colors group"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400 group-hover:scale-110 transition-transform">
+                                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                            </svg>
+                            <span class="text-slate-300 group-hover:text-white">{{ $navClinic->email }}</span>
+                        </a>
+                    @endif
                 </div>
-                <div class="hidden md:flex items-center gap-1.5 text-slate-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400">
-                        <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                    <span>{{ $navClinic->address }}</span>
+
+                <!-- Lado Derecho: Dirección de la Clínica + Iconos de Redes Sociales -->
+                <div class="flex items-center gap-4 text-slate-300">
+                    <!-- Dirección -->
+                    @if(!empty($navClinic->address))
+                        <div class="flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400 shrink-0">
+                                <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            @if(!empty($navClinic->google_maps_url))
+                                <a href="{{ $navClinic->google_maps_url }}" target="_blank" rel="noopener" class="hover:text-white transition-colors truncate max-w-xs sm:max-w-sm">
+                                    {{ $navClinic->address }}
+                                </a>
+                            @else
+                                <span class="truncate max-w-xs sm:max-w-sm">{{ $navClinic->address }}</span>
+                            @endif
+                        </div>
+                    @endif
+
+                    <div class="h-3 w-px bg-slate-700"></div>
+
+                    <!-- Iconos de Redes Sociales -->
+                    <div class="flex items-center gap-3 text-slate-400">
+                        <!-- Facebook -->
+                        <a 
+                            href="{{ $navClinic->social_links['facebook'] ?? 'https://facebook.com' }}" 
+                            target="_blank" 
+                            rel="noopener" 
+                            class="hover:text-sky-400 transition-colors"
+                            title="Facebook"
+                            aria-label="Facebook"
+                        >
+                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+
+                        <!-- X (Twitter) -->
+                        <a 
+                            href="{{ $navClinic->social_links['twitter'] ?? $navClinic->social_links['x'] ?? 'https://x.com' }}" 
+                            target="_blank" 
+                            rel="noopener" 
+                            class="hover:text-sky-400 transition-colors"
+                            title="X (Twitter)"
+                            aria-label="X (Twitter)"
+                        >
+                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+
+                        <!-- Instagram -->
+                        <a 
+                            href="{{ $navClinic->social_links['instagram'] ?? 'https://instagram.com' }}" 
+                            target="_blank" 
+                            rel="noopener" 
+                            class="hover:text-sky-400 transition-colors"
+                            title="Instagram"
+                            aria-label="Instagram"
+                        >
+                            <svg class="w-3.5 h-3.5 fill-none stroke-current" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                            </svg>
+                        </a>
+
+                        <!-- LinkedIn -->
+                        <a 
+                            href="{{ $navClinic->social_links['linkedin'] ?? 'https://linkedin.com' }}" 
+                            target="_blank" 
+                            rel="noopener" 
+                            class="hover:text-sky-400 transition-colors"
+                            title="LinkedIn"
+                            aria-label="LinkedIn"
+                        >
+                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9h2.79v8.37H6.46v-8.37M7.86 6.32a1.63 1.63 0 1 0 1.63 1.63 1.63 1.63 0 0 0-1.63-1.63z"/>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex items-center space-x-4">
-                <span class="text-slate-400 hidden lg:inline">Lun - Sáb: 8:00 AM - 7:00 PM</span>
-                <span class="text-slate-700 hidden lg:inline">•</span>
-                <a 
-                    href="tel:{{ $navClinic->phone }}" 
-                    class="text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1.5 transition-colors"
-                >
-                    <svg class="w-3.5 h-3.5 fill-none stroke-current" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                    </svg>
-                    <span>Llamar: {{ $navClinic->phone }}</span>
-                </a>
+            <!-- B. VISTA MÓVIL (< md): Estrictamente 1 sola fila con animación dato por dato -->
+            @php
+                $mobileSlideCount = 1 + (!empty($navClinic->email) ? 1 : 0) + (!empty($navClinic->address) ? 1 : 0);
+                $currSlide = 0;
+            @endphp
+            <div 
+                class="flex md:hidden items-center justify-between gap-3 w-full"
+                x-data="{ 
+                    current: 0, 
+                    total: {{ $mobileSlideCount }},
+                    timer: null,
+                    start() {
+                        if (this.total > 1) {
+                            this.timer = setInterval(() => {
+                                this.current = (this.current + 1) % this.total;
+                            }, 3600);
+                        }
+                    },
+                    stop() {
+                        if (this.timer) clearInterval(this.timer);
+                    }
+                }"
+                x-init="start()"
+                @mouseenter="stop()"
+                @mouseleave="start()"
+                @touchstart.passive="stop()"
+                @touchend.passive="start()"
+            >
+                <!-- Contenedor del Ticker (1 Fila estricta con altura fija relativa para evitar desbordes) -->
+                <div class="relative h-5 flex-1 min-w-0 overflow-hidden">
+                    <!-- Dato 1: Teléfono de Urgencias -->
+                    <div 
+                        x-show="current === {{ $currSlide }}"
+                        x-transition:enter="transition ease-out duration-400 transform"
+                        x-transition:enter-start="opacity-0 translate-y-3"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-300 transform"
+                        x-transition:leave-start="opacity-100 translate-y-0"
+                        x-transition:leave-end="opacity-0 -translate-y-3"
+                        class="absolute inset-0 flex items-center gap-1.5 truncate text-slate-300"
+                    >
+                        <a 
+                            href="tel:{{ preg_replace('/[^0-9+]/', '', $navClinic->emergency_phone ?? $navClinic->phone) }}" 
+                            class="flex items-center gap-1.5 hover:text-white truncate"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400 shrink-0">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                            <span class="truncate">{{ app()->getLocale() === 'en' ? 'Emergency' : 'Urgencias' }}: <strong class="text-white font-semibold">{{ $navClinic->emergency_phone ?? $navClinic->phone }}</strong></span>
+                        </a>
+                    </div>
+                    @php $currSlide++; @endphp
+
+                    <!-- Dato 2: Correo Electrónico -->
+                    @if(!empty($navClinic->email))
+                        <div 
+                            x-show="current === {{ $currSlide }}"
+                            x-cloak
+                            x-transition:enter="transition ease-out duration-400 transform"
+                            x-transition:enter-start="opacity-0 translate-y-3"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-300 transform"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 -translate-y-3"
+                            class="absolute inset-0 flex items-center gap-1.5 truncate text-slate-300"
+                        >
+                            <a 
+                                href="mailto:{{ $navClinic->email }}" 
+                                class="flex items-center gap-1.5 hover:text-white truncate"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400 shrink-0">
+                                    <rect width="20" height="16" x="2" y="4" rx="2"/>
+                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                                </svg>
+                                <span class="truncate">{{ $navClinic->email }}</span>
+                            </a>
+                        </div>
+                        @php $currSlide++; @endphp
+                    @endif
+
+                    <!-- Dato 3: Dirección de la Clínica -->
+                    @if(!empty($navClinic->address))
+                        <div 
+                            x-show="current === {{ $currSlide }}"
+                            x-cloak
+                            x-transition:enter="transition ease-out duration-400 transform"
+                            x-transition:enter-start="opacity-0 translate-y-3"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-300 transform"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 -translate-y-3"
+                            class="absolute inset-0 flex items-center gap-1.5 truncate text-slate-300"
+                        >
+                            @if(!empty($navClinic->google_maps_url))
+                                <a href="{{ $navClinic->google_maps_url }}" target="_blank" rel="noopener" class="flex items-center gap-1.5 hover:text-white truncate">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400 shrink-0">
+                                        <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                    <span class="truncate">{{ $navClinic->address }}</span>
+                                </a>
+                            @else
+                                <div class="flex items-center gap-1.5 truncate">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400 shrink-0">
+                                        <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                    <span class="truncate">{{ $navClinic->address }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Iconos de Redes Sociales en Móvil (Fijos, compactos, en la misma fila) -->
+                <div class="flex items-center gap-2.5 shrink-0 pl-2.5 border-l border-slate-800 text-slate-400">
+                    <a 
+                        href="{{ $navClinic->social_links['facebook'] ?? 'https://facebook.com' }}" 
+                        target="_blank" 
+                        rel="noopener" 
+                        class="hover:text-sky-400 transition-colors"
+                        title="Facebook"
+                        aria-label="Facebook"
+                    >
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                    </a>
+
+                    <a 
+                        href="{{ $navClinic->social_links['twitter'] ?? $navClinic->social_links['x'] ?? 'https://x.com' }}" 
+                        target="_blank" 
+                        rel="noopener" 
+                        class="hover:text-sky-400 transition-colors"
+                        title="X (Twitter)"
+                        aria-label="X (Twitter)"
+                    >
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                    </a>
+
+                    <a 
+                        href="{{ $navClinic->social_links['instagram'] ?? 'https://instagram.com' }}" 
+                        target="_blank" 
+                        rel="noopener" 
+                        class="hover:text-sky-400 transition-colors"
+                        title="Instagram"
+                        aria-label="Instagram"
+                    >
+                        <svg class="w-3 h-3 fill-none stroke-current" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                        </svg>
+                    </a>
+
+                    <a 
+                        href="{{ $navClinic->social_links['linkedin'] ?? 'https://linkedin.com' }}" 
+                        target="_blank" 
+                        rel="noopener" 
+                        class="hover:text-sky-400 transition-colors"
+                        title="LinkedIn"
+                        aria-label="LinkedIn"
+                    >
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24">
+                            <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9h2.79v8.37H6.46v-8.37M7.86 6.32a1.63 1.63 0 1 0 1.63 1.63 1.63 1.63 0 0 0-1.63-1.63z"/>
+                        </svg>
+                    </a>
+                </div>
             </div>
+
         </div>
     </div>
 

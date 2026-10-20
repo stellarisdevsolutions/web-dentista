@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        $this->call(DentalClinicSeeder::class);
+        $this->call([
+            DentalClinicSeeder::class,
+            SiteSectionSeeder::class,
+        ]);
     }
 }

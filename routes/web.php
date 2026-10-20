@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\MediaLibraryController;
+use App\Http\Controllers\Admin\VisualEditorController;
 use App\Http\Controllers\AppointmentBookingController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +35,16 @@ Route::get('/schedule', [AppointmentBookingController::class, 'schedule'])->name
 Route::post('/appointments', [AppointmentBookingController::class, 'store'])->middleware('throttle:20,1')->name('appointments.store');
 Route::get('/api/services/{service}/dentists', [AppointmentBookingController::class, 'dentistsForService'])->middleware('throttle:60,1')->name('api.services.dentists');
 Route::get('/api/appointments/available-slots', [AppointmentBookingController::class, 'availableSlots'])->middleware('throttle:60,1')->name('api.appointments.slots');
+
+// Full-screen Visual Editor and Media Library (Admin Only)
+Route::middleware(['web', 'auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/editor', [VisualEditorController::class, 'index'])->name('editor.index');
+    Route::post('/editor/save', [VisualEditorController::class, 'save'])->name('editor.save');
+
+    Route::get('/media', [MediaLibraryController::class, 'standalone'])->name('media.standalone');
+    Route::get('/media-library', [MediaLibraryController::class, 'index'])->name('media-library.index');
+    Route::post('/media-library', [MediaLibraryController::class, 'store'])->name('media-library.store');
+    Route::patch('/media-library/{mediaAsset}', [MediaLibraryController::class, 'update'])->name('media-library.update');
+    Route::delete('/media-library/{mediaAsset}', [MediaLibraryController::class, 'destroy'])->name('media-library.destroy');
+    Route::post('/media-library/sync', [MediaLibraryController::class, 'syncExisting'])->name('media-library.sync');
+});
