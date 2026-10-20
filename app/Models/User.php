@@ -64,6 +64,21 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(Dentist::class);
     }
 
+    public function getInitialsAttribute(): string
+    {
+        $words = preg_split("/[\s,--]+/", trim((string) $this->name));
+        if (count($words) === 1) {
+            return mb_strtoupper(mb_substr($words[0], 0, 2));
+        }
+
+        $initials = '';
+        foreach ($words as $w) {
+            $initials .= mb_substr($w, 0, 1);
+        }
+
+        return mb_strtoupper(mb_substr($initials, 0, 2)) ?: 'US';
+    }
+
     /**
      * Get the attributes that should be cast.
      *

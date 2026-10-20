@@ -25,4 +25,13 @@ enum UserRole: string
             self::Dentist => 'success',
         };
     }
+
+    public function icon(): string
+    {
+        return match ($this) {
+            self::Admin => 'heroicon-m-shield-check',
+            self::Receptionist => 'heroicon-m-clipboard-document-list',
+            self::Dentist => 'heroicon-m-academic-cap',
+        };
+    }
 }

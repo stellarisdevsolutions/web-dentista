@@ -44,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('16.5rem')
             ->collapsedSidebarWidth('4.75rem')
-            ->spa(true, hasPrefetching: true)
+            ->spa(false)
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn () => view('filament.admin.theme-overrides')
