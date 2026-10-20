@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    @include('partials.favicon')
+
     <title>Blog y Consejos Clínicos | {{ $clinic->clinic_name }}</title>
     <meta name="description" content="Aprende sobre higiene oral, ortodoncia invisible, implantes y estética dental con los especialistas de {{ $clinic->clinic_name }}.">
 

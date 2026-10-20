@@ -24,14 +24,18 @@
             <!-- Col 1: Brand & Mission -->
             <div class="space-y-4">
                 <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center shadow-md shadow-sky-500/20">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-                            <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
-                        </svg>
-                    </div>
-                    <span class="text-2xl font-black tracking-tight text-white">
-                        {{ explode(' ', $footerClinic->clinic_name)[0] }}<span class="text-sky-400">{{ count(explode(' ', $footerClinic->clinic_name)) > 1 ? implode(' ', array_slice(explode(' ', $footerClinic->clinic_name), 1)) : 'Studio' }}</span>
-                    </span>
+                    @if($footerClinic->logo_asset_url)
+                        <img src="{{ $footerClinic->logo_asset_url }}" alt="{{ $footerClinic->clinic_name }}" class="h-10 w-auto max-w-[180px] object-contain" />
+                    @else
+                        <div class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center shadow-md shadow-sky-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+                                <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
+                            </svg>
+                        </div>
+                        <span class="text-2xl font-black tracking-tight text-white">
+                            {{ explode(' ', $footerClinic->clinic_name)[0] }}<span class="text-sky-400">{{ count(explode(' ', $footerClinic->clinic_name)) > 1 ? implode(' ', array_slice(explode(' ', $footerClinic->clinic_name), 1)) : 'Studio' }}</span>
+                        </span>
+                    @endif
                 </a>
 
                 <p class="text-slate-400 text-xs leading-relaxed font-light">

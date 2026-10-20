@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    @include('partials.favicon')
+
     <title>Nosotros y Especialistas | {{ $clinic->clinic_name }}</title>
     <meta name="description" content="Conoce a nuestro equipo médico odontológico de especialistas y nuestra trayectoria de excelencia clínica en {{ $clinic->clinic_name }}.">
 

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    @include('partials.favicon')
+
     <title>{{ $service->name }} | {{ $clinic->clinic_name }}</title>
     <meta name="description" content="{{ $service->short_description ?? Str::limit($service->description, 150) }}">
 

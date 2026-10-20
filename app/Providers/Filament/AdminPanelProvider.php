@@ -9,6 +9,7 @@ use App\Filament\Widgets\LatestAppointmentsWidget;
 use App\Filament\Widgets\TodaySpecialistsWidget;
 use App\Filament\Widgets\TreatmentDistributionChart;
 use App\Filament\Widgets\WelcomeBannerWidget;
+use App\Models\ClinicSetting;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -37,6 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('Aura Dental Studio')
             ->brandLogo(fn () => view('filament.admin.logo'))
             ->brandLogoHeight('auto')
+            ->favicon(fn () => ClinicSetting::first()?->favicon_asset_url ?? null)
             ->login()
             ->colors([
                 'primary' => Color::Sky,

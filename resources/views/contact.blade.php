@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    @include('partials.favicon')
+
     <title>Contacto y Ubicación | {{ $clinic->clinic_name }}</title>
     <meta name="description" content="Ponte en contacto con {{ $clinic->clinic_name }}. Atención de urgencias dentales 24/7, consultas generales, ubicación y horarios de atención.">
 

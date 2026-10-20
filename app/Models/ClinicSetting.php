@@ -25,4 +25,30 @@ class ClinicSetting extends Model
             'social_links' => 'array',
         ];
     }
+
+    public function getLogoAssetUrlAttribute(): ?string
+    {
+        if (empty($this->logo_url)) {
+            return null;
+        }
+
+        if (str_starts_with($this->logo_url, 'http://') || str_starts_with($this->logo_url, 'https://')) {
+            return $this->logo_url;
+        }
+
+        return asset('storage/'.ltrim($this->logo_url, '/'));
+    }
+
+    public function getFaviconAssetUrlAttribute(): ?string
+    {
+        if (empty($this->favicon_url)) {
+            return null;
+        }
+
+        if (str_starts_with($this->favicon_url, 'http://') || str_starts_with($this->favicon_url, 'https://')) {
+            return $this->favicon_url;
+        }
+
+        return asset('storage/'.ltrim($this->favicon_url, '/'));
+    }
 }
