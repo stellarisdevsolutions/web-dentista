@@ -28,9 +28,9 @@ class SyncMediaLibraryCommand extends Command
      */
     public function handle(): int
     {
-        $this->info('Iniciando sincronización de imágenes de la clínica...');
+        $this->info('Iniciando sincronización de imágenes de la galería web...');
 
-        $directories = ['clinic', 'dentists', 'services', 'blog', 'media'];
+        $directories = ['media'];
         $synced = 0;
 
         foreach ($directories as $dir) {

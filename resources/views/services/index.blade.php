@@ -90,7 +90,7 @@
                                 <div class="aspect-[4/3] w-full overflow-hidden bg-slate-100">
                                     <img 
                                         src="{{ $service->image_url }}" 
-                                        alt="{{ $service->name }}" 
+                                        alt="{{ __('images.service_card', ['service' => $service->name, 'clinic' => $clinic->clinic_name ?? 'Aura Dental Studio']) }}" 
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                         loading="lazy"
                                     />

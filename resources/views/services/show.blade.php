@@ -87,7 +87,7 @@
                             <div class="aspect-[4/3] w-full overflow-hidden bg-slate-100 md:rounded-2xl md:shadow-xs">
                                 <img 
                                     src="{{ $service->image_url }}" 
-                                    alt="{{ $service->name }}" 
+                                    alt="{{ __('images.service_detail', ['service' => $service->name]) }}" 
                                     class="w-full h-full object-cover"
                                 />
                             </div>
@@ -142,7 +142,7 @@
                                                 @if($doc->photo_url)
                                                     <img 
                                                         src="{{ $doc->photo_url }}" 
-                                                        alt="{{ $doc->name }}" 
+                                                        alt="{{ __('images.service_dentist', ['name' => $doc->name, 'service' => $service->name]) }}" 
                                                         class="w-full h-full object-cover"
                                                     />
                                                 @else

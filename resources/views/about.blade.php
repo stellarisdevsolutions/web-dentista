@@ -193,7 +193,7 @@
                                 <img
                                     data-cms-field="image_1_url"
                                     src="{{ $storyImage1 }}"
-                                    alt="{{ $storyTitle }}"
+                                    alt="{{ __('images.about_story_1', ['clinic' => $clinic->clinic_name ?? 'Aura Dental Studio']) }}"
                                     class="w-full h-[360px] object-cover hover:scale-105 transition-transform duration-700"
                                     loading="eager"
                                 />
@@ -210,7 +210,7 @@
                                 <img
                                     data-cms-field="image_2_url"
                                     src="{{ $storyImage2 }}"
-                                    alt="{{ $storyTitle }}"
+                                    alt="{{ __('images.about_story_2') }}"
                                     class="w-full h-full object-cover"
                                     loading="eager"
                                 />
@@ -385,7 +385,7 @@
                                         @click="activeDentist = {{ Js::from($dentistData) }}; isDentistModalOpen = true"
                                     >
                                         @if($dentist->photo_url)
-                                            <img src="{{ $dentist->photo_url }}" alt="{{ $dentist->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                                            <img src="{{ $dentist->photo_url }}" alt="{{ __('images.about_dentist_photo', ['name' => $dentist->name, 'specialty' => $dentist->specialty]) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                                         @else
                                             <div class="w-full h-full bg-[#0EA5E9] text-[#0F172A] font-black text-6xl sm:text-7xl flex items-center justify-center tracking-tight group-hover:scale-105 transition-transform duration-500">
                                                 {{ $dentist->initials }}
@@ -497,7 +497,7 @@
                                 <!-- Doctor Photo (1:1) -->
                                 <div class="w-28 h-28 sm:w-32 sm:h-32 aspect-square rounded-2xl overflow-hidden bg-white p-1 border-4 border-white shadow-xl flex-shrink-0 relative z-10 flex items-center justify-center">
                                     <template x-if="activeDentist?.photo_url">
-                                        <img :src="activeDentist?.photo_url" :alt="activeDentist?.name" class="w-full h-full object-cover rounded-xl" />
+                                        <img :src="activeDentist?.photo_url" :alt="'{{ __('images.about_dentist_modal', ['name' => '']) }}' + (activeDentist?.name || '')" class="w-full h-full object-cover rounded-xl" />
                                     </template>
                                     <template x-if="!activeDentist?.photo_url">
                                         <div class="w-full h-full rounded-xl bg-[#0EA5E9] text-[#0F172A] font-black text-3xl sm:text-4xl flex items-center justify-center select-none shadow-inner">

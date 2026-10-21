@@ -137,7 +137,7 @@
                     <img 
                         data-cms-field="image_url" 
                         src="{{ !empty($hero['image_url']) ? $hero['image_url'] : 'https://masalaserclinic.com/wp-content/uploads/elementor/thumbs/dentist-making-professional-teeth-cleaning-withb-cotton-female-young-patient-dental-office-scaled-rmzddojmvr5b2ndthwo8x3mhck1ct16aflega90jqw.jpg' }}" 
-                        alt="{{ $hero['title'] ?? 'Odontología moderna en ' . $clinic->clinic_name }}" 
+                        alt="{{ __('images.home_hero', ['clinic' => $clinic->clinic_name ?? 'Aura Dental Studio']) }}" 
                         class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" 
                         loading="eager" 
                         fetchpriority="high"
@@ -203,7 +203,7 @@
                                 <img 
                                     data-cms-field="image_1_url" 
                                     src="{{ !empty($aboutSec['image_1_url']) ? $aboutSec['image_1_url'] : ($aboutSec['image_url'] ?? 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80') }}" 
-                                    alt="Instalaciones clínicas de {{ $clinic->clinic_name }}" 
+                                    alt="{{ __('images.home_about_1', ['clinic' => $clinic->clinic_name ?? 'Aura Dental Studio']) }}" 
                                     class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" 
                                     loading="lazy" 
                                 />
@@ -220,7 +220,7 @@
                                 <img 
                                     data-cms-field="image_2_url" 
                                     src="{{ !empty($aboutSec['image_2_url']) ? $aboutSec['image_2_url'] : 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80' }}" 
-                                    alt="Procedimiento y atención de alta precisión" 
+                                    alt="{{ __('images.home_about_2') }}" 
                                     class="w-full h-full object-cover" 
                                     loading="lazy" 
                                 />
@@ -464,7 +464,7 @@
                                 <img 
                                     data-cms-field="image_1_url" 
                                     src="{{ !empty($howItWorksSec['image_1_url']) ? $howItWorksSec['image_1_url'] : 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80' }}" 
-                                    alt="Especialista revisando caso clínico" 
+                                    alt="{{ __('images.home_how_it_works_1') }}" 
                                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" 
                                     loading="lazy" 
                                 />
@@ -474,7 +474,7 @@
                                 <img 
                                     data-cms-field="image_2_url" 
                                     src="{{ !empty($howItWorksSec['image_2_url']) ? $howItWorksSec['image_2_url'] : 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80' }}" 
-                                    alt="Examen dental preventivo" 
+                                    alt="{{ __('images.home_how_it_works_2') }}" 
                                     class="w-full h-full object-cover" 
                                     loading="lazy" 
                                 />
@@ -547,7 +547,7 @@
                             <img 
                                 data-cms-field="image_url"
                                 src="{{ $testimonialsSec['image_url'] ?? 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=1000&q=80' }}" 
-                                alt="Doctor explicando escaneo 3D" 
+                                alt="{{ __('images.home_testimonials') }}" 
                                 class="w-full h-full object-cover min-h-[340px]" 
                                 loading="lazy" 
                             />
@@ -707,7 +707,7 @@
                                 <div class="aspect-[4/3] w-full overflow-hidden bg-slate-100">
                                     <img 
                                         src="{{ $service->image_url }}" 
-                                        alt="{{ $service->name }}" 
+                                        alt="{{ __('images.service_card', ['service' => $service->name, 'clinic' => $clinic->clinic_name ?? 'Aura Dental Studio']) }}" 
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                         loading="lazy"
                                     />
@@ -930,7 +930,7 @@
                                 <img
                                     data-cms-field="image_url"
                                     src="{{ $ctaBookingSec['image_url'] ?? 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80' }}"
-                                    alt="Doctora Especialista Odontológica"
+                                    alt="{{ __('images.home_booking_cta', ['clinic' => $clinic->clinic_name ?? 'Aura Dental Studio']) }}"
                                     class="w-full h-full object-cover"
                                     loading="eager"
                                 />

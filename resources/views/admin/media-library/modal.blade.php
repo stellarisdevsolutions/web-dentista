@@ -4,17 +4,16 @@
     x-cloak 
     @open-media-library.window="openModal($event.detail)"
     @keydown.escape.window="closeModal()"
-    class="fixed inset-0 z-50 overflow-y-auto"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
 >
     <!-- Backdrop Blur -->
     <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity" @click="closeModal()"></div>
 
-    <!-- Modal Dialog -->
-    <div class="min-h-screen px-4 text-center flex items-center justify-center p-0">
-        <div 
-            class="inline-block w-full max-w-5xl my-8 overflow-hidden text-left align-middle transition-all transform bg-slate-900 border border-slate-800 shadow-2xl rounded-2xl flex flex-col h-[680px] relative z-10"
-            @click.stop
-        >
+    <!-- Modal Dialog Card -->
+    <div 
+        class="w-full max-w-5xl overflow-hidden text-left transition-all transform bg-slate-900 border border-slate-800 shadow-2xl rounded-2xl flex flex-col h-[680px] relative z-10"
+        @click.stop
+    >
             <!-- Modal Header -->
             <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950">
                 <div class="flex items-center gap-3">
@@ -26,12 +25,12 @@
                         </svg>
                     </div>
                     <div>
-                        <h2 class="text-sm font-bold text-white tracking-tight">Biblioteca de Medios</h2>
-                        <p class="text-xs text-slate-400">Selecciona una imagen existente, sube nuevos archivos o sincroniza el catálogo.</p>
+                        <h2 class="text-sm font-bold text-white tracking-tight">Galería de Imágenes Web</h2>
+                        <p class="text-xs text-slate-400">Selecciona o sube imágenes para personalizar las secciones del sitio web.</p>
                     </div>
                 </div>
 
-                <!-- Tabs: Biblioteca vs Subir -->
+                <!-- Tabs: Galería vs Subir -->
                 <div class="flex items-center gap-2">
                     <div class="bg-slate-900 border border-slate-800 p-1 rounded-xl flex items-center gap-1">
                         <button 
@@ -41,7 +40,7 @@
                             class="px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5"
                         >
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-                            Imágenes Guardadas
+                            Galería Web
                         </button>
                         <button 
                             type="button"
@@ -50,7 +49,7 @@
                             class="px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5"
                         >
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                            Subir Archivos
+                            Subir Imágenes
                         </button>
                     </div>
 
@@ -68,34 +67,22 @@
                     
                     <!-- Left: Grid of Assets -->
                     <div class="flex-1 flex flex-col border-r border-slate-800 overflow-hidden">
-                        <!-- Search Bar & Actions -->
-                        <div class="p-3 border-b border-slate-800 bg-slate-900/60 flex items-center justify-between gap-3">
-                            <div class="relative flex-1 max-w-sm">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500">
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="11" cy="11" r="8" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/></svg>
-                                </span>
-                                <input 
-                                    type="text" 
-                                    x-model="searchQuery" 
-                                    @input.debounce.300ms="fetchAssets()"
-                                    placeholder="Buscar por nombre, título o etiqueta..." 
-                                    class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500"
-                                >
+                        <!-- Gallery Header & Actions (Sin buscador por renombrado automático de archivos) -->
+                        <div class="p-3.5 border-b border-slate-800 bg-slate-900/60 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-2.5">
+                                <span class="text-xs font-bold text-white uppercase tracking-wider">Imágenes del Editor Web</span>
+                                <span class="px-2 py-0.5 rounded-full bg-slate-800 text-[11px] font-semibold text-sky-400" x-text="`${assets.length} disponibles`"></span>
                             </div>
 
                             <div class="flex items-center gap-2">
                                 <button 
                                     type="button" 
-                                    @click="syncExisting()" 
-                                    :disabled="isSyncing"
-                                    class="text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 font-medium disabled:opacity-50"
-                                    title="Escanear y registrar fotos existentes en storage/app/public"
+                                    @click="activeTab = 'upload'" 
+                                    class="text-xs text-white bg-sky-500 hover:bg-sky-600 px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 font-bold shadow-sm cursor-pointer"
                                 >
-                                    <svg x-show="isSyncing" class="w-3.5 h-3.5 animate-spin text-sky-400" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
-                                    <svg x-show="!isSyncing" class="w-3.5 h-3.5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                                    <span x-text="isSyncing ? 'Sincronizando...' : 'Sincronizar Existentes'"></span>
+                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                                    <span>Subir Nueva Imagen</span>
                                 </button>
-                                <span class="text-xs text-slate-400" x-text="`${assets.length} imágenes`"></span>
                             </div>
                         </div>
 
@@ -104,7 +91,7 @@
                             <!-- Loading State -->
                             <div x-show="isLoading" class="h-full flex items-center justify-center text-slate-400 gap-2">
                                 <svg class="w-5 h-5 animate-spin text-sky-400" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
-                                <span class="text-xs">Cargando biblioteca...</span>
+                                <span class="text-xs">Cargando galería...</span>
                             </div>
 
                             <!-- Empty State -->
@@ -112,14 +99,11 @@
                                 <div class="w-12 h-12 rounded-2xl bg-slate-800 text-slate-500 flex items-center justify-center mb-3">
                                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect width="18" height="18" x="3" y="3" rx="2" stroke-width="2"/><circle cx="9" cy="9" r="2" stroke-width="2"/><path stroke-width="2" d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
                                 </div>
-                                <h3 class="text-xs font-bold text-white mb-1">Aún no hay imágenes en la biblioteca</h3>
-                                <p class="text-[11px] text-slate-400 max-w-xs mb-4">Sube tus fotos de la clínica o haz clic en sincronizar para importar las imágenes existentes.</p>
+                                <h3 class="text-xs font-bold text-white mb-1">Aún no hay imágenes en la galería del editor</h3>
+                                <p class="text-[11px] text-slate-400 max-w-xs mb-4">Sube fotos de la clínica para utilizarlas en las distintas secciones de tu sitio web.</p>
                                 <div class="flex items-center gap-2">
                                     <button type="button" @click="activeTab = 'upload'" class="bg-sky-500 text-white px-4 py-2 rounded-xl text-xs font-semibold hover:bg-sky-600 transition-colors">
                                         Subir primera imagen
-                                    </button>
-                                    <button type="button" @click="syncExisting()" class="bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-semibold hover:bg-slate-700 transition-colors">
-                                        Sincronizar existentes
                                     </button>
                                 </div>
                             </div>
@@ -132,16 +116,17 @@
                                         :class="selectedAsset?.id === item.id ? 'ring-2 ring-sky-500 border-sky-400 bg-sky-500/10' : 'border-slate-800 hover:border-slate-700 bg-slate-950'"
                                         class="group relative aspect-square rounded-xl border overflow-hidden cursor-pointer transition-all flex flex-col justify-between"
                                     >
-                                        <img :src="item.url" :alt="item.alt_text || item.filename" class="w-full h-full object-cover">
+                                        <img :src="item.url" :alt="'{{ __('images.media_library_item', ['clinic' => 'Aura Dental Studio']) }}'" class="w-full h-full object-cover">
                                         
                                         <!-- Selected Badge Check -->
                                         <div x-show="selectedAsset?.id === item.id" class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-sky-500 text-white flex items-center justify-center shadow">
                                             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                         </div>
 
-                                        <!-- Title on hover -->
-                                        <div class="absolute inset-x-0 bottom-0 bg-slate-950/85 p-1.5 text-[10px] text-slate-200 truncate opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <span x-text="item.title || item.filename"></span>
+                                        <!-- Dimensions & Size on hover (sin nombre de archivo) -->
+                                        <div class="absolute inset-x-0 bottom-0 bg-slate-950/90 p-1.5 text-[10px] text-slate-200 truncate opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-between">
+                                            <span class="font-bold text-sky-400" x-text="item.format || (item.mime_type ? item.mime_type.replace('image/', '').toUpperCase() : 'IMG')"></span>
+                                            <span class="text-slate-300 font-medium" x-text="item.formatted_size"></span>
                                         </div>
                                     </div>
                                 </template>
@@ -151,12 +136,12 @@
 
                     <!-- Right: Asset Details Sidebar (300px) -->
                     <div class="w-76 bg-slate-950 p-4 flex flex-col justify-between shrink-0 overflow-y-auto">
-                        <div x-show="selectedAsset" class="space-y-3.5">
-                            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Detalles & Metadatos SEO</h3>
+                        <div x-show="selectedAsset" class="space-y-4">
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Detalles de la Imagen</h3>
                             
                             <!-- Thumbnail Preview -->
                             <div class="aspect-video w-full rounded-xl overflow-hidden bg-slate-900 border border-slate-800 flex items-center justify-center relative group">
-                                <img :src="selectedAsset?.url" class="max-h-full max-w-full object-contain">
+                                <img :src="selectedAsset?.url" :alt="'{{ __('images.media_library_item', ['clinic' => 'Aura Dental Studio']) }}'" class="max-h-full max-w-full object-contain">
                             </div>
 
                             <!-- Quick Action: Copy URL -->
@@ -169,63 +154,38 @@
                                 <span x-text="isCopied ? '¡Enlace Copiado!' : 'Copiar URL Directa'"></span>
                             </button>
 
-                            <!-- Editable Fields (Title and Alt Text) -->
-                            <div class="space-y-2 pt-1 border-t border-slate-900">
-                                <div>
-                                    <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Título de la Imagen</label>
-                                    <input 
-                                        type="text" 
-                                        x-model="selectedAsset.title" 
-                                        @change="updateAssetMeta(selectedAsset)" 
-                                        class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-sky-500"
-                                        placeholder="Nombre descriptivo"
-                                    >
-                                </div>
-                                <div>
-                                    <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Texto Alternativo (Alt Text SEO)</label>
-                                    <input 
-                                        type="text" 
-                                        x-model="selectedAsset.alt_text" 
-                                        @change="updateAssetMeta(selectedAsset)" 
-                                        class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-sky-500"
-                                        placeholder="Descripción para Google y accesibilidad"
-                                    >
-                                    <span class="text-[9px] text-slate-500">Se guarda automáticamente al editar.</span>
-                                </div>
-                            </div>
-
-                            <!-- Technical Specs -->
-                            <div class="space-y-1.5 text-xs pt-1 border-t border-slate-900">
+                            <!-- Especificaciones de la Imagen (Únicamente Formato, Dimensiones y Tamaño) -->
+                            <div class="space-y-2.5 text-xs pt-2 border-t border-slate-900 bg-slate-900/50 p-3 rounded-xl border border-slate-800/80">
                                 <div class="flex items-center justify-between text-[11px]">
-                                    <span class="text-slate-500 font-medium">Tamaño</span>
-                                    <span class="text-slate-300 font-semibold" x-text="selectedAsset?.formatted_size"></span>
-                                </div>
-                                <div x-show="selectedAsset?.width && selectedAsset?.height" class="flex items-center justify-between text-[11px]">
-                                    <span class="text-slate-500 font-medium">Dimensiones</span>
-                                    <span class="text-slate-300 font-semibold" x-text="`${selectedAsset?.width} × ${selectedAsset?.height} px`"></span>
+                                    <span class="text-slate-400 font-medium">Formato</span>
+                                    <span class="text-white font-bold tracking-wider" x-text="selectedAsset?.format || (selectedAsset?.mime_type ? selectedAsset.mime_type.replace('image/', '').toUpperCase() : 'WEBP')"></span>
                                 </div>
                                 <div class="flex items-center justify-between text-[11px]">
-                                    <span class="text-slate-500 font-medium">Formato</span>
-                                    <span class="text-slate-300 font-semibold" x-text="selectedAsset?.mime_type"></span>
+                                    <span class="text-slate-400 font-medium">Dimensiones</span>
+                                    <span class="text-white font-bold" x-text="selectedAsset?.width && selectedAsset?.height ? `${selectedAsset.width} × ${selectedAsset.height} px` : 'Optimizada'"></span>
+                                </div>
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="text-slate-400 font-medium">Tamaño</span>
+                                    <span class="text-white font-bold" x-text="selectedAsset?.formatted_size"></span>
                                 </div>
                             </div>
 
                             <!-- Delete Action -->
-                            <div class="pt-2">
+                            <div class="pt-1">
                                 <button 
                                     type="button" 
                                     @click="requestDeleteAsset(selectedAsset)" 
-                                    class="text-xs text-rose-400 hover:text-rose-300 font-medium transition-colors flex items-center gap-1"
+                                    class="text-xs text-rose-400 hover:text-rose-300 font-medium transition-colors flex items-center gap-1 cursor-pointer"
                                 >
                                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    Eliminar de la biblioteca
+                                    Eliminar de la galería
                                 </button>
                             </div>
                         </div>
 
                         <div x-show="!selectedAsset" class="h-full flex flex-col items-center justify-center text-center text-slate-500 p-4">
                             <svg class="w-8 h-8 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="1.5" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
-                            <p class="text-xs">Selecciona una imagen de la cuadrícula para ver o editar sus metadatos e insertarla.</p>
+                            <p class="text-xs">Selecciona una imagen de la galería para ver sus especificaciones e insertarla.</p>
                         </div>
 
                         <!-- Footer Action Button -->
@@ -234,7 +194,7 @@
                                 type="button" 
                                 @click="confirmSelection()" 
                                 :disabled="!selectedAsset"
-                                class="w-full bg-emerald-500 hover:bg-emerald-600 disabled:opacity-30 disabled:cursor-not-allowed text-white py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-emerald-500/20"
+                                class="w-full bg-emerald-500 hover:bg-emerald-600 disabled:opacity-30 disabled:cursor-not-allowed text-white py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-emerald-500/20 cursor-pointer"
                             >
                                 Usar esta Imagen
                             </button>
@@ -367,7 +327,6 @@
 
         </div>
     </div>
-</div>
 
 <script>
     function mediaLibraryModal() {
@@ -376,7 +335,7 @@
             activeTab: 'library',
             assets: [],
             selectedAsset: null,
-            searchQuery: '',
+            folder: 'media',
             isLoading: false,
             isUploading: false,
             isSyncing: false,
@@ -400,6 +359,7 @@
 
             openModal(detail = {}) {
                 this.callback = detail.callback || null;
+                this.folder = detail.folder || 'media';
                 this.isOpen = true;
                 this.activeTab = 'library';
                 this.fetchAssets();
@@ -414,8 +374,8 @@
                 this.isLoading = true;
                 try {
                     const url = new URL('{{ route('admin.media-library.index') }}', window.location.origin);
-                    if (this.searchQuery) {
-                        url.searchParams.set('search', this.searchQuery);
+                    if (this.folder) {
+                        url.searchParams.set('folder', this.folder);
                     }
                     const res = await fetch(url.toString(), {
                         headers: {
@@ -460,37 +420,6 @@
                     this.showToast('Enlace copiado al portapapeles', 'info');
                     setTimeout(() => { this.isCopied = false; }, 2000);
                 });
-            },
-
-            async updateAssetMeta(asset) {
-                if (!asset || !asset.id) return;
-                try {
-                    const res = await fetch(`/admin/media-library/${asset.id}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'X-Requested-With': 'XMLHttpRequest',
-                        },
-                        body: JSON.stringify({
-                            title: asset.title,
-                            alt_text: asset.alt_text
-                        })
-                    });
-                    const data = await res.json();
-                    if (data.success && data.asset) {
-                        const idx = this.assets.findIndex(a => a.id === asset.id);
-                        if (idx !== -1) {
-                            this.assets[idx].title = data.asset.title;
-                            this.assets[idx].alt_text = data.asset.alt_text;
-                        }
-                        this.showToast('Metadatos actualizados', 'success');
-                    }
-                } catch (e) {
-                    console.error('Error updating asset meta:', e);
-                    this.showToast('Error al actualizar los metadatos', 'error');
-                }
             },
 
             handleDrop(e) {

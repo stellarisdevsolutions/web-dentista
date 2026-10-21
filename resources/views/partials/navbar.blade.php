@@ -356,7 +356,7 @@
             <!-- Brand Logo -->
             <a class="flex items-center gap-3 group" href="{{ route('home') }}">
                 @if($navClinic->logo_asset_url)
-                    <img src="{{ $navClinic->logo_asset_url }}" alt="{{ $navClinic->clinic_name }}" class="h-10 w-auto max-w-[180px] object-contain group-hover:scale-105 transition-transform" />
+                    <img src="{{ $navClinic->logo_asset_url }}" alt="{{ __('images.clinic_logo', ['clinic' => $navClinic->clinic_name]) }}" class="h-10 w-auto max-w-[180px] object-contain group-hover:scale-105 transition-transform" />
                 @else
                     <div class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white">

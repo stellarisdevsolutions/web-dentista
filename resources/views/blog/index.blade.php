@@ -159,7 +159,7 @@
                                             @if($post->cover_image)
                                                 <img 
                                                     src="{{ Str::startsWith($post->cover_image, ['http://', 'https://']) ? $post->cover_image : asset('storage/' . $post->cover_image) }}" 
-                                                    alt="{{ $post->title }}" 
+                                                    alt="{{ __('images.blog_cover', ['title' => $post->title]) }}" 
                                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                     loading="lazy"
                                                     onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center bg-gradient-to-br from-sky-400 to-blue-600 text-white font-black text-xs uppercase\'>{{ strtoupper(substr($clinic->clinic_name, 0, 4)) }}</div>';"

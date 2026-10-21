@@ -18,12 +18,21 @@ class MediaLibraryController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $folder = $request->query('folder', 'media');
         $term = $request->query('search');
 
-        $assets = MediaAsset::query()
-            ->search($term)
+        $query = MediaAsset::query();
+
+        if ($folder === 'media' || $folder === 'editor' || empty($folder)) {
+            $query->where('file_path', 'like', 'media/%');
+        } elseif ($folder !== 'all') {
+            $query->where('file_path', 'like', "{$folder}/%");
+        }
+
+        $assets = $query
+            ->when($term, fn ($q) => $q->search($term))
             ->latest()
-            ->take(80)
+            ->take(100)
             ->get();
 
         return response()->json([
@@ -124,7 +133,7 @@ class MediaLibraryController extends Controller
      */
     public function syncExisting(): JsonResponse
     {
-        $directories = ['clinic', 'dentists', 'services', 'blog', 'media'];
+        $directories = ['media'];
         $syncedCount = 0;
 
         foreach ($directories as $dir) {
@@ -207,6 +216,9 @@ class MediaLibraryController extends Controller
             }
         }
 
+        $defaultTitle = $title ?: Str::headline(pathinfo($originalName, PATHINFO_FILENAME));
+        $defaultAlt = $altText ?: __('images.media_library_item', ['clinic' => 'Aura Dental Studio']);
+
         return MediaAsset::create([
             'filename' => $originalName,
             'file_path' => $path,
@@ -215,8 +227,8 @@ class MediaLibraryController extends Controller
             'file_size' => (int) $file->getSize(),
             'width' => $width,
             'height' => $height,
-            'title' => $title ?: pathinfo($originalName, PATHINFO_FILENAME),
-            'alt_text' => $altText ?: pathinfo($originalName, PATHINFO_FILENAME),
+            'title' => $defaultTitle,
+            'alt_text' => $defaultAlt,
         ]);
     }
 }

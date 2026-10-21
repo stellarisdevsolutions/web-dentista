@@ -36,6 +36,7 @@ class MediaAsset extends Model
     protected $appends = [
         'url',
         'formatted_size',
+        'format',
     ];
 
     /**
@@ -58,6 +59,20 @@ class MediaAsset extends Model
     public function getUrlAttribute(): string
     {
         return Storage::disk($this->disk)->url($this->file_path);
+    }
+
+    /**
+     * Get uppercase file format (e.g. JPG, PNG, WEBP).
+     */
+    public function getFormatAttribute(): string
+    {
+        $ext = pathinfo($this->file_path ?? '', PATHINFO_EXTENSION);
+
+        if ($ext) {
+            return strtoupper($ext);
+        }
+
+        return strtoupper(str_replace('image/', '', $this->mime_type ?? ''));
     }
 
     /**

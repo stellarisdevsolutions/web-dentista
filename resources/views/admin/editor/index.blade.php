@@ -889,6 +889,7 @@
                     const self = this;
                     window.dispatchEvent(new CustomEvent('open-media-library', {
                         detail: {
+                            folder: 'media',
                             callback: function(url) {
                                 if (self.activeSection && self.activeSection.content[fieldKey]) {
                                     self.updateRepeaterItem(fieldKey, index, subKey, url);
@@ -902,6 +903,7 @@
                     const self = this;
                     window.dispatchEvent(new CustomEvent('open-media-library', {
                         detail: {
+                            folder: 'media',
                             callback: function(url) {
                                 if (self.activeSection) {
                                     self.updateField(fieldKey, url);

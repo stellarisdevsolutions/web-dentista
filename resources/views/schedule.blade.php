@@ -332,7 +332,7 @@
                                                 >
                                                     <div class="w-10 h-10 rounded-xl bg-[#0EA5E9] text-[#0F172A] border border-sky-400/30 flex items-center justify-center font-extrabold text-xs flex-shrink-0 overflow-hidden shadow-2xs select-none">
                                                         @if($doc->photo_url)
-                                                            <img src="{{ $doc->photo_url }}" alt="{{ $doc->name }}" class="w-full h-full object-cover aspect-square">
+                                                            <img src="{{ $doc->photo_url }}" alt="{{ __('images.schedule_dentist', ['name' => $doc->name]) }}" class="w-full h-full object-cover aspect-square">
                                                         @else
                                                             <span>{{ $doc->initials }}</span>
                                                         @endif

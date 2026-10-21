@@ -91,9 +91,9 @@
                                 <div class="rounded-2xl overflow-hidden shadow-sm border border-slate-100 bg-slate-100 h-80 sm:h-96 relative">
                                     <img 
                                         src="{{ Str::startsWith($post->cover_image, ['http://', 'https://']) ? $post->cover_image : asset('storage/' . $post->cover_image) }}" 
-                                        alt="{{ $post->title }}" 
+                                        alt="{{ __('images.blog_detail', ['title' => $post->title]) }}" 
                                         class="w-full h-full object-cover"
-                                        onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center bg-gradient-to-br from-sky-400 to-blue-600 text-white font-black text-6xl\'>🦷</div>';"
+                                        onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center bg-gradient-to-br from-sky-400 to-blue-600 text-white font-black text-xs uppercase tracking-widest\'>{{ strtoupper(substr($clinic->clinic_name, 0, 4)) }}</div>';"
                                     />
                                 </div>
                             @endif

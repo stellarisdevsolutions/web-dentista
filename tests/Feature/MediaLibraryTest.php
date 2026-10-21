@@ -183,7 +183,7 @@ class MediaLibraryTest extends TestCase
             'role' => UserRole::Admin,
         ]);
 
-        Storage::disk('public')->put('dentists/dr-ana-martinez.jpg', 'fake-image-bytes');
+        Storage::disk('public')->put('media/clinica-sala-espera.jpg', 'fake-image-bytes');
 
         $response = $this->actingAs($admin)->postJson('/admin/media-library/sync');
 
@@ -194,9 +194,47 @@ class MediaLibraryTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('media_assets', [
-            'file_path' => 'dentists/dr-ana-martinez.jpg',
-            'filename' => 'dr-ana-martinez.jpg',
+            'file_path' => 'media/clinica-sala-espera.jpg',
+            'filename' => 'clinica-sala-espera.jpg',
         ]);
+    }
+
+    public function test_media_library_excludes_dentist_service_and_blog_images(): void
+    {
+        $admin = User::factory()->create([
+            'role' => UserRole::Admin,
+        ]);
+
+        MediaAsset::create([
+            'filename' => 'doctor-avatar.jpg',
+            'file_path' => 'dentists/doctor-avatar.jpg',
+            'disk' => 'public',
+            'mime_type' => 'image/jpeg',
+            'file_size' => 10240,
+        ]);
+
+        MediaAsset::create([
+            'filename' => 'tratamiento.jpg',
+            'file_path' => 'services/tratamiento.jpg',
+            'disk' => 'public',
+            'mime_type' => 'image/jpeg',
+            'file_size' => 20480,
+        ]);
+
+        MediaAsset::create([
+            'filename' => 'banner-web.jpg',
+            'file_path' => 'media/banner-web.jpg',
+            'disk' => 'public',
+            'mime_type' => 'image/jpeg',
+            'file_size' => 30720,
+        ]);
+
+        $response = $this->actingAs($admin)->getJson('/admin/media-library');
+
+        $response->assertSuccessful();
+        $response->assertSee('banner-web.jpg');
+        $response->assertDontSee('doctor-avatar.jpg');
+        $response->assertDontSee('tratamiento.jpg');
     }
 
     public function test_admin_can_access_standalone_media_library_page(): void
