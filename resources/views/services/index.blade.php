@@ -25,18 +25,51 @@
     <!-- GLOBAL NAVBAR -->
     @include('partials.navbar')
 
+    @php
+        $sectionsMap = isset($sections) ? $sections : \App\Models\SiteSection::forPage('services')->get()->keyBy('section_key');
+        $servicesHero = $sectionsMap->get('services_hero')?->content ?? [];
+        $servicesHeroActive = $sectionsMap->get('services_hero')?->is_active ?? true;
+        $isEditor = request()->has('editor_preview');
+
+        $heroEyebrow = $servicesHero['eyebrow'] ?? null;
+        if (!array_key_exists('eyebrow', $servicesHero)) {
+            $heroEyebrow = 'EXCELENCIA CLÍNICA';
+        }
+
+        $heroTitle = $servicesHero['title'] ?? null;
+        if (!array_key_exists('title', $servicesHero)) {
+            $heroTitle = 'Nuestros Tratamientos y Procedimientos';
+        }
+
+        $heroSubtitle = $servicesHero['subtitle'] ?? null;
+        if (!array_key_exists('subtitle', $servicesHero)) {
+            $heroSubtitle = 'Atención odontológica integral, moderna y sin dolor respaldada por tecnología intraoral 3D y materiales de estándar suizo.';
+        }
+
+        $hasHeroEyebrow = filled(trim($heroEyebrow ?? ''));
+        $hasHeroTitle = filled(trim($heroTitle ?? ''));
+        $hasHeroSubtitle = filled(trim($heroSubtitle ?? ''));
+    @endphp
+
 <main class="min-h-screen bg-slate-50/70 text-slate-900 flex flex-col justify-between overflow-x-hidden">
 
         <!-- ========================================== -->
         <!-- HEADER HERO BANNER (#13223f)               -->
         <!-- ========================================== -->
-        <section class="bg-[#13223f] text-white py-14 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <section data-cms-section="services_hero" 
+                 data-cms-name="Portada de Servicios (Hero)" 
+                 class="bg-[#13223f] text-white py-14 px-4 sm:px-6 lg:px-8 relative overflow-hidden" 
+                 @if(!$servicesHeroActive && !$isEditor) style="display: none;" @endif>
             <div class="absolute -top-24 right-0 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="max-w-7xl mx-auto text-center relative z-10">
-                <span class="text-sky-400 font-bold text-xs uppercase tracking-widest block mb-2">EXCELENCIA CLÍNICA</span>
-                <h1 class="text-4xl sm:text-5xl font-black text-white">Nuestros Tratamientos y Procedimientos</h1>
-                <p class="text-slate-300 text-xs sm:text-sm max-w-xl mx-auto mt-3 font-light leading-relaxed">
-                    Atención odontológica integral, moderna y sin dolor respaldada por tecnología intraoral 3D y materiales de estándar suizo.
+                <span data-cms-field="eyebrow" data-cms-row="eyebrow" class="text-sky-400 font-bold text-xs uppercase tracking-widest block mb-2" @if(!$hasHeroEyebrow) style="display: none;" @endif>
+                    {{ $heroEyebrow }}
+                </span>
+                <h1 data-cms-field="title" data-cms-row="title" class="text-4xl sm:text-5xl font-black text-white" @if(!$hasHeroTitle) style="display: none;" @endif>
+                    {{ $heroTitle }}
+                </h1>
+                <p data-cms-field="subtitle" data-cms-row="subtitle" class="text-slate-300 text-xs sm:text-sm max-w-xl mx-auto mt-3 font-light leading-relaxed" @if(!$hasHeroSubtitle) style="display: none;" @endif>
+                    {{ $heroSubtitle }}
                 </p>
             </div>
         </section>
@@ -106,6 +139,10 @@
 
     <!-- GLOBAL FOOTER -->
     @include('partials.footer')
+
+    @if(request()->has('editor_preview'))
+        @include('partials.editor-bridge')
+    @endif
 
 </body>
 </html>

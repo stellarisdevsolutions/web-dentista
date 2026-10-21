@@ -25,27 +25,151 @@
     <!-- GLOBAL NAVBAR -->
     @include('partials.navbar')
 
+    @php
+        $sectionsMap = isset($sections) ? $sections : \App\Models\SiteSection::forPage('about')->get()->keyBy('section_key');
+        $aboutHero = $sectionsMap->get('about_hero')?->content ?? [];
+        $aboutHeroActive = $sectionsMap->get('about_hero')?->is_active ?? true;
+        $isEditor = request()->has('editor_preview');
+
+        $heroEyebrow = $aboutHero['eyebrow'] ?? ('CONOCE ' . strtoupper($clinic->clinic_name));
+        $heroTitle = $aboutHero['title'] ?? 'Más de 20+ Años Brindando Excelencia Odontológica';
+        $heroSubtitle = $aboutHero['subtitle'] ?? 'Un equipo multidisciplinario de odontólogos especialistas apasionados por tu bienestar, tecnología mínimamente invasiva y una experiencia clínica libre de dolor.';
+
+        $primaryText = $aboutHero['button_primary_text'] ?? null;
+        $primaryUrl = $aboutHero['button_primary_url'] ?? '#dentists';
+        if (!array_key_exists('button_primary_text', $aboutHero)) {
+            $primaryText = 'Conocer Especialistas ↓';
+        }
+
+        $secondaryText = $aboutHero['button_secondary_text'] ?? null;
+        $secondaryUrl = $aboutHero['button_secondary_url'] ?? route('schedule');
+        if (!array_key_exists('button_secondary_text', $aboutHero)) {
+            $secondaryText = 'Agendar Consulta Online »';
+        }
+
+        $hasPrimaryBtn = filled(trim($primaryText ?? ''));
+        $hasSecondaryBtn = filled(trim($secondaryText ?? ''));
+
+        $aboutStory = $sectionsMap->get('about_story')?->content ?? [];
+        $aboutStoryActive = $sectionsMap->get('about_story')?->is_active ?? true;
+
+        $storyEyebrow = $aboutStory['eyebrow'] ?? 'NUESTRA FILOSOFÍA MÉDICA';
+        $storyTitle = $aboutStory['title'] ?? 'Cuidado Odontológico Integral, Cálido y Sin Dolor.';
+        $storyDescription = $aboutStory['description'] ?? ('En ' . $clinic->clinic_name . ', combinamos ciencia médica de vanguardia con un trato profundamente humano. Nuestro compromiso es que cada visita sea una experiencia tranquila y gratificante, cuidando tanto de la salud funcional de tus dientes como de la estética natural de tu sonrisa.');
+
+        $storyImage1 = !empty($aboutStory['image_1_url']) ? $aboutStory['image_1_url'] : 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80';
+        $storyImage2 = !empty($aboutStory['image_2_url']) ? $aboutStory['image_2_url'] : 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80';
+        $badgeYears = $aboutStory['badge_years'] ?? '20+';
+        $badgeText = $aboutStory['badge_text'] ?? 'Años de Trayectoria';
+
+        $feature1Title = $aboutStory['feature_1_title'] ?? null;
+        $feature1Desc = $aboutStory['feature_1_desc'] ?? null;
+        if (!array_key_exists('feature_1_title', $aboutStory)) {
+            $feature1Title = 'Acompañamiento Cercano';
+            $feature1Desc = 'Orientación clara y soporte antes, durante y después de cada tratamiento.';
+        }
+
+        $feature2Title = $aboutStory['feature_2_title'] ?? null;
+        $feature2Desc = $aboutStory['feature_2_desc'] ?? null;
+        if (!array_key_exists('feature_2_title', $aboutStory)) {
+            $feature2Title = 'Especialistas Certificados';
+            $feature2Desc = 'Postgrados universitarios y formación continua en cada área odontológica.';
+        }
+
+        $checkText = $aboutStory['check_text'] ?? null;
+        if (!array_key_exists('check_text', $aboutStory)) {
+            $checkText = 'Contamos con quirófanos digitales, escáner intraoral 3D y sedación consciente.';
+        }
+
+        $storyButtonText = $aboutStory['button_text'] ?? null;
+        $storyButtonUrl = $aboutStory['button_url'] ?? route('schedule');
+        if (!array_key_exists('button_text', $aboutStory)) {
+            $storyButtonText = 'Agendar Cita con un Especialista »';
+        }
+
+        $hasFeature1 = filled(trim($feature1Title ?? ''));
+        $hasFeature2 = filled(trim($feature2Title ?? ''));
+        $hasCheckText = filled(trim($checkText ?? ''));
+        $hasStoryButton = filled(trim($storyButtonText ?? ''));
+
+        $aboutTrustbar = $sectionsMap->get('about_trustbar')?->content ?? [];
+        $aboutTrustbarActive = $sectionsMap->get('about_trustbar')?->is_active ?? true;
+
+        $stat1Number = $aboutTrustbar['stat_1_number'] ?? null;
+        $stat1Label = $aboutTrustbar['stat_1_label'] ?? null;
+        if (!array_key_exists('stat_1_number', $aboutTrustbar)) {
+            $stat1Number = '567+';
+            $stat1Label = 'Pacientes Felices';
+        }
+
+        $stat2Number = $aboutTrustbar['stat_2_number'] ?? null;
+        $stat2Label = $aboutTrustbar['stat_2_label'] ?? null;
+        if (!array_key_exists('stat_2_number', $aboutTrustbar)) {
+            $stat2Number = '23K+';
+            $stat2Label = 'Atenciones Realizadas';
+        }
+
+        $stat3Number = $aboutTrustbar['stat_3_number'] ?? null;
+        $stat3Label = $aboutTrustbar['stat_3_label'] ?? null;
+        if (!array_key_exists('stat_3_number', $aboutTrustbar)) {
+            $stat3Number = '241+';
+            $stat3Label = 'Casos de Sonrisa';
+        }
+
+        $stat4Number = $aboutTrustbar['stat_4_number'] ?? null;
+        $stat4Label = $aboutTrustbar['stat_4_label'] ?? null;
+        if (!array_key_exists('stat_4_number', $aboutTrustbar)) {
+            $stat4Number = '16+';
+            $stat4Label = 'Certificaciones de Calidad';
+        }
+
+        $hasStat1 = filled(trim($stat1Number ?? ''));
+        $hasStat2 = filled(trim($stat2Number ?? ''));
+        $hasStat3 = filled(trim($stat3Number ?? ''));
+        $hasStat4 = filled(trim($stat4Number ?? ''));
+
+        $aboutSpecialists = $sectionsMap->get('about_specialists')?->content ?? [];
+        $aboutSpecialistsActive = $sectionsMap->get('about_specialists')?->is_active ?? true;
+
+        $specialistsEyebrow = $aboutSpecialists['eyebrow'] ?? null;
+        if (!array_key_exists('eyebrow', $aboutSpecialists)) {
+            $specialistsEyebrow = 'CUERPO MÉDICO DE ÉLITE';
+        }
+
+        $specialistsTitle = $aboutSpecialists['title'] ?? null;
+        if (!array_key_exists('title', $aboutSpecialists)) {
+            $specialistsTitle = 'Nuestros Especialistas Odontológicos';
+        }
+
+        $specialistsSubtitle = $aboutSpecialists['subtitle'] ?? null;
+        if (!array_key_exists('subtitle', $aboutSpecialists)) {
+            $specialistsSubtitle = 'Doctores colegiados con postgrados y amplia experiencia en cirugía, implantes, ortodoncia, odontopediatría y diseño de sonrisa.';
+        }
+
+        $hasSpecialistsEyebrow = filled(trim($specialistsEyebrow ?? ''));
+        $hasSpecialistsTitle = filled(trim($specialistsTitle ?? ''));
+        $hasSpecialistsSubtitle = filled(trim($specialistsSubtitle ?? ''));
+    @endphp
+
 <main class="min-h-screen bg-white text-slate-900 flex flex-col justify-between overflow-x-hidden">
 
         <!-- ========================================== -->
         <!-- HEADER HERO BANNER (#13223f)               -->
         <!-- ========================================== -->
-        <section class="bg-[#13223f] text-white py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <section data-cms-section="about_hero" data-cms-name="Portada Nosotros (Hero)" class="bg-[#13223f] text-white py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden" @if(!$aboutHeroActive && !$isEditor) style="display: none;" @endif>
             <div class="absolute -top-24 right-0 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="absolute -bottom-24 left-0 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
             <div class="max-w-7xl mx-auto text-center relative z-10 animate-fade-in-up">
-                <span class="text-sky-400 font-bold text-xs uppercase tracking-widest block mb-2">CONOCE {{ strtoupper($clinic->clinic_name) }}</span>
-                <h1 class="text-4xl sm:text-5xl font-black text-white">Más de 20+ Años Brindando Excelencia Odontológica</h1>
-                <p class="text-slate-300 text-sm max-w-2xl mx-auto mt-4 font-light leading-relaxed">
-                    Un equipo multidisciplinario de odontólogos especialistas apasionados por tu bienestar, tecnología mínimamente invasiva y una experiencia clínica libre de dolor.
-                </p>
-                <div class="mt-8 flex justify-center items-center gap-4">
-                    <a href="#dentists" class="bg-sky-500 hover:bg-sky-600 text-white px-7 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-sky-500/25 hover:scale-105">
-                        Conocer Especialistas ↓
+                <span data-cms-field="eyebrow" class="text-sky-400 font-bold text-xs uppercase tracking-widest block mb-2">{{ $heroEyebrow }}</span>
+                <h1 data-cms-field="title" class="text-4xl sm:text-5xl font-black text-white leading-tight mb-4">{{ $heroTitle }}</h1>
+                <p data-cms-field="subtitle" class="text-slate-300 text-sm max-w-2xl mx-auto font-light leading-relaxed mb-8">{{ $heroSubtitle }}</p>
+                <div data-cms-group="hero_buttons" class="flex flex-wrap justify-center items-center gap-4" @if(!$hasPrimaryBtn && !$hasSecondaryBtn) style="display: none;" @endif>
+                    <a data-cms-row="button_primary_text" href="{{ $primaryUrl }}" class="bg-sky-500 hover:bg-sky-600 text-white px-7 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-sky-500/25 hover:scale-105" @if(!$hasPrimaryBtn) style="display: none;" @endif>
+                        <span data-cms-field="button_primary_text">{{ $primaryText }}</span>
                     </a>
-                    <a href="{{ route('schedule') }}" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-7 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all hover:scale-105">
-                        Agendar Consulta Online »
+                    <a data-cms-row="button_secondary_text" href="{{ $secondaryUrl }}" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-7 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all hover:scale-105" @if(!$hasSecondaryBtn) style="display: none;" @endif>
+                        <span data-cms-field="button_secondary_text">{{ $secondaryText }}</span>
                     </a>
                 </div>
             </div>
@@ -54,7 +178,7 @@
         <!-- ========================================== -->
         <!-- SECTION 1: ABOUT US & CLINIC STORY         -->
         <!-- ========================================== -->
-        <section class="py-20 bg-white relative">
+        <section data-cms-section="about_story" data-cms-name="Filosofía Médica e Historia" class="py-20 bg-white relative" @if(!$aboutStoryActive && !$isEditor) style="display: none;" @endif>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div class="flex flex-col lg:flex-row items-center gap-16">
                     
@@ -67,8 +191,9 @@
                             <!-- Main Group Doctor Image -->
                             <div class="rounded-[40px] overflow-hidden shadow-2xl border-4 border-white bg-slate-100 hover:shadow-sky-500/20 transition-all duration-500">
                                 <img
-                                    src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80"
-                                    alt="Equipo Odontológico"
+                                    data-cms-field="image_1_url"
+                                    src="{{ $storyImage1 }}"
+                                    alt="{{ $storyTitle }}"
                                     class="w-full h-[360px] object-cover hover:scale-105 transition-transform duration-700"
                                     loading="eager"
                                 />
@@ -76,15 +201,16 @@
 
                             <!-- Experience Circular Badge -->
                             <div class="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full bg-[#13223f] text-white border-4 border-white shadow-2xl flex flex-col items-center justify-center text-center p-2 z-20 hover:scale-110 transition-transform duration-300">
-                                <span class="text-2xl font-black leading-none text-sky-400">20+</span>
-                                <span class="text-[9px] font-bold uppercase tracking-widest mt-1 text-slate-200">Años de Trayectoria</span>
+                                <span data-cms-field="badge_years" class="text-2xl font-black leading-none text-sky-400">{{ $badgeYears }}</span>
+                                <span data-cms-field="badge_text" class="text-[9px] font-bold uppercase tracking-widest mt-1 text-slate-200">{{ $badgeText }}</span>
                             </div>
 
                             <!-- Clinic Photo Bottom Right -->
                             <div class="w-64 h-44 rounded-3xl overflow-hidden shadow-2xl border-4 border-white -mt-16 ml-auto relative z-10 bg-slate-100 hover:scale-105 transition-transform duration-300">
                                 <img
-                                    src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80"
-                                    alt="Atención Odontológica Personalizada"
+                                    data-cms-field="image_2_url"
+                                    src="{{ $storyImage2 }}"
+                                    alt="{{ $storyTitle }}"
                                     class="w-full h-full object-cover"
                                     loading="eager"
                                 />
@@ -96,54 +222,55 @@
                     <div class="lg:w-1/2 flex flex-col items-start animate-fade-in-up">
                         <div class="flex items-center gap-2 text-sky-500 font-bold text-xs uppercase tracking-widest mb-3">
                             <span class="w-5 h-1 bg-sky-500 rounded-full"></span>
-                            <span>NUESTRA FILOSOFÍA MÉDICA</span>
+                            <span data-cms-field="eyebrow">{{ $storyEyebrow }}</span>
                         </div>
 
-                        <h2 class="text-4xl sm:text-5xl font-black text-slate-900 leading-tight mb-5">
-                            Cuidado Odontológico Integral, Cálido y Sin Dolor.
+                        <h2 data-cms-field="title" class="text-4xl sm:text-5xl font-black text-slate-900 leading-tight mb-5">
+                            {{ $storyTitle }}
                         </h2>
 
-                        <p class="text-slate-500 text-sm leading-relaxed mb-8">
-                            En {{ $clinic->clinic_name }}, combinamos ciencia médica de vanguardia con un trato profundamente humano. Nuestro compromiso es que cada visita sea una experiencia tranquila y gratificante, cuidando tanto de la salud funcional de tus dientes como de la estética natural de tu sonrisa.
+                        <p data-cms-field="description" class="text-slate-500 text-sm leading-relaxed mb-8">
+                            {{ $storyDescription }}
                         </p>
 
                         <!-- Support Cards Grid -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full mb-8">
-                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex items-start gap-4 hover:border-sky-300 hover:shadow-md transition-all hover:-translate-y-1">
-                                <div class="p-3 rounded-xl bg-white text-sky-500 shadow-xs border border-slate-100">
+                        <div data-cms-group="story_features" class="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full mb-8" @if(!$hasFeature1 && !$hasFeature2) style="display: none;" @endif>
+                            <div data-cms-row="feature_1_title" class="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex items-start gap-4 hover:border-sky-300 hover:shadow-md transition-all hover:-translate-y-1" @if(!$hasFeature1) style="display: none;" @endif>
+                                <div class="p-3 rounded-xl bg-white text-sky-500 shadow-xs border border-slate-100 shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"></path>
                                     </svg>
                                 </div>
                                 <div>
-                                    <h4 class="font-extrabold text-slate-900 text-sm mb-1">Acompañamiento Cercano</h4>
-                                    <p class="text-xs text-slate-500">Orientación clara y soporte antes, durante y después de cada tratamiento.</p>
+                                    <h4 data-cms-field="feature_1_title" class="font-extrabold text-slate-900 text-sm mb-1">{{ $feature1Title }}</h4>
+                                    <p data-cms-field="feature_1_desc" class="text-xs text-slate-500 leading-relaxed">{{ $feature1Desc }}</p>
                                 </div>
                             </div>
 
-                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex items-start gap-4 hover:border-sky-300 hover:shadow-md transition-all hover:-translate-y-1">
-                                <div class="p-3 rounded-xl bg-white text-sky-500 shadow-xs border border-slate-100">
+                            <div data-cms-row="feature_2_title" class="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex items-start gap-4 hover:border-sky-300 hover:shadow-md transition-all hover:-translate-y-1" @if(!$hasFeature2) style="display: none;" @endif>
+                                <div class="p-3 rounded-xl bg-white text-sky-500 shadow-xs border border-slate-100 shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
                                     </svg>
                                 </div>
                                 <div>
-                                    <h4 class="font-extrabold text-slate-900 text-sm mb-1">Especialistas Certificados</h4>
-                                    <p class="text-xs text-slate-500">Postgrados universitarios y formación continua en cada área odontológica.</p>
+                                    <h4 data-cms-field="feature_2_title" class="font-extrabold text-slate-900 text-sm mb-1">{{ $feature2Title }}</h4>
+                                    <p data-cms-field="feature_2_desc" class="text-xs text-slate-500 leading-relaxed">{{ $feature2Desc }}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Bullet Feature -->
-                        <div class="flex items-center gap-3 text-xs text-slate-600 mb-8">
+                        <!-- Bullet Feature Checkmark (Ocultar si está vacío) -->
+                        <div data-cms-row="check_text" class="flex items-center gap-3 text-xs text-slate-600 mb-8" @if(!$hasCheckText) style="display: none;" @endif>
                             <div class="w-5 h-5 rounded-full bg-[#13223f] text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">
                                 ✓
                             </div>
-                            <span>Contamos con quirófanos digitales, escáner intraoral 3D y sedación consciente. <a href="{{ route('home') }}#services" class="text-sky-500 font-bold hover:underline">VER TRATAMIENTOS +</a></span>
+                            <span data-cms-field="check_text">{{ $checkText }}</span>
                         </div>
 
-                        <a href="{{ route('schedule') }}" class="bg-sky-500 hover:bg-sky-600 text-white px-8 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-sky-500/25 transition-all flex items-center gap-1.5 hover:scale-105">
-                            <span>Agendar Cita con un Especialista »</span>
+                        <!-- CTA Button (Ocultar si está vacío) -->
+                        <a data-cms-row="button_text" href="{{ $storyButtonUrl }}" class="bg-sky-500 hover:bg-sky-600 text-white px-8 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-sky-500/25 transition-all flex items-center gap-1.5 hover:scale-105" @if(!$hasStoryButton) style="display: none;" @endif>
+                            <span data-cms-field="button_text">{{ $storyButtonText }}</span>
                         </a>
                     </div>
 
@@ -154,13 +281,13 @@
         <!-- ========================================== -->
         <!-- SECTION 2: TRUSTBAR BOX                    -->
         <!-- ========================================== -->
-        <section class="bg-white pb-16">
+        <section data-cms-section="about_trustbar" data-cms-name="Barra de Estadísticas y Confianza" class="bg-white pb-16" @if(!$aboutTrustbarActive && !$isEditor) style="display: none;" @endif>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <!-- Blue 4-Column Trustbar Box -->
                 <div class="bg-[#13223f] text-white rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-800 animate-scale-in">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-800">
-                        <div class="flex flex-col items-center p-3 group">
+                    <div data-cms-group="trustbar_stats" class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-800" @if(!$hasStat1 && !$hasStat2 && !$hasStat3 && !$hasStat4) style="display: none;" @endif>
+                        <div data-cms-row="stat_1_number" class="flex flex-col items-center p-3 group" @if(!$hasStat1) style="display: none;" @endif>
                             <div class="w-14 h-14 rounded-full bg-white/10 border border-white/10 text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 group-hover:bg-sky-500 transition-all duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-sky-400 group-hover:text-white transition-colors">
                                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
@@ -169,21 +296,21 @@
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
                             </div>
-                            <h3 class="text-3xl font-black text-white mb-1">567+</h3>
-                            <p class="text-xs text-slate-300 font-bold uppercase tracking-wider">Pacientes Felices</p>
+                            <h3 data-cms-field="stat_1_number" class="text-3xl font-black text-white mb-1">{{ $stat1Number }}</h3>
+                            <p data-cms-field="stat_1_label" class="text-xs text-slate-300 font-bold uppercase tracking-wider">{{ $stat1Label }}</p>
                         </div>
 
-                        <div class="flex flex-col items-center p-3 pt-6 md:pt-3 group">
+                        <div data-cms-row="stat_2_number" class="flex flex-col items-center p-3 pt-6 md:pt-3 group" @if(!$hasStat2) style="display: none;" @endif>
                             <div class="w-14 h-14 rounded-full bg-white/10 border border-white/10 text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 group-hover:bg-sky-500 transition-all duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-sky-400 group-hover:text-white transition-colors">
                                     <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
                                 </svg>
                             </div>
-                            <h3 class="text-3xl font-black text-white mb-1">23K+</h3>
-                            <p class="text-xs text-slate-300 font-bold uppercase tracking-wider">Atenciones Realizadas</p>
+                            <h3 data-cms-field="stat_2_number" class="text-3xl font-black text-white mb-1">{{ $stat2Number }}</h3>
+                            <p data-cms-field="stat_2_label" class="text-xs text-slate-300 font-bold uppercase tracking-wider">{{ $stat2Label }}</p>
                         </div>
 
-                        <div class="flex flex-col items-center p-3 pt-6 md:pt-3 group">
+                        <div data-cms-row="stat_3_number" class="flex flex-col items-center p-3 pt-6 md:pt-3 group" @if(!$hasStat3) style="display: none;" @endif>
                             <div class="w-14 h-14 rounded-full bg-white/10 border border-white/10 text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 group-hover:bg-sky-500 transition-all duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-sky-400 group-hover:text-white transition-colors">
                                     <path d="M12 2v20"></path>
@@ -191,19 +318,19 @@
                                     <path d="m17 19-5 3-5-3"></path>
                                 </svg>
                             </div>
-                            <h3 class="text-3xl font-black text-white mb-1">241+</h3>
-                            <p class="text-xs text-slate-300 font-bold uppercase tracking-wider">Casos de Sonrisa</p>
+                            <h3 data-cms-field="stat_3_number" class="text-3xl font-black text-white mb-1">{{ $stat3Number }}</h3>
+                            <p data-cms-field="stat_3_label" class="text-xs text-slate-300 font-bold uppercase tracking-wider">{{ $stat3Label }}</p>
                         </div>
 
-                        <div class="flex flex-col items-center p-3 pt-6 md:pt-3 group">
+                        <div data-cms-row="stat_4_number" class="flex flex-col items-center p-3 pt-6 md:pt-3 group" @if(!$hasStat4) style="display: none;" @endif>
                             <div class="w-14 h-14 rounded-full bg-white/10 border border-white/10 text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 group-hover:bg-sky-500 transition-all duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-sky-400 group-hover:text-white transition-colors">
                                     <circle cx="12" cy="8" r="6"></circle>
                                     <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
                                 </svg>
                             </div>
-                            <h3 class="text-3xl font-black text-white mb-1">16+</h3>
-                            <p class="text-xs text-slate-300 font-bold uppercase tracking-wider">Certificaciones de Calidad</p>
+                            <h3 data-cms-field="stat_4_number" class="text-3xl font-black text-white mb-1">{{ $stat4Number }}</h3>
+                            <p data-cms-field="stat_4_label" class="text-xs text-slate-300 font-bold uppercase tracking-wider">{{ $stat4Label }}</p>
                         </div>
                     </div>
                 </div>
@@ -214,20 +341,25 @@
         <!-- ========================================== -->
         <!-- SECTION 3: SPECIALISTS TEAM (FULL ROSTER)  -->
         <!-- ========================================== -->
-        <section id="dentists" class="py-20 bg-slate-50/80 border-t border-slate-200/80" x-data="{ isDentistModalOpen: false, activeDentist: null }">
+        <section id="dentists" 
+                 data-cms-section="about_specialists" 
+                 data-cms-name="Equipo de Especialistas" 
+                 class="py-20 bg-slate-50/80 border-t border-slate-200/80" 
+                 x-data="{ isDentistModalOpen: false, activeDentist: null }"
+                 @if(!$aboutSpecialistsActive && !$isEditor) style="display: none;" @endif>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <div class="text-center max-w-2xl mx-auto mb-14 animate-fade-in-up">
-                    <div class="flex items-center justify-center gap-2 text-sky-600 font-bold text-xs uppercase tracking-widest mb-2.5">
+                    <div data-cms-row="eyebrow" class="flex items-center justify-center gap-2 text-sky-600 font-bold text-xs uppercase tracking-widest mb-2.5" @if(!$hasSpecialistsEyebrow) style="display: none;" @endif>
                         <span class="w-5 h-0.5 bg-sky-500 rounded-full"></span>
-                        <span>CUERPO MÉDICO DE ÉLITE</span>
+                        <span data-cms-field="eyebrow">{{ $specialistsEyebrow }}</span>
                         <span class="w-5 h-0.5 bg-sky-500 rounded-full"></span>
                     </div>
-                    <h2 class="text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold text-slate-900 tracking-tight leading-tight mb-3.5">
-                        Nuestros Especialistas Odontológicos
+                    <h2 data-cms-field="title" data-cms-row="title" class="text-3xl sm:text-4xl lg:text-[2.6rem] font-extrabold text-slate-900 tracking-tight leading-tight mb-3.5" @if(!$hasSpecialistsTitle) style="display: none;" @endif>
+                        {{ $specialistsTitle }}
                     </h2>
-                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-                        Doctores colegiados con postgrados y amplia experiencia en cirugía, implantes, ortodoncia, odontopediatría y diseño de sonrisa.
+                    <p data-cms-field="subtitle" data-cms-row="subtitle" class="text-slate-600 text-sm sm:text-base leading-relaxed" @if(!$hasSpecialistsSubtitle) style="display: none;" @endif>
+                        {{ $specialistsSubtitle }}
                     </p>
                 </div>
 
@@ -428,6 +560,10 @@
 
     <!-- GLOBAL FOOTER -->
     @include('partials.footer')
+
+    @if(request()->has('editor_preview'))
+        @include('partials.editor-bridge')
+    @endif
 
 </body>
 </html>

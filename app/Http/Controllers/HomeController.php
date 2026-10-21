@@ -55,11 +55,13 @@ class HomeController extends Controller
         $clinic = $this->getClinicSetting();
         $dentists = Dentist::where('is_active', true)->with('services')->orderBy('order')->get();
         $testimonials = Testimonial::where('is_active', true)->orderBy('order')->get();
+        $sections = SiteSection::forPage('about')->get()->keyBy('section_key');
 
         return view('about', compact(
             'clinic',
             'dentists',
-            'testimonials'
+            'testimonials',
+            'sections'
         ));
     }
 
@@ -71,11 +73,13 @@ class HomeController extends Controller
         $clinic = $this->getClinicSetting();
         $services = Service::where('is_active', true)->with('dentists')->orderBy('order')->get();
         $dentists = Dentist::where('is_active', true)->get();
+        $sections = SiteSection::forPage('services')->get()->keyBy('section_key');
 
         return view('services.index', compact(
             'clinic',
             'services',
-            'dentists'
+            'dentists',
+            'sections'
         ));
     }
 
@@ -109,10 +113,12 @@ class HomeController extends Controller
     {
         $clinic = $this->getClinicSetting();
         $faqs = Faq::where('is_active', true)->orderBy('order')->take(5)->get();
+        $sections = SiteSection::forPage('contact')->get()->keyBy('section_key');
 
         return view('contact', compact(
             'clinic',
-            'faqs'
+            'faqs',
+            'sections'
         ));
     }
 
@@ -150,11 +156,13 @@ class HomeController extends Controller
             ->filter()
             ->unique()
             ->values();
+        $sections = SiteSection::forPage('blog')->get()->keyBy('section_key');
 
         return view('blog.index', compact(
             'clinic',
             'posts',
-            'categories'
+            'categories',
+            'sections'
         ));
     }
 

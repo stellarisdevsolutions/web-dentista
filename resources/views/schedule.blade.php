@@ -48,20 +48,53 @@
     <!-- GLOBAL NAVBAR -->
     @include('partials.navbar')
 
+    @php
+        $sectionsMap = isset($sections) ? $sections : \App\Models\SiteSection::forPage('schedule')->get()->keyBy('section_key');
+        $scheduleHero = $sectionsMap->get('schedule_hero')?->content ?? [];
+        $scheduleHeroActive = $sectionsMap->get('schedule_hero')?->is_active ?? true;
+        $isEditor = request()->has('editor_preview');
+
+        $heroEyebrow = $scheduleHero['eyebrow'] ?? null;
+        if (!array_key_exists('eyebrow', $scheduleHero)) {
+            $heroEyebrow = 'RESERVA ONLINE 24/7';
+        }
+
+        $heroTitle = $scheduleHero['title'] ?? null;
+        if (!array_key_exists('title', $scheduleHero)) {
+            $heroTitle = 'Agenda tu Cita Dental en 3 Pasos';
+        }
+
+        $heroSubtitle = $scheduleHero['subtitle'] ?? null;
+        if (!array_key_exists('subtitle', $scheduleHero)) {
+            $heroSubtitle = 'Selecciona tu tratamiento, el turno que mejor te acomode (Mañana o Tarde) y recibe confirmación instantánea vía WhatsApp con recepción.';
+        }
+
+        $hasHeroEyebrow = filled(trim($heroEyebrow ?? ''));
+        $hasHeroTitle = filled(trim($heroTitle ?? ''));
+        $hasHeroSubtitle = filled(trim($heroSubtitle ?? ''));
+    @endphp
+
 <main class="min-h-screen bg-slate-50/70 text-slate-900 flex flex-col justify-between overflow-x-hidden">
 
         <!-- ========================================== -->
         <!-- HEADER HERO BANNER (#13223f)               -->
         <!-- ========================================== -->
-        <section class="bg-[#13223f] text-white py-14 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <section data-cms-section="schedule_hero" 
+                 data-cms-name="Portada de Reservas (Hero)" 
+                 class="bg-[#13223f] text-white py-14 px-4 sm:px-6 lg:px-8 relative overflow-hidden" 
+                 @if(!$scheduleHeroActive && !$isEditor) style="display: none;" @endif>
             <div class="absolute -top-24 right-0 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="absolute -bottom-24 left-0 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
             <div class="max-w-4xl mx-auto text-center relative z-10 animate-fade-in-up">
-                <span class="text-sky-400 font-bold text-xs uppercase tracking-widest block mb-2">RESERVA ONLINE 24/7</span>
-                <h1 class="text-3xl sm:text-5xl font-black text-white">Agenda tu Cita Dental en 3 Pasos</h1>
-                <p class="text-slate-300 text-xs sm:text-sm max-w-xl mx-auto mt-3 font-light leading-relaxed">
-                    Selecciona tu tratamiento, el turno que mejor te acomode (Mañana o Tarde) y recibe confirmación instantánea vía WhatsApp con recepción.
+                <span data-cms-field="eyebrow" data-cms-row="eyebrow" class="text-sky-400 font-bold text-xs uppercase tracking-widest block mb-2" @if(!$hasHeroEyebrow) style="display: none;" @endif>
+                    {{ $heroEyebrow }}
+                </span>
+                <h1 data-cms-field="title" data-cms-row="title" class="text-3xl sm:text-5xl font-black text-white" @if(!$hasHeroTitle) style="display: none;" @endif>
+                    {{ $heroTitle }}
+                </h1>
+                <p data-cms-field="subtitle" data-cms-row="subtitle" class="text-slate-300 text-xs sm:text-sm max-w-xl mx-auto mt-3 font-light leading-relaxed" @if(!$hasHeroSubtitle) style="display: none;" @endif>
+                    {{ $heroSubtitle }}
                 </p>
             </div>
         </section>
@@ -1319,5 +1352,9 @@
             goToWizardStep(1);
         }
     </script>
+
+    @if(request()->has('editor_preview'))
+        @include('partials.editor-bridge')
+    @endif
 </body>
 </html>

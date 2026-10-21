@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use App\Models\ClinicSetting;
 use App\Models\Dentist;
 use App\Models\Service;
+use App\Models\SiteSection;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -36,13 +37,15 @@ class AppointmentBookingController extends Controller
         $dentists = Dentist::where('is_active', true)->with('services')->orderBy('order')->get();
         $selectedServiceId = $request->query('service_id') ?? $request->query('service');
         $selectedDentistId = $request->query('dentist_id') ?? $request->query('dentist');
+        $sections = SiteSection::forPage('schedule')->get()->keyBy('section_key');
 
         return view('schedule', compact(
             'clinic',
             'services',
             'dentists',
             'selectedServiceId',
-            'selectedDentistId'
+            'selectedDentistId',
+            'sections'
         ));
     }
 

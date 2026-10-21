@@ -26,7 +26,8 @@
             currentPage: '{{ $currentPage }}',
             sections: {{ Js::from($sections) }},
             saveUrl: '{{ route('admin.editor.save') }}',
-            csrfToken: '{{ csrf_token() }}'
+            csrfToken: '{{ csrf_token() }}',
+            availablePages: {{ Js::from($availablePages) }}
         })" 
         class="h-screen w-screen flex flex-col overflow-hidden"
     >
@@ -57,7 +58,8 @@
                 <!-- Page Dropdown -->
                 <div class="relative">
                     <select 
-                        x-model="currentPage" 
+                        id="editorPageSelect"
+                        :value="currentPage" 
                         @change="changePage($event.target.value)" 
                         class="bg-slate-900 border border-slate-700 text-xs text-white rounded-xl px-3 py-1.5 pr-8 focus:ring-1 focus:ring-sky-500 appearance-none cursor-pointer"
                     >
@@ -217,7 +219,12 @@
                                         
                                         <!-- LABEL MAPPING (no mostrar para arrays de testimonios que ya tienen cabecera propia) -->
                                         <template x-if="!Array.isArray(activeSection.content[fieldKey]) && fieldKey !== 'items'">
-                                            <label class="text-xs font-bold text-slate-300 flex items-center justify-between" x-text="getFieldLabel(fieldKey)"></label>
+                                            <div class="flex items-center justify-between">
+                                                <label class="text-xs font-bold text-slate-300" x-text="getFieldLabel(fieldKey)"></label>
+                                                <template x-if="fieldKey.includes('benefit') || fieldKey.includes('check') || fieldKey.includes('step_') || fieldKey.includes('stat_') || fieldKey.includes('button_secondary')">
+                                                    <span class="text-[10px] text-slate-500 font-normal">Opcional · Dejar vacío para ocultar</span>
+                                                </template>
+                                            </div>
                                         </template>
 
                                         <!-- TYPE 0: REPEATER (fieldKey === 'items' o Array de Elementos: Testimonios / FAQs) -->
@@ -228,7 +235,7 @@
                                                         <svg class="w-4 h-4 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
                                                         </svg>
-                                                        <span x-text="activeSection.section_key === 'faqs' ? 'Preguntas Frecuentes (' + (activeSection.content[fieldKey] || []).length + ')' : 'Testimonios (' + (activeSection.content[fieldKey] || []).length + ')'"></span>
+                                                        <span x-text="activeSection.section_key.includes('faq') ? 'Preguntas Frecuentes (' + (activeSection.content[fieldKey] || []).length + ')' : 'Testimonios (' + (activeSection.content[fieldKey] || []).length + ')'"></span>
                                                     </span>
                                                     <button 
                                                         type="button" 
@@ -236,7 +243,7 @@
                                                         class="bg-sky-500 hover:bg-sky-400 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors shadow-sm cursor-pointer"
                                                     >
                                                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-                                                        <span x-text="activeSection.section_key === 'faqs' ? 'Añadir Pregunta' : 'Añadir Testimonio'"></span>
+                                                        <span x-text="activeSection.section_key.includes('faq') ? 'Añadir Pregunta' : 'Añadir Testimonio'"></span>
                                                     </button>
                                                 </div>
 
@@ -250,11 +257,11 @@
                                                             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                                                                 <div class="flex items-center gap-2">
                                                                     <span class="w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 text-[10px] font-black flex items-center justify-center" x-text="itemIndex + 1"></span>
-                                                                    <span class="text-xs font-bold text-white truncate max-w-[140px]" x-text="activeSection.section_key === 'faqs' ? (item.question || 'Nueva Pregunta') : (item.patient_name || 'Nuevo Testimonio')"></span>
+                                                                    <span class="text-xs font-bold text-white truncate max-w-[140px]" x-text="activeSection.section_key.includes('faq') ? (item.question || 'Nueva Pregunta') : (item.patient_name || 'Nuevo Testimonio')"></span>
                                                                 </div>
                                                                 <div class="flex items-center gap-2">
                                                                     <!-- Star Badge preview solo para testimonios -->
-                                                                    <template x-if="activeSection.section_key !== 'faqs'">
+                                                                    <template x-if="!activeSection.section_key.includes('faq')">
                                                                         <span class="text-[10px] font-bold text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20 flex items-center gap-1">
                                                                             <svg class="w-3 h-3 fill-amber-400 text-amber-400" viewBox="0 0 24 24">
                                                                                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -268,7 +275,7 @@
                                                                         type="button" 
                                                                         @click.stop="removeRepeaterItem(fieldKey, itemIndex)"
                                                                         class="text-slate-500 hover:text-rose-400 transition-colors p-1 cursor-pointer"
-                                                                        :title="activeSection.section_key === 'faqs' ? 'Eliminar pregunta' : 'Eliminar testimonio'"
+                                                                        :title="activeSection.section_key.includes('faq') ? 'Eliminar pregunta' : 'Eliminar testimonio'"
                                                                     >
                                                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                                                     </button>
@@ -276,7 +283,7 @@
                                                             </div>
 
                                                             <!-- CASO A: CAMPOS DE PREGUNTAS FRECUENTES (FAQS) -->
-                                                            <template x-if="activeSection.section_key === 'faqs'">
+                                                            <template x-if="activeSection.section_key.includes('faq')">
                                                                 <div class="space-y-2.5">
                                                                     <div>
                                                                         <label class="text-[10px] font-semibold text-slate-400 block mb-1">Pregunta del Paciente</label>
@@ -302,7 +309,7 @@
                                                             </template>
 
                                                             <!-- CASO B: CAMPOS DE TESTIMONIOS -->
-                                                            <template x-if="activeSection.section_key !== 'faqs'">
+                                                            <template x-if="!activeSection.section_key.includes('faq')">
                                                                 <div class="space-y-2.5">
                                                                     <!-- Nombre del Paciente -->
                                                                     <div>
@@ -460,13 +467,112 @@
 
                                         <!-- TYPE 3: REGULAR SINGLE LINE TEXT -->
                                         <template x-if="!Array.isArray(activeSection.content[fieldKey]) && fieldKey !== 'items' && !fieldKey.includes('image') && !fieldKey.includes('photo') && !fieldKey.includes('desc') && !fieldKey.includes('subtitle')">
-                                            <input 
-                                                type="text" 
-                                                :value="activeSection.content[fieldKey]" 
-                                                @input="updateField(fieldKey, $event.target.value)" 
-                                                class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500 transition-colors"
-                                            >
+                                            <div class="relative flex items-center">
+                                                <input 
+                                                    type="text" 
+                                                    :value="activeSection.content[fieldKey]" 
+                                                    @input="updateField(fieldKey, $event.target.value)" 
+                                                    :placeholder="fieldKey.includes('benefit') || fieldKey.includes('check') || fieldKey.includes('step_') || fieldKey.includes('stat_') || fieldKey.includes('button_secondary') ? 'Dejar vacío para ocultar esta fila' : ''"
+                                                    :class="{'pr-8': fieldKey.includes('benefit') || fieldKey.includes('check') || fieldKey.includes('step_') || fieldKey.includes('stat_') || fieldKey.includes('button_secondary')}"
+                                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500 transition-colors"
+                                                >
+                                                <!-- Botón para limpiar / quitar beneficio con 1 clic si tiene texto -->
+                                                <button 
+                                                    type="button" 
+                                                    x-show="Boolean(activeSection.content[fieldKey]) && (fieldKey.includes('benefit') || fieldKey.includes('check') || fieldKey.includes('step_') || fieldKey.includes('stat_') || fieldKey.includes('button_secondary'))" 
+                                                    @click="updateField(fieldKey, '')" 
+                                                    class="absolute right-2 text-slate-400 hover:text-rose-400 p-1 text-xs cursor-pointer transition-colors"
+                                                    title="Quitar / Ocultar fila"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
                                         </template>
+                                    </div>
+                                </template>
+
+                                <!-- Nota informativa para Especialistas (sincronizados con BD / Dentistas) -->
+                                <template x-if="activeSection.section_key === 'about_specialists'">
+                                    <div class="mt-4 p-3.5 bg-slate-900/90 border border-sky-500/30 rounded-xl flex items-start gap-3 shadow-inner">
+                                        <div class="w-7 h-7 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0 mt-0.5">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <p class="text-xs font-bold text-white">Tarjetas de Doctores Odontólogos</p>
+                                            <p class="text-[11px] text-slate-400 leading-relaxed">
+                                                Las tarjetas de los especialistas provienen de la base de datos. Para añadir, editar o cambiar fotos y biografías de los doctores, ingresa a la sección <strong class="text-sky-300">Dentistas</strong> en el menú lateral del panel de administración.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- Nota informativa para Catálogo de Servicios (sincronizados con BD / Servicios) -->
+                                <template x-if="activeSection.section_key === 'services_hero'">
+                                    <div class="mt-4 p-3.5 bg-slate-900/90 border border-sky-500/30 rounded-xl flex items-start gap-3 shadow-inner">
+                                        <div class="w-7 h-7 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0 mt-0.5">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <p class="text-xs font-bold text-white">Catálogo de Procedimientos y Tratamientos</p>
+                                            <p class="text-[11px] text-slate-400 leading-relaxed">
+                                                Las tarjetas del catálogo se sincronizan desde la base de datos. Puedes añadir tratamientos, cambiar categorías, precios y fotos desde la sección <strong class="text-sky-300">Servicios</strong> en el menú lateral del panel de administración.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- Nota informativa para Artículos de Blog (sincronizados con BD / Artículos) -->
+                                <template x-if="activeSection.section_key === 'blog_hero'">
+                                    <div class="mt-4 p-3.5 bg-slate-900/90 border border-sky-500/30 rounded-xl flex items-start gap-3 shadow-inner">
+                                        <div class="w-7 h-7 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0 mt-0.5">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <p class="text-xs font-bold text-white">Artículos y Noticias del Blog</p>
+                                            <p class="text-[11px] text-slate-400 leading-relaxed">
+                                                Las publicaciones del blog se sincronizan directamente desde la base de datos. Puedes redactar nuevos artículos, asignar categorías y publicar imágenes desde la sección <strong class="text-sky-300">Blog</strong> en el menú lateral del panel de administración.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- Nota informativa para Tarjetas de Contacto (sincronizadas con Configuración Clínica) -->
+                                <template x-if="activeSection.section_key === 'contact_cards'">
+                                    <div class="mt-4 p-3.5 bg-slate-900/90 border border-sky-500/30 rounded-xl flex items-start gap-3 shadow-inner">
+                                        <div class="w-7 h-7 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0 mt-0.5">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <p class="text-xs font-bold text-white">Datos de Contacto Registrados</p>
+                                            <p class="text-[11px] text-slate-400 leading-relaxed">
+                                                El teléfono, urgencias, correo electrónico y dirección física se sincronizan directamente desde la configuración de la clínica registrada en la base de datos.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- Nota informativa para Portada de Reservas (asistente dinámico) -->
+                                <template x-if="activeSection.section_key === 'schedule_hero'">
+                                    <div class="mt-4 p-3.5 bg-slate-900/90 border border-sky-500/30 rounded-xl flex items-start gap-3 shadow-inner">
+                                        <div class="w-7 h-7 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center shrink-0 mt-0.5">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <p class="text-xs font-bold text-white">Asistente de Reservas Online</p>
+                                            <p class="text-[11px] text-slate-400 leading-relaxed">
+                                                Los pasos de reserva, catálogo de tratamientos, selección de odontólogos, turnos (mañana y tarde) y horarios disponibles se gestionan automáticamente en tiempo real según la base de datos y la agenda médica clínica.
+                                            </p>
+                                        </div>
                                     </div>
                                 </template>
                             </div>
@@ -481,11 +587,22 @@
                     :class="deviceMode === 'desktop' ? 'w-full h-full' : 'w-[390px] h-[844px] shadow-2xl rounded-[44px] border-[10px] border-slate-950 ring-1 ring-slate-800'" 
                     class="transition-all duration-300 bg-white overflow-hidden relative"
                 >
+                    <!-- Overlay suave mientras la nueva página carga en el lienzo -->
+                    <div 
+                        x-show="isPageLoading" 
+                        x-transition.opacity.duration.150ms
+                        class="absolute inset-0 bg-slate-950/75 backdrop-blur-[2px] z-30 flex flex-col items-center justify-center gap-2.5 text-white pointer-events-none"
+                        style="display: none;"
+                    >
+                        <div class="w-7 h-7 border-2 border-sky-400 border-t-transparent rounded-full animate-spin"></div>
+                        <span class="text-[11px] font-semibold text-slate-300 tracking-wide">Cargando previsualización...</span>
+                    </div>
+
                     <iframe 
                         x-ref="previewIframe" 
-                        :src="'/' + (currentPage === 'home' ? '' : currentPage) + '?editor_preview=1'" 
+                        :src="availablePages[currentPage]?.url || ('/' + (currentPage === 'home' ? '' : currentPage) + '?editor_preview=1')" 
                         class="w-full h-full border-0 select-auto"
-                        @load="initIframeBridge()"
+                        @load="onIframeLoaded()"
                     ></iframe>
                 </div>
             </main>
@@ -544,6 +661,7 @@
         function visualCustomizer(config) {
             return {
                 currentPage: config.currentPage,
+                availablePages: config.availablePages || {},
                 sections: config.sections,
                 saveUrl: config.saveUrl,
                 csrfToken: config.csrfToken,
@@ -551,6 +669,7 @@
                 activeSectionKey: null,
                 hasUnsavedChanges: false,
                 isSaving: false,
+                isPageLoading: false,
                 toast: { visible: false, message: '' },
 
                 init() {
@@ -566,6 +685,19 @@
                         if (event.data.type === 'CMS_BRIDGE_READY') {
                             self.syncAllToIframe();
                         }
+
+                        if (event.data.type === 'CMS_NAVBAR_CLICKED') {
+                            self.showToast('Para cambiar de página utiliza el selector de páginas en la barra superior.', 'info');
+                        }
+                    });
+
+                    // Sincronizar al presionar botones Atrás / Adelante del navegador
+                    window.addEventListener('popstate', function() {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const page = urlParams.get('page') || 'home';
+                        if (page !== self.currentPage) {
+                            self.changePage(page, false);
+                        }
                     });
                 },
 
@@ -577,8 +709,46 @@
                     this.deviceMode = mode;
                 },
 
-                changePage(page) {
-                    window.location.href = `/admin/editor?page=${page}`;
+                async changePage(page, updateHistory = true) {
+                    if (page === this.currentPage) return;
+
+                    if (this.hasUnsavedChanges) {
+                        const confirmed = confirm('Tienes cambios sin guardar en esta página. ¿Deseas descartarlos y cambiar de página?');
+                        if (!confirmed) {
+                            const selectEl = document.getElementById('editorPageSelect');
+                            if (selectEl) selectEl.value = this.currentPage;
+                            return;
+                        }
+                    }
+
+                    this.isPageLoading = true;
+                    this.deselectSection();
+
+                    try {
+                        const res = await fetch(`/admin/editor?page=${page}`, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        if (!res.ok) throw new Error('Respuesta inválida del servidor');
+
+                        const data = await res.json();
+                        this.currentPage = data.currentPage;
+                        this.sections = data.sections;
+                        this.hasUnsavedChanges = false;
+
+                        const selectEl = document.getElementById('editorPageSelect');
+                        if (selectEl) selectEl.value = data.currentPage;
+
+                        if (updateHistory) {
+                            window.history.pushState({ page: data.currentPage }, '', `/admin/editor?page=${data.currentPage}`);
+                        }
+                    } catch (e) {
+                        console.error('Error cambiando de página en editor:', e);
+                        window.location.href = `/admin/editor?page=${page}`;
+                    }
                 },
 
                 selectSection(key) {
@@ -641,7 +811,7 @@
                     }
 
                     let newItem;
-                    if (this.activeSection.section_key === 'faqs') {
+                    if (this.activeSection.section_key.includes('faq')) {
                         newItem = {
                             question: '¿Nueva pregunta frecuente?',
                             answer: 'Escribe aquí la respuesta clara y detallada para tus pacientes.'
@@ -661,7 +831,7 @@
                     this.notifyIframeUpdate();
 
                     const newIdx = this.activeSection.content[fieldKey].length - 1;
-                    if (this.activeSection.section_key === 'faqs') {
+                    if (this.activeSection.section_key.includes('faq')) {
                         this.sendToIframe({
                             type: 'PREVIEW_FAQ_INDEX',
                             index: newIdx
@@ -687,7 +857,7 @@
                     this.hasUnsavedChanges = true;
                     this.notifyIframeUpdate();
 
-                    if (this.activeSection.section_key === 'faqs') {
+                    if (this.activeSection.section_key.includes('faq')) {
                         this.sendToIframe({
                             type: 'PREVIEW_FAQ_INDEX',
                             index: index
@@ -702,7 +872,7 @@
 
                 previewRepeaterItem(index) {
                     if (!this.activeSection) return;
-                    if (this.activeSection.section_key === 'faqs') {
+                    if (this.activeSection.section_key.includes('faq')) {
                         this.sendToIframe({
                             type: 'PREVIEW_FAQ_INDEX',
                             index: index
@@ -743,7 +913,7 @@
 
                 getFieldLabel(key) {
                     if (key === 'items') {
-                        return this.activeSection?.section_key === 'faqs' ? 'Preguntas Frecuentes' : 'Listado de Testimonios';
+                        return this.activeSection?.section_key?.includes('faq') ? 'Preguntas Frecuentes' : 'Listado de Testimonios';
                     }
 
                     const labels = {
@@ -751,6 +921,10 @@
                         'title': 'Título Principal',
                         'subtitle': 'Subtítulo / Bajada',
                         'description': 'Descripción Detallada',
+                        'feature_1_title': 'Título Valor / Filosofía 1',
+                        'feature_1_desc': 'Descripción Valor / Filosofía 1',
+                        'feature_2_title': 'Título Valor / Filosofía 2',
+                        'feature_2_desc': 'Descripción Valor / Filosofía 2',
                         'benefit_1': 'Beneficio 1',
                         'benefit_2': 'Beneficio 2',
                         'check_text': 'Texto con Checkmark (✓)',
@@ -761,6 +935,8 @@
                         'button_url': 'Enlace del Botón',
                         'button_primary_text': 'Texto de Botón Principal',
                         'button_primary_url': 'Enlace de Botón Principal',
+                        'button_secondary_text': 'Texto de Botón Secundario',
+                        'button_secondary_url': 'Enlace de Botón Secundario',
                         'badge_title': 'Título de Insignia Flotante',
                         'badge_subtitle': 'Subtítulo de Insignia Flotante',
                         'badge_years': 'Cifra en Sello Circular (ej. 20+)',
@@ -784,7 +960,13 @@
                         'step_1_title': 'Paso / Solución 1',
                         'step_2_title': 'Paso / Solución 2',
                         'step_3_title': 'Paso / Solución 3',
-                        'step_4_title': 'Paso / Solución 4'
+                        'step_4_title': 'Paso / Solución 4',
+                        'card_1_title': 'Título Tarjeta 1 (Teléfono)',
+                        'card_1_desc': 'Descripción Tarjeta 1 (Teléfono)',
+                        'card_2_title': 'Título Tarjeta 2 (Correo)',
+                        'card_2_desc': 'Descripción Tarjeta 2 (Correo)',
+                        'card_3_title': 'Título Tarjeta 3 (Ubicación)',
+                        'card_3_desc': 'Descripción Tarjeta 3 (Ubicación)'
                     };
 
                     return labels[key] || key.replace(/_/g, ' ').toUpperCase();
@@ -810,6 +992,11 @@
                             isActive: s.is_active
                         });
                     });
+                },
+
+                onIframeLoaded() {
+                    this.isPageLoading = false;
+                    this.initIframeBridge();
                 },
 
                 initIframeBridge() {

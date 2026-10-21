@@ -39,6 +39,11 @@
         align-items: center;
         gap: 5px;
     }
+
+    /* En la previsualización del editor, deshabilitar navegación de enlaces en el header y footer */
+    header a, footer a {
+        cursor: default !important;
+    }
 </style>
 
 <script>
@@ -47,8 +52,24 @@
 
         let activeBadge = null;
 
-        // 1. Interceptar clics para destacar la sección y evitar salir de la página
+        // 1. Interceptar clics para evitar salir del editor y destacar secciones
         document.addEventListener('click', function (e) {
+            // Evitar navegación externa en enlaces <a> (header, footer y secciones) para no salir del lienzo del editor
+            const anchor = e.target.closest('a');
+            if (anchor) {
+                const href = anchor.getAttribute('href') || anchor.getAttribute(':href');
+                if (anchor.closest('header') || anchor.closest('footer') || (href && !href.startsWith('#') && !href.startsWith('javascript:'))) {
+                    e.preventDefault();
+
+                    // Si el usuario intentó navegar desde el header o footer, informar al panel editor
+                    if ((anchor.closest('header') || anchor.closest('footer')) && window.parent && window.parent !== window) {
+                        window.parent.postMessage({
+                            type: 'CMS_NAVBAR_CLICKED'
+                        }, '*');
+                    }
+                }
+            }
+
             const section = e.target.closest('[data-cms-section]');
             if (section) {
                 const sectionKey = section.getAttribute('data-cms-section');
@@ -59,15 +80,6 @@
                         type: 'CMS_SECTION_CLICKED',
                         sectionKey: sectionKey
                     }, '*');
-                }
-
-                // Evitar navegación externa en enlaces <a> para no salir del lienzo del editor
-                const anchor = e.target.closest('a');
-                if (anchor) {
-                    const href = anchor.getAttribute('href');
-                    if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
-                        e.preventDefault();
-                    }
                 }
 
                 // NOTA: No llamamos a e.stopPropagation() para permitir que los botones interactivos
@@ -136,6 +148,20 @@
                             node.textContent = value;
                         }
                     });
+
+                    // Sincronizar visibilidad de filas condicionales (beneficios, checkmarks, pasos)
+                    const row = section.querySelector(`[data-cms-row="${fieldKey}"]`);
+                    if (row) {
+                        const hasContent = Boolean(value && String(value).trim().length > 0);
+                        row.style.display = hasContent ? '' : 'none';
+
+                        const group = row.closest('[data-cms-group]');
+                        if (group) {
+                            const allRows = group.querySelectorAll('[data-cms-row]');
+                            const anyVisible = Array.from(allRows).some(r => r.style.display !== 'none');
+                            group.style.display = anyVisible ? '' : 'none';
+                        }
+                    }
                 }
             }
 
@@ -160,6 +186,19 @@
                                 node.textContent = value;
                             }
                         });
+
+                        const row = section.querySelector(`[data-cms-row="${key}"]`);
+                        if (row) {
+                            const hasContent = Boolean(value && String(value).trim().length > 0);
+                            row.style.display = hasContent ? '' : 'none';
+
+                            const group = row.closest('[data-cms-group]');
+                            if (group) {
+                                const allRows = group.querySelectorAll('[data-cms-row]');
+                                const anyVisible = Array.from(allRows).some(r => r.style.display !== 'none');
+                                group.style.display = anyVisible ? '' : 'none';
+                            }
+                        }
                     }
                 });
 

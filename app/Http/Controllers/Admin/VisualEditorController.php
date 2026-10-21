@@ -13,7 +13,7 @@ class VisualEditorController extends Controller
     /**
      * Display the full-screen visual customizer workspace.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View|JsonResponse
     {
         $currentPage = $request->query('page', 'home');
 
@@ -30,9 +30,17 @@ class VisualEditorController extends Controller
                 'name' => 'Tratamientos y Servicios',
                 'url' => route('services.index', ['editor_preview' => 1]),
             ],
+            'blog' => [
+                'name' => 'Blog y Consejos',
+                'url' => route('blog.index', ['editor_preview' => 1]),
+            ],
             'contact' => [
                 'name' => 'Contacto y Citas',
                 'url' => route('contact', ['editor_preview' => 1]),
+            ],
+            'schedule' => [
+                'name' => 'Reserva de Citas',
+                'url' => route('schedule', ['editor_preview' => 1]),
             ],
         ];
 
@@ -43,6 +51,14 @@ class VisualEditorController extends Controller
         $sections = SiteSection::forPage($currentPage)
             ->get()
             ->values();
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'currentPage' => $currentPage,
+                'availablePages' => $availablePages,
+                'sections' => $sections,
+            ]);
+        }
 
         return view('admin.editor.index', [
             'currentPage' => $currentPage,

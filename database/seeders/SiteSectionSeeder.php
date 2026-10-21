@@ -216,7 +216,206 @@ class SiteSectionSeeder extends Seeder
             ],
         ];
 
-        foreach ($homeSections as $section) {
+        $aboutSections = [
+            [
+                'page' => 'about',
+                'section_key' => 'about_hero',
+                'name' => 'Portada Nosotros (Hero)',
+                'icon' => 'sparkles',
+                'order' => 1,
+                'is_active' => true,
+                'content' => [
+                    'eyebrow' => 'CONOCE AURA DENTAL STUDIO',
+                    'title' => 'Más de 20+ Años Brindando Excelencia Odontológica',
+                    'subtitle' => 'Un equipo multidisciplinario de odontólogos especialistas apasionados por tu bienestar, tecnología mínimamente invasiva y una experiencia clínica libre de dolor.',
+                    'button_primary_text' => 'Conocer Especialistas ↓',
+                    'button_primary_url' => '#dentists',
+                    'button_secondary_text' => 'Agendar Consulta Online »',
+                    'button_secondary_url' => '/reservar',
+                ],
+            ],
+            [
+                'page' => 'about',
+                'section_key' => 'about_story',
+                'name' => 'Nuestra Filosofía e Historia',
+                'icon' => 'heart',
+                'order' => 2,
+                'is_active' => true,
+                'content' => [
+                    'eyebrow' => 'NUESTRA FILOSOFÍA MÉDICA',
+                    'title' => 'Cuidado Odontológico Integral, Cálido y Sin Dolor.',
+                    'description' => 'En Aura Dental Studio, combinamos ciencia médica de vanguardia con un trato profundamente humano. Nuestro compromiso es que cada visita sea una experiencia tranquila y gratificante, cuidando tanto de la salud funcional de tus dientes como de la estética natural de tu sonrisa.',
+                    'feature_1_title' => 'Acompañamiento Cercano',
+                    'feature_1_desc' => 'Orientación clara y soporte antes, durante y después de cada tratamiento.',
+                    'feature_2_title' => 'Especialistas Certificados',
+                    'feature_2_desc' => 'Postgrados universitarios y formación continua en cada área odontológica.',
+                    'check_text' => 'Contamos con quirófanos digitales, escáner intraoral 3D y sedación consciente.',
+                    'button_text' => 'Agendar Cita con un Especialista »',
+                    'button_url' => '/reservar',
+                    'image_1_url' => 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80',
+                    'image_2_url' => 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80',
+                    'badge_years' => '20+',
+                    'badge_text' => 'Años de Trayectoria',
+                ],
+            ],
+            [
+                'page' => 'about',
+                'section_key' => 'about_trustbar',
+                'name' => 'Barra de Estadísticas y Confianza',
+                'icon' => 'chart-bar',
+                'order' => 3,
+                'is_active' => true,
+                'content' => [
+                    'stat_1_number' => '567+',
+                    'stat_1_label' => 'Pacientes Felices',
+                    'stat_2_number' => '23K+',
+                    'stat_2_label' => 'Atenciones Realizadas',
+                    'stat_3_number' => '241+',
+                    'stat_3_label' => 'Casos de Sonrisa',
+                    'stat_4_number' => '16+',
+                    'stat_4_label' => 'Certificaciones de Calidad',
+                ],
+            ],
+            [
+                'page' => 'about',
+                'section_key' => 'about_specialists',
+                'name' => 'Equipo de Especialistas',
+                'icon' => 'user-group',
+                'order' => 4,
+                'is_active' => true,
+                'content' => [
+                    'eyebrow' => 'CUERPO MÉDICO DE ÉLITE',
+                    'title' => 'Nuestros Especialistas Odontológicos',
+                    'subtitle' => 'Doctores colegiados con postgrados y amplia experiencia en cirugía, implantes, ortodoncia, odontopediatría y diseño de sonrisa.',
+                ],
+            ],
+        ];
+
+        $servicesSections = [
+            [
+                'page' => 'services',
+                'section_key' => 'services_hero',
+                'name' => 'Portada de Servicios (Hero)',
+                'icon' => 'sparkles',
+                'order' => 1,
+                'is_active' => true,
+                'content' => [
+                    'eyebrow' => 'EXCELENCIA CLÍNICA',
+                    'title' => 'Nuestros Tratamientos y Procedimientos',
+                    'subtitle' => 'Atención odontológica integral, moderna y sin dolor respaldada por tecnología intraoral 3D y materiales de estándar suizo.',
+                ],
+            ],
+        ];
+
+        $blogSections = [
+            [
+                'page' => 'blog',
+                'section_key' => 'blog_hero',
+                'name' => 'Portada del Blog (Hero)',
+                'icon' => 'sparkles',
+                'order' => 1,
+                'is_active' => true,
+                'content' => [
+                    'eyebrow' => 'DIVULGACIÓN CIENTÍFICA & SALUD BUCAL',
+                    'title' => 'Blog y Consejos Clínicos',
+                    'subtitle' => 'Artículos con base científica y recomendaciones prácticas de nuestros odontólogos para el cuidado diario de tu salud bucal.',
+                ],
+            ],
+            [
+                'page' => 'blog',
+                'section_key' => 'blog_cta',
+                'name' => 'Banner Consulta Personalizada',
+                'icon' => 'chat-bubble-bottom-center-text',
+                'order' => 2,
+                'is_active' => true,
+                'content' => [
+                    'eyebrow' => 'CONSULTA PERSONALIZADA',
+                    'title' => '¿Tienes dudas sobre algún síntoma o tratamiento dental?',
+                    'subtitle' => 'Nuestros especialistas certificados están disponibles para una evaluación presencial o responder a tus inquietudes de inmediato.',
+                    'button_primary_text' => 'Reservar Turno Online »',
+                    'button_primary_url' => '/reservar',
+                    'button_secondary_text' => 'Contactar »',
+                    'button_secondary_url' => '/contacto',
+                ],
+            ],
+        ];
+
+        $contactSections = [
+            [
+                'page' => 'contact',
+                'section_key' => 'contact_hero',
+                'name' => 'Portada de Contacto (Hero)',
+                'icon' => 'sparkles',
+                'order' => 1,
+                'is_active' => true,
+                'content' => [
+                    'eyebrow' => 'ESTAMOS PARA AYUDARTE',
+                    'title' => 'Contacta con Aura Dental Studio',
+                    'subtitle' => '¿Tienes dudas sobre un tratamiento o necesitas atención inmediata? Escríbenos, llámanos o visítanos en nuestras instalaciones.',
+                ],
+            ],
+            [
+                'page' => 'contact',
+                'section_key' => 'contact_cards',
+                'name' => 'Tarjetas de Contacto e Información',
+                'icon' => 'phone',
+                'order' => 2,
+                'is_active' => true,
+                'content' => [
+                    'card_1_title' => 'Teléfono y Urgencias',
+                    'card_1_desc' => 'Línea directa para consultas generales y emergencias odontológicas 24/7.',
+                    'card_2_title' => 'Correo Electrónico',
+                    'card_2_desc' => 'Envíanos tus dudas, historial clínico o consultas sobre presupuestos.',
+                    'card_3_title' => 'Ubicación de la Clínica',
+                    'card_3_desc' => 'Ubicación céntrica con estacionamiento gratuito para pacientes.',
+                ],
+            ],
+            [
+                'page' => 'contact',
+                'section_key' => 'contact_faqs',
+                'name' => 'Preguntas Frecuentes',
+                'icon' => 'question-mark-circle',
+                'order' => 3,
+                'is_active' => true,
+                'content' => [
+                    'eyebrow' => 'PREGUNTAS FRECUENTES',
+                    'title' => 'Orientación al Paciente',
+                    'subtitle' => 'Respuestas a las dudas más comunes antes de visitar nuestra clínica.',
+                    'items' => [
+                        [
+                            'question' => '¿Debo reservar turno previo para una consulta o urgencia?',
+                            'answer' => 'Para consultas programadas recomendamos reservar online con anticipación. Para urgencias odontológicas de dolor agudo, atendemos prioritariamente con llamada previa.',
+                        ],
+                        [
+                            'question' => '¿Cuentan con opciones de financiamiento y seguro médico?',
+                            'answer' => 'Sí, trabajamos con los principales seguros dentales y disponemos de planes de pago en cuotas fijas para tratamientos de ortodoncia e implantes.',
+                        ],
+                        [
+                            'question' => '¿Dónde puedo estacionar cuando asisto a la clínica?',
+                            'answer' => 'Contamos con estacionamiento exclusivo y gratuito para nuestros pacientes justo frente al ingreso principal de la clínica.',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $scheduleSections = [
+            [
+                'page' => 'schedule',
+                'section_key' => 'schedule_hero',
+                'name' => 'Portada de Reservas (Hero)',
+                'icon' => 'calendar',
+                'order' => 1,
+                'is_active' => true,
+                'content' => [
+                    'eyebrow' => 'RESERVA ONLINE 24/7',
+                    'title' => 'Agenda tu Cita Dental en 3 Pasos',
+                    'subtitle' => 'Selecciona tu tratamiento, el turno que mejor te acomode (Mañana o Tarde) y recibe confirmación instantánea vía WhatsApp con recepción.',
+                ],
+            ],
+        ];
+
+        foreach (array_merge($homeSections, $aboutSections, $servicesSections, $blogSections, $contactSections, $scheduleSections) as $section) {
             SiteSection::updateOrCreate(
                 [
                     'page' => $section['page'],

@@ -92,14 +92,26 @@
                         </p>
 
                         <!-- Key Benefits / Bullet Checkmarks -->
-                        <div class="space-y-3 mb-8">
-                            <div class="flex items-center gap-3 text-xs sm:text-sm font-bold text-slate-200 hover:translate-x-1 transition-transform">
+                        @php
+                            $benefit1 = $hero['benefit_1'] ?? null;
+                            $benefit2 = $hero['benefit_2'] ?? null;
+                            if (!array_key_exists('benefit_1', $hero)) {
+                                $benefit1 = 'Odontólogos y Cirujanos Especialistas Certificados';
+                            }
+                            if (!array_key_exists('benefit_2', $hero)) {
+                                $benefit2 = 'Tratamientos Láser 100% Indoloros y Sedación Consciente';
+                            }
+                            $hasBenefit1 = filled(trim($benefit1 ?? ''));
+                            $hasBenefit2 = filled(trim($benefit2 ?? ''));
+                        @endphp
+                        <div data-cms-group="hero_benefits" class="space-y-3 mb-8" @if(!$hasBenefit1 && !$hasBenefit2) style="display: none;" @endif>
+                            <div data-cms-row="benefit_1" class="flex items-center gap-3 text-xs sm:text-sm font-bold text-slate-200 hover:translate-x-1 transition-transform" @if(!$hasBenefit1) style="display: none;" @endif>
                                 <div class="w-5 h-5 rounded-full bg-sky-500 text-white flex items-center justify-center text-xs flex-shrink-0">✓</div>
-                                <span data-cms-field="benefit_1">{{ $hero['benefit_1'] ?? 'Odontólogos y Cirujanos Especialistas Certificados' }}</span>
+                                <span data-cms-field="benefit_1">{{ $benefit1 }}</span>
                             </div>
-                            <div class="flex items-center gap-3 text-xs sm:text-sm font-bold text-slate-200 hover:translate-x-1 transition-transform">
+                            <div data-cms-row="benefit_2" class="flex items-center gap-3 text-xs sm:text-sm font-bold text-slate-200 hover:translate-x-1 transition-transform" @if(!$hasBenefit2) style="display: none;" @endif>
                                 <div class="w-5 h-5 rounded-full bg-sky-500 text-white flex items-center justify-center text-xs flex-shrink-0">✓</div>
-                                <span data-cms-field="benefit_2">{{ $hero['benefit_2'] ?? 'Tratamientos Láser 100% Indoloros y Sedación Consciente' }}</span>
+                                <span data-cms-field="benefit_2">{{ $benefit2 }}</span>
                             </div>
                         </div>
 
@@ -269,10 +281,17 @@
                             </div>
                         </div>
 
+                        @php
+                            $checkText = $aboutSec['check_text'] ?? null;
+                            if (!array_key_exists('check_text', $aboutSec)) {
+                                $checkText = 'Horarios organizados por Turno Mañana y Turno Tarde para tu comodidad.';
+                            }
+                            $hasCheckText = filled(trim($checkText ?? ''));
+                        @endphp
                         <!-- Checkmark de horarios -->
-                        <div class="flex items-center gap-3 text-xs text-slate-600 mb-6">
+                        <div data-cms-row="check_text" class="flex items-center gap-3 text-xs text-slate-600 mb-6" @if(!$hasCheckText) style="display: none;" @endif>
                             <div class="w-5 h-5 rounded-full bg-[#13223f] text-white flex items-center justify-center text-[10px] font-bold shrink-0">✓</div>
-                            <span data-cms-field="check_text">{{ $aboutSec['check_text'] ?? 'Horarios organizados por Turno Mañana y Turno Tarde para tu comodidad.' }}</span>
+                            <span data-cms-field="check_text">{{ $checkText }}</span>
                         </div>
 
                         <!-- Botón: Conocer a los Especialistas (Fin de la sección Sobre la Clínica) -->
@@ -369,47 +388,69 @@
                         </p>
 
                         <div class="space-y-3.5 w-full mb-4">
+                            @php
+                                $step1 = $howItWorksSec['step_1_title'] ?? null;
+                                $step2 = $howItWorksSec['step_2_title'] ?? null;
+                                $step3 = $howItWorksSec['step_3_title'] ?? null;
+                                $step4 = $howItWorksSec['step_4_title'] ?? null;
+                                if (!array_key_exists('step_1_title', $howItWorksSec)) {
+                                    $step1 = 'Higiene y Prevención Dental Integral con Ultrasonido Tibio';
+                                }
+                                if (!array_key_exists('step_2_title', $howItWorksSec)) {
+                                    $step2 = 'Especialistas Certificados en Estética y Cirugía Reconstructiva';
+                                }
+                                if (!array_key_exists('step_3_title', $howItWorksSec)) {
+                                    $step3 = 'Protocolos Estrictos de Esterilización Quirúrgica Grado Hospital';
+                                }
+                                if (!array_key_exists('step_4_title', $howItWorksSec)) {
+                                    $step4 = 'Odontología Láser Indolora y Sedación Consciente';
+                                }
+                                $hasStep1 = filled(trim($step1 ?? ''));
+                                $hasStep2 = filled(trim($step2 ?? ''));
+                                $hasStep3 = filled(trim($step3 ?? ''));
+                                $hasStep4 = filled(trim($step4 ?? ''));
+                            @endphp
                             <!-- Feature 1 -->
-                            <div class="flex items-center gap-4 p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-sky-300 hover:shadow-md transition-all hover:translate-x-1">
+                            <div data-cms-row="step_1_title" class="flex items-center gap-4 p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-sky-300 hover:shadow-md transition-all hover:translate-x-1" @if(!$hasStep1) style="display: none;" @endif>
                                 <div class="w-9 h-9 rounded-xl bg-[#13223f] text-white flex items-center justify-center flex-shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-sky-400">
                                         <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
                                         <path d="m9 12 2 2 4-4"></path>
                                     </svg>
                                 </div>
-                                <span data-cms-field="step_1_title" class="font-bold text-slate-800 text-sm">{{ $howItWorksSec['step_1_title'] ?? 'Higiene y Prevención Dental Integral con Ultrasonido Tibio' }}</span>
+                                <span data-cms-field="step_1_title" class="font-bold text-slate-800 text-sm">{{ $step1 }}</span>
                             </div>
 
                             <!-- Feature 2 -->
-                            <div class="flex items-center gap-4 p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-sky-300 hover:shadow-md transition-all hover:translate-x-1">
+                            <div data-cms-row="step_2_title" class="flex items-center gap-4 p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-sky-300 hover:shadow-md transition-all hover:translate-x-1" @if(!$hasStep2) style="display: none;" @endif>
                                 <div class="w-9 h-9 rounded-xl bg-[#13223f] text-white flex items-center justify-center flex-shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-sky-400">
                                         <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
                                     </svg>
                                 </div>
-                                <span data-cms-field="step_2_title" class="font-bold text-slate-800 text-sm">{{ $howItWorksSec['step_2_title'] ?? 'Especialistas Certificados en Estética y Cirugía Reconstructiva' }}</span>
+                                <span data-cms-field="step_2_title" class="font-bold text-slate-800 text-sm">{{ $step2 }}</span>
                             </div>
 
                             <!-- Feature 3 -->
-                            <div class="flex items-center gap-4 p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-sky-300 hover:shadow-md transition-all hover:translate-x-1">
+                            <div data-cms-row="step_3_title" class="flex items-center gap-4 p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-sky-300 hover:shadow-md transition-all hover:translate-x-1" @if(!$hasStep3) style="display: none;" @endif>
                                 <div class="w-9 h-9 rounded-xl bg-[#13223f] text-white flex items-center justify-center flex-shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-sky-400">
                                         <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"></path>
                                         <path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"></path>
                                     </svg>
                                 </div>
-                                <span data-cms-field="step_3_title" class="font-bold text-slate-800 text-sm">{{ $howItWorksSec['step_3_title'] ?? 'Protocolos Estrictos de Esterilización Quirúrgica Grado Hospital' }}</span>
+                                <span data-cms-field="step_3_title" class="font-bold text-slate-800 text-sm">{{ $step3 }}</span>
                             </div>
 
                             <!-- Feature 4 -->
-                            <div class="flex items-center gap-4 p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-sky-300 hover:shadow-md transition-all hover:translate-x-1">
+                            <div data-cms-row="step_4_title" class="flex items-center gap-4 p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-sky-300 hover:shadow-md transition-all hover:translate-x-1" @if(!$hasStep4) style="display: none;" @endif>
                                 <div class="w-9 h-9 rounded-xl bg-[#13223f] text-white flex items-center justify-center flex-shrink-0">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-sky-400">
                                         <path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path>
                                         <circle cx="12" cy="8" r="6"></circle>
                                     </svg>
                                 </div>
-                                <span data-cms-field="step_4_title" class="font-bold text-slate-800 text-sm">{{ $howItWorksSec['step_4_title'] ?? 'Odontología Láser Indolora y Sedación Consciente' }}</span>
+                                <span data-cms-field="step_4_title" class="font-bold text-slate-800 text-sm">{{ $step4 }}</span>
                             </div>
                         </div>
                     </div>
@@ -828,24 +869,41 @@
                                 </p>
 
                                 <!-- Benefits Checklist -->
-                                <ul class="space-y-3 mb-8 text-xs text-slate-300">
-                                    <li class="flex items-center gap-2.5">
+                                @php
+                                    $check1 = $ctaBookingSec['check_1'] ?? null;
+                                    $check2 = $ctaBookingSec['check_2'] ?? null;
+                                    $check3 = $ctaBookingSec['check_3'] ?? null;
+                                    if (!array_key_exists('check_1', $ctaBookingSec)) {
+                                        $check1 = 'Confirmación instantánea de cita y recordatorios automáticos por WhatsApp.';
+                                    }
+                                    if (!array_key_exists('check_2', $ctaBookingSec)) {
+                                        $check2 = 'Especialistas certificados en estética y cirugía reconstructiva.';
+                                    }
+                                    if (!array_key_exists('check_3', $ctaBookingSec)) {
+                                        $check3 = 'Horarios flexibles organizados por Turno Mañana y Turno Tarde.';
+                                    }
+                                    $hasCheck1 = filled(trim($check1 ?? ''));
+                                    $hasCheck2 = filled(trim($check2 ?? ''));
+                                    $hasCheck3 = filled(trim($check3 ?? ''));
+                                @endphp
+                                <ul data-cms-group="cta_booking_checks" class="space-y-3 mb-8 text-xs text-slate-300" @if(!$hasCheck1 && !$hasCheck2 && !$hasCheck3) style="display: none;" @endif>
+                                    <li data-cms-row="check_1" class="flex items-center gap-2.5" @if(!$hasCheck1) style="display: none;" @endif>
                                         <div class="w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0 border border-sky-500/30">
                                             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                         </div>
-                                        <span data-cms-field="check_1">{{ $ctaBookingSec['check_1'] ?? 'Confirmación instantánea de cita y recordatorios automáticos por WhatsApp.' }}</span>
+                                        <span data-cms-field="check_1">{{ $check1 }}</span>
                                     </li>
-                                    <li class="flex items-center gap-2.5">
+                                    <li data-cms-row="check_2" class="flex items-center gap-2.5" @if(!$hasCheck2) style="display: none;" @endif>
                                         <div class="w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0 border border-sky-500/30">
                                             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                         </div>
-                                        <span data-cms-field="check_2">{{ $ctaBookingSec['check_2'] ?? 'Especialistas certificados en estética y cirugía reconstructiva.' }}</span>
+                                        <span data-cms-field="check_2">{{ $check2 }}</span>
                                     </li>
-                                    <li class="flex items-center gap-2.5">
+                                    <li data-cms-row="check_3" class="flex items-center gap-2.5" @if(!$hasCheck3) style="display: none;" @endif>
                                         <div class="w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0 border border-sky-500/30">
                                             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                         </div>
-                                        <span data-cms-field="check_3">{{ $ctaBookingSec['check_3'] ?? 'Horarios flexibles organizados por Turno Mañana y Turno Tarde.' }}</span>
+                                        <span data-cms-field="check_3">{{ $check3 }}</span>
                                     </li>
                                 </ul>
                             </div>

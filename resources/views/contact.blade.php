@@ -25,18 +25,137 @@
     <!-- GLOBAL NAVBAR -->
     @include('partials.navbar')
 
+    @php
+        $sectionsMap = isset($sections) ? $sections : \App\Models\SiteSection::forPage('contact')->get()->keyBy('section_key');
+        $contactHero = $sectionsMap->get('contact_hero')?->content ?? [];
+        $contactHeroActive = $sectionsMap->get('contact_hero')?->is_active ?? true;
+        $isEditor = request()->has('editor_preview');
+
+        $heroEyebrow = $contactHero['eyebrow'] ?? null;
+        if (!array_key_exists('eyebrow', $contactHero)) {
+            $heroEyebrow = 'ESTAMOS PARA AYUDARTE';
+        }
+
+        $heroTitle = $contactHero['title'] ?? null;
+        if (!array_key_exists('title', $contactHero)) {
+            $heroTitle = 'Contacta con ' . $clinic->clinic_name;
+        }
+
+        $heroSubtitle = $contactHero['subtitle'] ?? null;
+        if (!array_key_exists('subtitle', $contactHero)) {
+            $heroSubtitle = '¿Tienes dudas sobre un tratamiento o necesitas atención inmediata? Escríbenos, llámanos o visítanos en nuestras instalaciones.';
+        }
+
+        $hasHeroEyebrow = filled(trim($heroEyebrow ?? ''));
+        $hasHeroTitle = filled(trim($heroTitle ?? ''));
+        $hasHeroSubtitle = filled(trim($heroSubtitle ?? ''));
+
+        $contactCards = $sectionsMap->get('contact_cards')?->content ?? [];
+        $contactCardsActive = $sectionsMap->get('contact_cards')?->is_active ?? true;
+
+        $card1Title = $contactCards['card_1_title'] ?? null;
+        if (!array_key_exists('card_1_title', $contactCards)) {
+            $card1Title = 'Teléfono y Urgencias';
+        }
+        $card1Desc = $contactCards['card_1_desc'] ?? null;
+        if (!array_key_exists('card_1_desc', $contactCards)) {
+            $card1Desc = 'Línea directa para consultas generales y emergencias odontológicas 24/7.';
+        }
+
+        $card2Title = $contactCards['card_2_title'] ?? null;
+        if (!array_key_exists('card_2_title', $contactCards)) {
+            $card2Title = 'Correo Electrónico';
+        }
+        $card2Desc = $contactCards['card_2_desc'] ?? null;
+        if (!array_key_exists('card_2_desc', $contactCards)) {
+            $card2Desc = 'Envíanos tus dudas, historial clínico o consultas sobre presupuestos.';
+        }
+
+        $card3Title = $contactCards['card_3_title'] ?? null;
+        if (!array_key_exists('card_3_title', $contactCards)) {
+            $card3Title = 'Ubicación de la Clínica';
+        }
+        $card3Desc = $contactCards['card_3_desc'] ?? null;
+        if (!array_key_exists('card_3_desc', $contactCards)) {
+            $card3Desc = 'Ubicación céntrica con estacionamiento gratuito para pacientes.';
+        }
+
+        $hasCard1Title = filled(trim($card1Title ?? ''));
+        $hasCard1Desc = filled(trim($card1Desc ?? ''));
+        $hasCard2Title = filled(trim($card2Title ?? ''));
+        $hasCard2Desc = filled(trim($card2Desc ?? ''));
+        $hasCard3Title = filled(trim($card3Title ?? ''));
+        $hasCard3Desc = filled(trim($card3Desc ?? ''));
+
+        $contactFaqs = $sectionsMap->get('contact_faqs')?->content ?? [];
+        $contactFaqsActive = $sectionsMap->get('contact_faqs')?->is_active ?? true;
+
+        $faqEyebrow = $contactFaqs['eyebrow'] ?? null;
+        if (!array_key_exists('eyebrow', $contactFaqs)) {
+            $faqEyebrow = 'PREGUNTAS FRECUENTES';
+        }
+
+        $faqTitle = $contactFaqs['title'] ?? null;
+        if (!array_key_exists('title', $contactFaqs)) {
+            $faqTitle = 'Orientación al Paciente';
+        }
+
+        $faqSubtitle = $contactFaqs['subtitle'] ?? null;
+        if (!array_key_exists('subtitle', $contactFaqs)) {
+            $faqSubtitle = 'Respuestas a las dudas más comunes antes de visitar nuestra clínica.';
+        }
+
+        $hasFaqEyebrow = filled(trim($faqEyebrow ?? ''));
+        $hasFaqTitle = filled(trim($faqTitle ?? ''));
+        $hasFaqSubtitle = filled(trim($faqSubtitle ?? ''));
+
+        $contactFaqItems = $contactFaqs['items'] ?? [];
+        if (empty($contactFaqItems) && isset($faqs) && $faqs->isNotEmpty()) {
+            $contactFaqItems = $faqs->map(function ($f) {
+                return [
+                    'question' => $f->question,
+                    'answer' => $f->answer,
+                ];
+            })->values()->toArray();
+        }
+
+        if (empty($contactFaqItems)) {
+            $contactFaqItems = [
+                [
+                    'question' => '¿Debo reservar turno previo para una consulta o urgencia?',
+                    'answer' => 'Para consultas programadas recomendamos reservar online con anticipación. Para urgencias odontológicas de dolor agudo, atendemos prioritariamente con llamada previa.',
+                ],
+                [
+                    'question' => '¿Cuentan con opciones de financiamiento y seguro médico?',
+                    'answer' => 'Sí, trabajamos con los principales seguros dentales y disponemos de planes de pago en cuotas fijas para tratamientos de ortodoncia e implantes.',
+                ],
+                [
+                    'question' => '¿Dónde puedo estacionar cuando asisto a la clínica?',
+                    'answer' => 'Contamos con estacionamiento exclusivo y gratuito para nuestros pacientes justo frente al ingreso principal de la clínica.',
+                ],
+            ];
+        }
+    @endphp
+
 <main class="min-h-screen bg-white text-slate-900 flex flex-col justify-between overflow-x-hidden">
 
         <!-- ========================================== -->
         <!-- HEADER HERO BANNER (#13223f)               -->
         <!-- ========================================== -->
-        <section class="bg-[#13223f] text-white py-14 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <section data-cms-section="contact_hero" 
+                 data-cms-name="Portada de Contacto (Hero)" 
+                 class="bg-[#13223f] text-white py-14 px-4 sm:px-6 lg:px-8 relative overflow-hidden" 
+                 @if(!$contactHeroActive && !$isEditor) style="display: none;" @endif>
             <div class="absolute -top-24 right-0 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="max-w-7xl mx-auto text-center relative z-10">
-                <span class="text-sky-400 font-bold text-xs uppercase tracking-widest block mb-2">ESTAMOS PARA AYUDARTE</span>
-                <h1 class="text-4xl sm:text-5xl font-black text-white">Contacta con {{ $clinic->clinic_name }}</h1>
-                <p class="text-slate-300 text-xs sm:text-sm max-w-xl mx-auto mt-3 font-light leading-relaxed">
-                    ¿Tienes dudas sobre un tratamiento o necesitas atención inmediata? Escríbenos, llámanos o visítanos en nuestras instalaciones.
+                <span data-cms-field="eyebrow" data-cms-row="eyebrow" class="text-sky-400 font-bold text-xs uppercase tracking-widest block mb-2" @if(!$hasHeroEyebrow) style="display: none;" @endif>
+                    {{ $heroEyebrow }}
+                </span>
+                <h1 data-cms-field="title" data-cms-row="title" class="text-4xl sm:text-5xl font-black text-white" @if(!$hasHeroTitle) style="display: none;" @endif>
+                    {{ $heroTitle }}
+                </h1>
+                <p data-cms-field="subtitle" data-cms-row="subtitle" class="text-slate-300 text-xs sm:text-sm max-w-xl mx-auto mt-3 font-light leading-relaxed" @if(!$hasHeroSubtitle) style="display: none;" @endif>
+                    {{ $heroSubtitle }}
                 </p>
             </div>
         </section>
@@ -47,7 +166,10 @@
         <section class="py-14 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                <div data-cms-section="contact_cards" 
+                     data-cms-name="Tarjetas de Contacto e Información" 
+                     class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
+                     @if(!$contactCardsActive && !$isEditor) style="display: none;" @endif>
                     
                     <!-- Card 1: Phone & Emergency -->
                     <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200/80 hover:border-sky-300 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group">
@@ -56,8 +178,12 @@
                                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Teléfono y Urgencias</h3>
-                        <p class="text-xs text-slate-500 mb-4">Línea directa para consultas generales y emergencias odontológicas 24/7.</p>
+                        <h3 data-cms-field="card_1_title" data-cms-row="card_1_title" class="text-xl font-bold text-slate-900 mb-2" @if(!$hasCard1Title) style="display: none;" @endif>
+                            {{ $card1Title }}
+                        </h3>
+                        <p data-cms-field="card_1_desc" data-cms-row="card_1_desc" class="text-xs text-slate-500 mb-4" @if(!$hasCard1Desc) style="display: none;" @endif>
+                            {{ $card1Desc }}
+                        </p>
                         <a href="tel:{{ preg_replace('/[^0-9+]/', '', $clinic->phone) }}" class="text-sky-500 font-extrabold text-sm hover:underline block">
                             {{ $clinic->phone }}
                         </a>
@@ -74,14 +200,15 @@
                                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Correo Electrónico</h3>
-                        <p class="text-xs text-slate-500 mb-4">Envíanos tus dudas, historial clínico o consultas sobre presupuestos.</p>
+                        <h3 data-cms-field="card_2_title" data-cms-row="card_2_title" class="text-xl font-bold text-slate-900 mb-2" @if(!$hasCard2Title) style="display: none;" @endif>
+                            {{ $card2Title }}
+                        </h3>
+                        <p data-cms-field="card_2_desc" data-cms-row="card_2_desc" class="text-xs text-slate-500 mb-4" @if(!$hasCard2Desc) style="display: none;" @endif>
+                            {{ $card2Desc }}
+                        </p>
                         <a href="mailto:{{ $clinic->email }}" class="text-sky-500 font-extrabold text-sm hover:underline block">
                             {{ $clinic->email }}
                         </a>
-                        <span class="text-slate-400 font-medium text-xs block mt-1">
-                            Respuesta en menos de 2 horas hábiles
-                        </span>
                     </div>
 
                     <!-- Card 3: Clinic Location -->
@@ -92,8 +219,12 @@
                                 <circle cx="12" cy="10" r="3"></circle>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Ubicación de la Clínica</h3>
-                        <p class="text-xs text-slate-500 mb-4">Ubicación céntrica con estacionamiento gratuito para pacientes.</p>
+                        <h3 data-cms-field="card_3_title" data-cms-row="card_3_title" class="text-xl font-bold text-slate-900 mb-2" @if(!$hasCard3Title) style="display: none;" @endif>
+                            {{ $card3Title }}
+                        </h3>
+                        <p data-cms-field="card_3_desc" data-cms-row="card_3_desc" class="text-xs text-slate-500 mb-4" @if(!$hasCard3Desc) style="display: none;" @endif>
+                            {{ $card3Desc }}
+                        </p>
                         <span class="text-slate-800 font-extrabold text-xs block">{{ $clinic->address }}</span>
                         <a href="#mapSection" class="text-sky-500 font-bold text-xs hover:underline block mt-1">Ver mapa interactivo »</a>
                     </div>
@@ -246,34 +377,45 @@
                 <!-- ========================================== -->
                 <!-- FAQ ACCORDION SECTION                      -->
                 <!-- ========================================== -->
-                @if(isset($faqs) && $faqs->count() > 0)
-                    <div class="max-w-3xl mx-auto pt-8 border-t border-slate-100">
-                        <div class="text-center mb-8">
-                            <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">PREGUNTAS FRECUENTES</span>
-                            <h2 class="text-3xl font-black text-slate-900">Orientación al Paciente</h2>
-                        </div>
-
-                        <div class="space-y-4" x-data="{ openFaq: null }">
-                            @foreach($faqs as $fIndex => $faq)
-                                <div class="border border-slate-200/80 rounded-2xl overflow-hidden bg-slate-50 transition-all duration-300">
-                                    <button
-                                        type="button"
-                                        @click="openFaq = (openFaq === {{ $fIndex }} ? null : {{ $fIndex }})"
-                                        class="w-full p-5 text-left font-bold text-slate-800 text-sm flex items-center justify-between gap-4 hover:bg-slate-100/80 transition-colors"
-                                    >
-                                        <span>{{ $faq->question }}</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-500 flex-shrink-0 transition-transform duration-300" :class="openFaq === {{ $fIndex }} ? 'rotate-180' : ''">
-                                            <path d="m6 9 6 6 6-6"></path>
-                                        </svg>
-                                    </button>
-                                    <div x-show="openFaq === {{ $fIndex }}" x-cloak class="p-5 pt-0 text-xs text-slate-600 leading-relaxed bg-white border-t border-slate-100">
-                                        {{ $faq->answer }}
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
+                <div data-cms-section="contact_faqs" 
+                     data-cms-name="Preguntas Frecuentes" 
+                     class="max-w-3xl mx-auto pt-8 border-t border-slate-100"
+                     @if(!$contactFaqsActive && !$isEditor) style="display: none;" @endif>
+                    <div class="text-center mb-8">
+                        <span data-cms-field="eyebrow" data-cms-row="eyebrow" class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1" @if(!$hasFaqEyebrow) style="display: none;" @endif>
+                            {{ $faqEyebrow }}
+                        </span>
+                        <h2 data-cms-field="title" data-cms-row="title" class="text-3xl font-black text-slate-900" @if(!$hasFaqTitle) style="display: none;" @endif>
+                            {{ $faqTitle }}
+                        </h2>
+                        <p data-cms-field="subtitle" data-cms-row="subtitle" class="text-slate-500 text-xs sm:text-sm mt-2 font-light leading-relaxed max-w-lg mx-auto" @if(!$hasFaqSubtitle) style="display: none;" @endif>
+                            {{ $faqSubtitle }}
+                        </p>
                     </div>
-                @endif
+
+                    <div 
+                        class="space-y-4" 
+                        x-data="contactFaqsAccordion({ items: @js($contactFaqItems) })"
+                    >
+                        <template x-for="(faq, fIndex) in items" :key="fIndex">
+                            <div class="border border-slate-200/80 rounded-2xl overflow-hidden bg-slate-50 transition-all duration-300">
+                                <button
+                                    type="button"
+                                    @click="toggle(fIndex)"
+                                    class="w-full p-5 text-left font-bold text-slate-800 text-sm flex items-center justify-between gap-4 hover:bg-slate-100/80 transition-colors cursor-pointer"
+                                >
+                                    <span x-text="faq.question"></span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-500 flex-shrink-0 transition-transform duration-300" :class="activeFaq === fIndex ? 'rotate-180' : ''">
+                                        <path d="m6 9 6 6 6-6"></path>
+                                    </svg>
+                                </button>
+                                <div x-show="activeFaq === fIndex" x-cloak class="p-5 pt-0 text-xs text-slate-600 leading-relaxed bg-white border-t border-slate-100">
+                                    <p class="whitespace-pre-line" x-text="faq.answer"></p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
 
             </div>
         </section>
@@ -284,6 +426,43 @@
 
     <!-- GLOBAL FOOTER -->
     @include('partials.footer')
+
+    @if(request()->has('editor_preview'))
+        @include('partials.editor-bridge')
+    @endif
+
+    <script>
+        function contactFaqsAccordion(config) {
+            return {
+                activeFaq: 0,
+                items: config.items || [],
+
+                init() {
+                    window.addEventListener('cms-contact_faqs-items-updated', (e) => {
+                        if (Array.isArray(e.detail)) {
+                            this.items = e.detail;
+                        }
+                    });
+
+                    window.addEventListener('cms-contact_faqs-updated', (e) => {
+                        if (e.detail && Array.isArray(e.detail.items)) {
+                            this.items = e.detail.items;
+                        }
+                    });
+
+                    window.addEventListener('cms-preview-faq-index', (e) => {
+                        if (typeof e.detail === 'number') {
+                            this.activeFaq = e.detail;
+                        }
+                    });
+                },
+
+                toggle(index) {
+                    this.activeFaq = this.activeFaq === index ? null : index;
+                }
+            };
+        }
+    </script>
 
 </body>
 </html>
