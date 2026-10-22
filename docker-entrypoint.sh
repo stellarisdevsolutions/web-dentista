@@ -1,10 +1,20 @@
 #!/usr/bin/env sh
 set -e
 
+# Select pre-seeded database template based on APP_LOCALE or SEEDER_LOCALE
+TEMPLATE="/app/database/demo_template.sqlite"
+if [ "${APP_LOCALE}" = "en" ] || [ "${SEEDER_LOCALE}" = "en" ]; then
+    if [ -f /app/database/demo_template_en.sqlite ]; then
+        TEMPLATE="/app/database/demo_template_en.sqlite"
+    fi
+elif [ -f /app/database/demo_template_es.sqlite ]; then
+    TEMPLATE="/app/database/demo_template_es.sqlite"
+fi
+
 # Restore pre-seeded SQLite database if missing or empty (cold start takes < 2ms)
 if [ ! -f /app/database/database.sqlite ] || [ ! -s /app/database/database.sqlite ]; then
-    echo "Restoring database from demo_template.sqlite..."
-    cp /app/database/demo_template.sqlite /app/database/database.sqlite
+    echo "Restoring database from ${TEMPLATE}..."
+    cp "${TEMPLATE}" /app/database/database.sqlite
     chmod 664 /app/database/database.sqlite || true
 fi
 
