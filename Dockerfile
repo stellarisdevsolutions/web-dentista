@@ -18,8 +18,8 @@ WORKDIR /app
 RUN npm install -g pnpm
 
 # Install frontend dependencies using pnpm
-COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install --frozen-lockfile || pnpm install
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml* ./
+RUN pnpm install
 
 # Copy vendor from composer_stage (required for Filament theme.css and Laravel Tailwind scanning)
 COPY --from=composer_stage /app/vendor /app/vendor
@@ -53,6 +53,11 @@ RUN install-php-extensions \
     opcache \
     exif
 
+# Remove Linux capabilities from FrankenPHP binary to allow execution under Render's no-new-privileges security policy
+RUN apk add --no-cache libcap && \
+    setcap -r /usr/local/bin/frankenphp && \
+    apk del libcap
+
 # Copy Composer binary
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -73,7 +78,7 @@ COPY Caddyfile /etc/caddy/Caddyfile
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Ensure storage directories exist with write permissions
+# Ensure storage directories and Caddy configuration cache exist with write permissions
 RUN mkdir -p storage/app/public \
     storage/framework/cache \
     storage/framework/sessions \
@@ -81,7 +86,10 @@ RUN mkdir -p storage/app/public \
     storage/logs \
     bootstrap/cache \
     database \
-    && chmod -R 775 storage bootstrap/cache database
+    /data \
+    /config \
+    && chmod -R 775 storage bootstrap/cache database public \
+    && chmod -R 777 /data /config
 
 EXPOSE 8000 10000
 

@@ -6,6 +6,7 @@ use App\Routing\LocalizedUrlGenerator;
 use App\Services\ImageOptimizerService;
 use Filament\Forms\Components\BaseFileUpload;
 use Filament\Forms\Components\FileUpload;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
@@ -51,6 +52,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if ($this->app->environment('production') || str_starts_with((string) config('app.url'), 'https://')) {
+            URL::forceScheme('https');
+        }
+
         // Macro to allow explicit configuration with custom maxWidth and quality
         FileUpload::macro('optimizeForWeb', function (int $maxWidth = ImageOptimizerService::DEFAULT_MAX_WIDTH, int $quality = ImageOptimizerService::DEFAULT_QUALITY): static {
             /** @var FileUpload $this */
