@@ -58,11 +58,13 @@ class DashboardKpiService
         }
 
         // Subtexto tarjeta 1
-        $confirmedTitle = $isDentist ? 'MIS CITAS CONFIRMADAS HOY' : 'CITAS CONFIRMADAS HOY';
+        $confirmedTitle = $isDentist ? __('MY CONFIRMED APPOINTMENTS TODAY') : __('CONFIRMED APPOINTMENTS TODAY');
         if ($scheduledCount === 0) {
-            $confirmedSubtitle = 'Sin citas programadas hoy';
+            $confirmedSubtitle = __('No appointments scheduled today');
         } else {
-            $confirmedSubtitle = trans_choice('{1} de :count programada|[2,*] de :count programadas', $scheduledCount, ['count' => $scheduledCount]);
+            $confirmedSubtitle = $scheduledCount === 1
+                ? __('of 1 scheduled')
+                : __('of :count scheduled', ['count' => $scheduledCount]);
         }
 
         // Mini gráfico SVG: últimos 6 días + hoy (7 días en total)
@@ -105,17 +107,17 @@ class DashboardKpiService
 
         // Tarjeta 2: Por confirmar
         if ($pendingCount === 0) {
-            $pendingSubtitle = 'Todo confirmado';
+            $pendingSubtitle = __('All confirmed');
         } else {
-            $pendingSubtitle = 'Requieren confirmación de recepción';
+            $pendingSubtitle = __('Require reception confirmation');
         }
 
-        $pendingButtonText = 'Enviar recordatorios';
+        $pendingButtonText = __('Send reminders');
         $pendingButtonUrl = AppointmentResource::getUrl('index', ['activeTab' => 'pending']);
 
         // Tarjeta 3: Servicios clínicos activos y top 3 en últimos 30 días
         $activeServicesCount = Service::where('is_active', true)->count();
-        $servicesSubtitle = 'Tratamientos disponibles hoy';
+        $servicesSubtitle = __('Treatments available today');
 
         $thirtyDaysAgoStr = $today->copy()->subDays(30)->toDateString();
         $topServices = Service::where('is_active', true)
@@ -131,7 +133,7 @@ class DashboardKpiService
         $remainingServicesCount = max(0, $activeServicesCount - count($topServices));
 
         // Tarjeta 4: Ocupación de la agenda hoy
-        $occupancyTitle = $isDentist ? 'MI OCUPACIÓN HOY' : 'OCUPACIÓN DE LA AGENDA HOY';
+        $occupancyTitle = $isDentist ? __('MY OCCUPANCY TODAY') : __('SCHEDULE OCCUPANCY TODAY');
 
         $availableMinutes = 0;
         if ($isDentist && $user->dentist) {

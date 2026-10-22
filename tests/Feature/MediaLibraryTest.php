@@ -101,6 +101,20 @@ class MediaLibraryTest extends TestCase
         $this->assertFalse(Storage::disk('public')->exists($path));
     }
 
+    public function test_deleting_already_deleted_media_asset_returns_success_gracefully(): void
+    {
+        $admin = User::factory()->create([
+            'role' => UserRole::Admin,
+        ]);
+
+        $response = $this->actingAs($admin)->deleteJson('/admin/media-library/999999');
+
+        $response->assertSuccessful();
+        $response->assertJson([
+            'success' => true,
+        ]);
+    }
+
     public function test_non_admin_cannot_access_media_library(): void
     {
         $receptionist = User::factory()->create([

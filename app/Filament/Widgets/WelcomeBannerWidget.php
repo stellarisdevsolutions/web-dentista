@@ -32,9 +32,9 @@ class WelcomeBannerWidget extends Widget
         $hour = (int) Carbon::now()->format('H');
 
         return match (true) {
-            $hour >= 5 && $hour < 12 => 'Buenos días',
-            $hour >= 12 && $hour < 19 => 'Buenas tardes',
-            default => 'Buenas noches',
+            $hour >= 5 && $hour < 12 => __('Good morning'),
+            $hour >= 12 && $hour < 19 => __('Good afternoon'),
+            default => __('Good evening'),
         };
     }
 
@@ -44,13 +44,13 @@ class WelcomeBannerWidget extends Widget
     public function getCleanUserName(?User $user): string
     {
         if (! $user) {
-            return 'Usuario';
+            return __('User');
         }
 
         // Strip any accidental Dr., Dra., Sr., Sra. prefixes to enforce the rule strictly
         $name = preg_replace('/^(dr\.|dra\.|sr\.|sra\.|doctor|doctora)\s+/i', '', trim($user->name));
 
-        return $name ?: 'Usuario';
+        return $name ?: __('User');
     }
 
     /**
@@ -91,7 +91,7 @@ class WelcomeBannerWidget extends Widget
             $myPendingCount = (int) ($counts['pending'] ?? 0);
 
             if ($myTodayCount === 0) {
-                $subtitle = 'No tienes citas pendientes hoy.';
+                $subtitle = __('No pending appointments today.');
             } else {
                 $currentTime = Carbon::now()->format('H:i');
                 $nextAppt = (clone $dentistQuery)
@@ -108,8 +108,11 @@ class WelcomeBannerWidget extends Widget
                 }
 
                 $nextTime = Appointment::formatTime($nextAppt?->appointment_time);
-                $pacientesText = $myTodayCount === 1 ? '1 paciente' : "{$myTodayCount} pacientes";
-                $subtitle = "Tienes {$pacientesText} hoy. Tu próxima cita es a las {$nextTime}.";
+                $pacientesText = $myTodayCount === 1 ? __('1 patient') : __(':count patients', ['count' => $myTodayCount]);
+                $subtitle = __('You have :count today. Your next appointment is at :time.', [
+                    'count' => $pacientesText,
+                    'time' => $nextTime,
+                ]);
             }
 
             return [
@@ -117,21 +120,21 @@ class WelcomeBannerWidget extends Widget
                 'userName' => $userName,
                 'subtitle' => $subtitle,
                 'primaryButton' => [
-                    'label' => 'Ver mi agenda',
+                    'label' => __('View my schedule'),
                     'url' => AppointmentResource::getUrl('index'),
                 ],
                 'secondaryButton' => [
-                    'label' => 'Mis pacientes',
+                    'label' => __('My patients'),
                     'url' => AppointmentResource::getUrl('index'),
                 ],
                 'cards' => [
                     [
                         'value' => $myTodayCount,
-                        'label' => 'mis citas hoy',
+                        'label' => __('my appointments today'),
                     ],
                     [
                         'value' => $myPendingCount,
-                        'label' => 'por confirmar',
+                        'label' => __('to confirm'),
                         'isHighlight' => true,
                     ],
                 ],
@@ -148,30 +151,33 @@ class WelcomeBannerWidget extends Widget
             $pendingCount = (int) ($todayCounts['pending'] ?? 0);
             $inProgressCount = (int) ($todayCounts['in_progress'] ?? 0);
 
-            $citasText = $pendingCount === 1 ? '1 cita' : "{$pendingCount} citas";
-            $pacientesText = $inProgressCount === 1 ? '1 paciente' : "{$inProgressCount} paciente(s)";
-            $subtitle = "Hay {$citasText} por confirmar y {$pacientesText} en sala. Empieza por las pendientes.";
+            $citasText = $pendingCount === 1 ? __('1 appointment') : __(':count appointments', ['count' => $pendingCount]);
+            $pacientesText = $inProgressCount === 1 ? __('1 in clinic') : __(':count in clinic', ['count' => $inProgressCount]);
+            $subtitle = __('There are :pending to confirm and :in_progress in clinic. Start with pending.', [
+                'pending' => $citasText,
+                'in_progress' => $pacientesText,
+            ]);
 
             return [
                 'greeting' => $greeting,
                 'userName' => $userName,
                 'subtitle' => $subtitle,
                 'primaryButton' => [
-                    'label' => '+ Nueva cita',
+                    'label' => '+ '.__('New Appointment'),
                     'url' => AppointmentResource::getUrl('create'),
                 ],
                 'secondaryButton' => [
-                    'label' => 'Confirmar pendientes',
+                    'label' => __('Confirm pending'),
                     'url' => AppointmentResource::getUrl('index', ['activeTab' => 'pending']),
                 ],
                 'cards' => [
                     [
                         'value' => $inProgressCount,
-                        'label' => 'en sala ahora',
+                        'label' => __('in clinic now'),
                     ],
                     [
                         'value' => $pendingCount,
-                        'label' => 'por confirmar',
+                        'label' => __('to confirm'),
                         'isHighlight' => true,
                     ],
                 ],
@@ -191,23 +197,23 @@ class WelcomeBannerWidget extends Widget
         return [
             'greeting' => $greeting,
             'userName' => $userName,
-            'subtitle' => 'Monitorea citas, solicitudes de pacientes y especialistas en tiempo real.',
+            'subtitle' => __('Monitor appointments, patient requests and specialists in real time.'),
             'primaryButton' => [
-                'label' => '+ Nueva cita',
+                'label' => '+ '.__('New Appointment'),
                 'url' => AppointmentResource::getUrl('create'),
             ],
             'secondaryButton' => [
-                'label' => 'Ver agenda',
+                'label' => __('View schedule'),
                 'url' => AppointmentResource::getUrl('index'),
             ],
             'cards' => [
                 [
                     'value' => $todayTotal,
-                    'label' => 'citas hoy',
+                    'label' => __('appointments today'),
                 ],
                 [
                     'value' => $pendingCount,
-                    'label' => 'por confirmar',
+                    'label' => __('to confirm'),
                     'isHighlight' => true,
                 ],
             ],

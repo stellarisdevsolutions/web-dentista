@@ -41,11 +41,9 @@ class TestimonialResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         /** @var Testimonial $record */
-        $isSpanish = app()->getLocale() === 'es';
-
         return [
-            $isSpanish ? 'Tratamiento' : 'Treatment' => $record->treatment,
-            $isSpanish ? 'Calificación' : 'Rating' => str_repeat('⭐', (int) $record->rating),
+            __('Completed Treatment') => $record->treatment,
+            __('Rating') => number_format((float) $record->rating, 1).' / 5.0',
         ];
     }
 

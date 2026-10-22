@@ -28,8 +28,8 @@ class PostForm
                 // ==========================================
                 // SECCIÓN 1: IDENTIDAD EDITORIAL Y PORTADA
                 // ==========================================
-                Section::make('Información Principal y Portada del Artículo')
-                    ->description('Define el título, enlace permanente (slug), categoría y la fotografía principal del artículo educativo.')
+                Section::make(__('Article Main Information & Cover'))
+                    ->description(__('Define title, permalink (slug), category, and main photography for the educational article.'))
                     ->icon('heroicon-o-document-text')
                     ->columnSpanFull()
                     ->schema([
@@ -40,7 +40,7 @@ class PostForm
                                     ->columnSpan(['default' => 12, 'lg' => 4, 'xl' => 4])
                                     ->schema([
                                         FileUpload::make('cover_image')
-                                            ->label('Imagen de Portada (16:9)')
+                                            ->label(__('Cover Image (16:9)'))
                                             ->image()
                                             ->required()
                                             ->imageCropAspectRatio('16:9')
@@ -57,7 +57,7 @@ class PostForm
                                             ->imagePreviewHeight('220')
                                             ->directory('blog')
                                             ->disk('public')
-                                            ->helperText('Obligatorio. Formato recomendado 16:9 (1280×720 px). Se optimiza automáticamente a WebP para máxima velocidad en la web.'),
+                                            ->helperText(__('Required. Recommended format 16:9 (1280×720 px). Automatically optimized to WebP for maximum website speed.')),
                                     ]),
 
                                 // Columna Derecha: Título, Categoría, Publicación y Slug Híbrido
@@ -69,9 +69,9 @@ class PostForm
                                             ->dehydrated(false),
 
                                         TextInput::make('title')
-                                            ->label('Título del Artículo')
+                                            ->label(__('Article Title'))
                                             ->prefixIcon('heroicon-o-pencil-square')
-                                            ->placeholder('ej. 7 Consejos Esenciales para Prevenir la Caries Dental')
+                                            ->placeholder(__('e.g. 7 Essential Tips to Prevent Dental Cavities'))
                                             ->required()
                                             ->maxLength(255)
                                             ->columnSpanFull()
@@ -83,27 +83,27 @@ class PostForm
                                             }),
 
                                         TextInput::make('category')
-                                            ->label('Categoría')
+                                            ->label(__('Category'))
                                             ->prefixIcon('heroicon-o-tag')
-                                            ->placeholder('ej. Prevención, Ortodoncia, Estética Dental')
+                                            ->placeholder(__('e.g. Prevention, Orthodontics, Cosmetic Dentistry'))
                                             ->datalist(fn (): array => Post::query()
                                                 ->whereNotNull('category')
                                                 ->where('category', '!=', '')
                                                 ->distinct()
                                                 ->pluck('category')
                                                 ->toArray())
-                                            ->helperText('Selecciona de las sugerencias o escribe una nueva.')
+                                            ->helperText(__('Select from suggestions or type a new one.'))
                                             ->maxLength(100),
 
                                         DateTimePicker::make('published_at')
-                                            ->label('Fecha y Hora de Publicación')
+                                            ->label(__('Publication Date & Time'))
                                             ->prefixIcon('heroicon-o-calendar')
                                             ->default(now())
                                             ->required()
-                                            ->helperText('Fecha visible para los lectores.'),
+                                            ->helperText(__('Date visible to readers.')),
 
                                         TextInput::make('slug')
-                                            ->label('Enlace Web / Slug (URL)')
+                                            ->label(__('Web Link / Slug (URL)'))
                                             ->prefixIcon('heroicon-o-link')
                                             ->prefix($urlPrefix)
                                             ->required()
@@ -119,7 +119,7 @@ class PostForm
                                             ->suffixAction(
                                                 Action::make('toggle_slug_edit')
                                                     ->icon(fn (callable $get): string => $get('is_slug_editable') ? 'heroicon-m-check' : 'heroicon-m-pencil-square')
-                                                    ->tooltip(fn (callable $get): string => $get('is_slug_editable') ? 'Bloquear edición de enlace' : 'Personalizar enlace web')
+                                                    ->tooltip(fn (callable $get): string => $get('is_slug_editable') ? __('Lock link editing') : __('Customize web link'))
                                                     ->color(fn (callable $get): string => $get('is_slug_editable') ? 'success' : 'gray')
                                                     ->action(function (callable $set, callable $get): void {
                                                         $set('is_slug_editable', ! $get('is_slug_editable'));
@@ -133,13 +133,13 @@ class PostForm
                                             })
                                             ->dehydrateStateUsing(fn (?string $state, ?Post $record) => blank($state) ? null : Post::generateUniqueSlug($state, $record?->id))
                                             ->helperText(fn (callable $get): string => $get('is_slug_editable')
-                                                ? 'Modo edición activado: personaliza el enlace a tu gusto (sin acentos ni espacios; las colisiones se resuelven solas).'
-                                                : 'Generado automáticamente según el título. Protegido contra cambios accidentales (pulsa el lápiz para personalizar).'
+                                                ? __('Edit mode active: customize link to your liking (no accents or spaces; collisions resolve automatically).')
+                                                : __('Automatically generated from title. Protected against accidental changes (click pencil to customize).')
                                             ),
 
                                         Toggle::make('is_published')
-                                            ->label('Publicado en la Web')
-                                            ->helperText('Habilita la visibilidad pública de este artículo en la sección de blog.')
+                                            ->label(__('Published on the Web'))
+                                            ->helperText(__('Enables public visibility of this article in the blog section.'))
                                             ->default(true)
                                             ->columnSpanFull(),
                                     ]),
@@ -149,21 +149,21 @@ class PostForm
                 // ==========================================
                 // SECCIÓN 2: RESUMEN Y CONTENIDO DEL ARTÍCULO
                 // ==========================================
-                Section::make('Cuerpo y Redacción del Artículo')
-                    ->description('Escribe el resumen destacado para las tarjetas del catálogo y el desarrollo editorial completo.')
+                Section::make(__('Article Body & Writing'))
+                    ->description(__('Write featured summary for catalog cards and complete editorial body.'))
                     ->icon('heroicon-o-book-open')
                     ->columnSpanFull()
                     ->schema([
                         Textarea::make('excerpt')
-                            ->label('Resumen del Artículo (Extracto)')
-                            ->placeholder('Breve adelanto o sinopsis para las tarjetas del blog y vistas previas en redes sociales...')
+                            ->label(__('Article Excerpt'))
+                            ->placeholder(__('Brief teaser or synopsis for blog cards and social previews...'))
                             ->rows(3)
                             ->columnSpanFull()
-                            ->helperText('Opcional. Si se deja en blanco, se extraerán automáticamente las primeras líneas del contenido.'),
+                            ->helperText(__('Optional. If left blank, first lines of content will be extracted automatically.')),
 
                         RichEditor::make('content')
-                            ->label('Cuerpo Completo del Artículo')
-                            ->placeholder('Escribe aquí el contenido editorial del artículo con subtítulos, listas, citas y recomendaciones clínicas...')
+                            ->label(__('Full Article Body'))
+                            ->placeholder(__('Write editorial article content here with subheadings, lists, quotes, and clinical recommendations...'))
                             ->required()
                             ->columnSpanFull(),
                     ]),

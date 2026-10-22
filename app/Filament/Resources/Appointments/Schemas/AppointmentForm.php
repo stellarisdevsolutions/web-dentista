@@ -30,55 +30,55 @@ class AppointmentForm
                 // ==========================================
                 // SECCIÓN 1: INFORMACIÓN DEL PACIENTE (100% ANCHO COMPLETO)
                 // ==========================================
-                Section::make('Información del Paciente')
-                    ->description('Datos de contacto para la ficha clínica, recordatorios y confirmación vía WhatsApp.')
+                Section::make(__('Patient Information'))
+                    ->description(__('Contact details for clinical record, reminders, and WhatsApp confirmation.'))
                     ->icon('heroicon-o-user')
                     ->columnSpanFull()
                     ->schema([
                         Grid::make(['default' => 1, 'sm' => 2, 'lg' => 3])
                             ->schema([
                                 TextInput::make('patient_name')
-                                    ->label('Nombre Completo del Paciente')
+                                    ->label(__('Full Patient Name'))
                                     ->placeholder('ej. María Rodríguez')
                                     ->required()
                                     ->maxLength(255),
 
                                 TextInput::make('patient_phone')
-                                    ->label('Teléfono / WhatsApp')
+                                    ->label(__('Phone / WhatsApp'))
                                     ->tel()
                                     ->telRegex('/^[+0-9\s()\-.]+$/')
                                     ->validationMessages([
-                                        'regex' => 'Formato no válido (solo números, espacios, +, -).',
+                                        'regex' => __('Invalid format (numbers, spaces, +, - only).'),
                                     ])
                                     ->required()
                                     ->placeholder('+591 70012345')
                                     ->maxLength(50),
 
                                 TextInput::make('patient_email')
-                                    ->label('Correo Electrónico (Opcional)')
+                                    ->label(__('Email Address (Optional)'))
                                     ->email()
                                     ->placeholder('paciente@ejemplo.com')
                                     ->maxLength(255),
                             ]),
 
                         Toggle::make('is_first_visit')
-                            ->label('¿Es su primera visita a nuestra clínica?')
-                            ->helperText('Indica si requiere apertura de nueva ficha clínica y odontograma inicial.')
+                            ->label(__('Is this the first visit to our clinic?'))
+                            ->helperText(__('Indicates whether a new clinical file and initial dental chart are required.'))
                             ->default(false),
                     ]),
 
                 // ==========================================
                 // SECCIÓN 2: DETALLES DE LA CITA (100% ANCHO COMPLETO)
                 // ==========================================
-                Section::make('Detalles de la Cita')
-                    ->description('Selecciona el procedimiento odontológico y el especialista calificado.')
+                Section::make(__('Appointment Details'))
+                    ->description(__('Select dental procedure and qualified specialist.'))
                     ->icon('heroicon-o-sparkles')
                     ->columnSpanFull()
                     ->schema([
                         Grid::make(['default' => 1, 'md' => 12])
                             ->schema([
                                 Select::make('service_id')
-                                    ->label('Tratamiento / Servicio')
+                                    ->label(__('Treatment / Service'))
                                     ->options(fn () => Service::query()->where('is_active', true)->orderBy('order')->pluck('name', 'id'))
                                     ->searchable()
                                     ->preload()
@@ -102,11 +102,11 @@ class AppointmentForm
                                         $set('appointment_time', null);
                                     })
                                     ->columnSpan(['default' => 12, 'md' => 5])
-                                    ->helperText('Define la duración y filtra los doctores calificados.'),
+                                    ->helperText(__('Defines duration and filters qualified doctors.')),
 
                                 Select::make('dentist_id')
-                                    ->label('Especialista Asignado')
-                                    ->placeholder('Primer Especialista Disponible (Balanceo auto)')
+                                    ->label(__('Assigned Specialist'))
+                                    ->placeholder(__('First Available Specialist (Auto balancing)'))
                                     ->options(function (Get $get) {
                                         /** @var User|null $user */
                                         $user = auth()->user();
@@ -141,10 +141,10 @@ class AppointmentForm
                                         $set('appointment_time', null);
                                     })
                                     ->columnSpan(['default' => 12, 'md' => 5])
-                                    ->helperText('Dejar vacío para asignación automática según disponibilidad.'),
+                                    ->helperText(__('Leave blank for automatic assignment based on availability.')),
 
                                 TextInput::make('duration_minutes')
-                                    ->label('Duración (Minutos)')
+                                    ->label(__('Duration (Minutes)'))
                                     ->numeric()
                                     ->default(45)
                                     ->minValue(15)
@@ -157,7 +157,7 @@ class AppointmentForm
                                     })
                                     ->required()
                                     ->columnSpan(['default' => 12, 'md' => 2])
-                                    ->helperText('Ajuste clínico.'),
+                                    ->helperText(__('Clinical adjustment.')),
                             ]),
                     ]),
 
@@ -168,13 +168,13 @@ class AppointmentForm
                     ->columnSpanFull()
                     ->schema([
                         // COLUMNA 1: FECHA Y HORARIO DE ATENCIÓN (7 de 12 cols en desktop)
-                        Section::make('Fecha y Horario de Atención')
-                            ->description('Selecciona la fecha para consultar los turnos disponibles en tiempo real según agenda médica.')
+                        Section::make(__('Date & Appointment Time'))
+                            ->description(__('Select date to check available time slots in real time according to medical schedule.'))
                             ->icon('heroicon-o-calendar-days')
                             ->columnSpan(['default' => 12, 'lg' => 7])
                             ->schema([
                                 DatePicker::make('appointment_date')
-                                    ->label('Fecha de la Cita')
+                                    ->label(__('Appointment Date'))
                                     ->native(false)
                                     ->minDate(today())
                                     ->default(now()->isSunday() ? today()->addDay() : today())
@@ -185,7 +185,7 @@ class AppointmentForm
                                     ->required(),
 
                                 ViewField::make('appointment_time')
-                                    ->label('Turno y Horario')
+                                    ->label(__('Shift & Time Slot'))
                                     ->view('filament.forms.components.time-slot-picker')
                                     ->formatStateUsing(fn ($state) => $state ? substr((string) $state, 0, 5) : null)
                                     ->dehydrateStateUsing(fn ($state) => $state ? substr((string) $state, 0, 5) : null)
@@ -270,33 +270,33 @@ class AppointmentForm
                             ]),
 
                         // COLUMNA 2: CONTROL CLÍNICO Y ESTADO (5 de 12 cols en desktop)
-                        Section::make('Control Clínico y Estado')
-                            ->description('Estado administrativo, motivo de consulta y notas internas.')
+                        Section::make(__('Clinical Control & Status'))
+                            ->description(__('Administrative status, consultation reason, and internal notes.'))
                             ->icon('heroicon-o-clipboard-document-check')
                             ->columnSpan(['default' => 12, 'lg' => 5])
                             ->schema([
                                 Select::make('status')
-                                    ->label('Estado de la Cita')
+                                    ->label(__('Appointment Status'))
                                     ->options([
-                                        'pending' => 'Por Confirmar',
-                                        'confirmed' => 'Confirmada',
-                                        'in_progress' => 'En Consulta',
-                                        'completed' => 'Completada',
-                                        'cancelled' => 'Cancelada',
-                                        'no_show' => 'No Asistió',
+                                        'pending' => __('Pending Confirmation'),
+                                        'confirmed' => __('Confirmed'),
+                                        'in_progress' => __('In Consultation'),
+                                        'completed' => __('Completed'),
+                                        'cancelled' => __('Cancelled'),
+                                        'no_show' => __('No Show'),
                                     ])
                                     ->default('pending')
                                     ->required(),
 
                                 Textarea::make('symptoms')
-                                    ->label('Notas o Motivo de la Cita (Opcional)')
-                                    ->placeholder('Molestias dentales, limpieza programada, revisión...')
+                                    ->label(__('Notes or Chief Complaint (Optional)'))
+                                    ->placeholder(__('Dental discomfort, scheduled cleaning, checkup...'))
                                     ->rows(3)
                                     ->nullable(),
 
                                 Textarea::make('internal_notes')
-                                    ->label('Notas Internas del Equipo Clínico (Opcional)')
-                                    ->placeholder('Observaciones privadas para recepción o doctores...')
+                                    ->label(__('Internal Clinic Team Notes (Optional)'))
+                                    ->placeholder(__('Private notes for reception or doctors...'))
                                     ->rows(3)
                                     ->nullable(),
 

@@ -6,16 +6,22 @@ use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\File;
 
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
     /**
-     * Seed the application's database.
+     * Seed the application's database based on configured locale.
      */
     public function run(): void
     {
+        if (File::isDirectory(database_path('seed_assets'))) {
+            File::ensureDirectoryExists(storage_path('app/public'));
+            File::copyDirectory(database_path('seed_assets'), storage_path('app/public'));
+        }
+
         User::firstOrCreate(
             ['email' => 'admin@admin.com'],
             [
@@ -25,9 +31,12 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        $configuredLocale = env('SEEDER_LOCALE', config('app.locale', 'es'));
+        $isEnglish = str_starts_with(strtolower((string) $configuredLocale), 'en');
+
         $this->call([
-            DentalClinicSeeder::class,
-            SiteSectionSeeder::class,
+            $isEnglish ? DentalClinicEnSeeder::class : DentalClinicSeeder::class,
+            $isEnglish ? SiteSectionEnSeeder::class : SiteSectionSeeder::class,
             MediaAssetSeeder::class,
         ]);
     }

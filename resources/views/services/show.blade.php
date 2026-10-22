@@ -7,8 +7,12 @@
 
     @include('partials.favicon')
 
-    <title>{{ $service->name }} | {{ $clinic->clinic_name }}</title>
-    <meta name="description" content="{{ $service->short_description ?? Str::limit($service->description, 150) }}">
+    @include('partials.seo-meta', [
+        'title' => $service->name . ' | ' . $clinic->clinic_name,
+        'description' => $service->short_description ?? Str::limit(strip_tags($service->description), 150),
+        'ogImage' => $service->image_asset_url ?? $clinic->logo_asset_url,
+        'service' => $service,
+    ])
 
     <!-- Google Fonts: Instrument Sans -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -34,9 +38,9 @@
             <div class="max-w-7xl mx-auto relative z-10">
                 <!-- Breadcrumbs -->
                 <nav class="flex items-center space-x-2 text-xs text-sky-400 font-semibold mb-4">
-                    <a href="{{ route('home') }}" class="hover:underline">Inicio</a>
+                    <a href="{{ route('home') }}" class="hover:underline">{{ __('Inicio') }}</a>
                     <span>/</span>
-                    <a href="{{ route('services.index') }}" class="hover:underline">Tratamientos</a>
+                    <a href="{{ route('services.index') }}" class="hover:underline">{{ __('Tratamientos') }}</a>
                     <span>/</span>
                     <span class="text-slate-300">{{ $service->name }}</span>
                 </nav>
@@ -53,16 +57,16 @@
 
                     <div class="flex items-center gap-4 bg-white/10 backdrop-blur-xs p-4 rounded-2xl border border-white/15 self-start lg:self-auto">
                         <div>
-                            <span class="block text-[11px] text-slate-300 uppercase tracking-wider font-bold">Inversión Estimada</span>
+                            <span class="block text-[11px] text-slate-300 uppercase tracking-wider font-bold">{{ __('Inversión Estimada') }}</span>
                             <span class="text-2xl font-black text-white">
-                                {{ $service->price ? '$'.number_format($service->price, 0) : 'Previa Valoración' }}
+                                {{ $service->price ? '$'.number_format($service->price, 0) : __('Previa Valoración') }}
                             </span>
                         </div>
                         <div class="h-10 w-px bg-white/20"></div>
                         <div>
-                            <span class="block text-[11px] text-slate-300 uppercase tracking-wider font-bold">Duración</span>
+                            <span class="block text-[11px] text-slate-300 uppercase tracking-wider font-bold">{{ __('Duración') }}</span>
                             <span class="text-sm font-black text-sky-400">
-                                {{ $service->duration_minutes ?? 45 }} Minutos
+                                {{ $service->duration_minutes ?? 45 }} {{ __('Minutos') }}
                             </span>
                         </div>
                     </div>
@@ -95,34 +99,11 @@
                             <div class="p-6 sm:p-8 md:p-0 md:pt-8 space-y-6">
                                 <div class="space-y-3">
                                     <div>
-                                        <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">DESCRIPCIÓN CLÍNICA</span>
-                                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900">En qué consiste este tratamiento</h2>
+                                        <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">{{ __('DESCRIPCIÓN CLÍNICA') }}</span>
+                                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900">{{ __('En qué consiste este tratamiento') }}</h2>
                                     </div>
 
                                     <div class="text-slate-600 text-sm sm:text-base leading-relaxed font-normal whitespace-pre-line">{{ trim($service->description ?? $service->short_description) }}</div>
-                                </div>
-
-                                <!-- Clinical Features -->
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-slate-100">
-                                    <div class="flex items-start gap-3">
-                                        <div class="w-8 h-8 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center font-bold text-sm flex-shrink-0">
-                                            ✓
-                                        </div>
-                                        <div>
-                                            <h4 class="font-bold text-slate-900 text-xs uppercase">Tecnología de Precisión</h4>
-                                            <p class="text-slate-500 text-[11px] mt-0.5">Diagnóstico intraoral 3D de alta definición.</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="flex items-start gap-3">
-                                        <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm flex-shrink-0">
-                                            ✓
-                                        </div>
-                                        <div>
-                                            <h4 class="font-bold text-slate-900 text-xs uppercase">Procedimiento Sin Dolor</h4>
-                                            <p class="text-slate-500 text-[11px] mt-0.5">Protocolos de anestesia suave y confort total.</p>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -131,8 +112,8 @@
                         @if($service->dentists->count() > 0)
                             <div class="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-sm space-y-6">
                                 <div>
-                                    <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">EQUIPO MÉDICO</span>
-                                    <h2 class="text-2xl font-black text-slate-900">Especialistas para este Tratamiento</h2>
+                                    <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">{{ __('EQUIPO MÉDICO') }}</span>
+                                    <h2 class="text-2xl font-black text-slate-900">{{ __('Especialistas para este Tratamiento') }}</h2>
                                 </div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -168,26 +149,26 @@
                         <div class="bg-[#13223f] text-white p-8 rounded-3xl shadow-2xl border border-slate-800 space-y-6">
                             <div>
                                 <span class="inline-block px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-400 text-[10px] font-extrabold uppercase tracking-wider mb-2">
-                                    ONLINE 24/7
+                                    {{ __('ONLINE 24/7') }}
                                 </span>
-                                <h3 class="text-2xl font-black text-white">¿Deseas agendar este tratamiento?</h3>
+                                <h3 class="text-2xl font-black text-white">{{ __('¿Deseas agendar este tratamiento?') }}</h3>
                                 <p class="text-xs text-slate-300 mt-2 font-light leading-relaxed">
-                                    Reserva tu turno de forma inmediata en 3 pasos con confirmación directa por WhatsApp.
+                                    {{ __('Reserva tu turno de forma inmediata en 3 pasos con confirmación directa por WhatsApp.') }}
                                 </p>
                             </div>
 
                             <div class="p-4 rounded-2xl bg-white/10 border border-white/15 space-y-2 text-xs">
                                 <div class="flex justify-between items-center text-slate-300">
-                                    <span>Tiempo estimado:</span>
-                                    <span class="font-bold text-white">{{ $service->duration_minutes ?? 45 }} min</span>
+                                    <span>{{ __('Tiempo estimado') }}:</span>
+                                    <span class="font-bold text-white">{{ $service->duration_minutes ?? 45 }} {{ __('min') }}</span>
                                 </div>
                                 <div class="flex justify-between items-center text-slate-300">
-                                    <span>Costo estimado:</span>
-                                    <span class="font-bold text-sky-400">{{ $service->price ? '$'.number_format($service->price, 0) : 'Previa Valoración' }}</span>
+                                    <span>{{ __('Costo estimado') }}:</span>
+                                    <span class="font-bold text-sky-400">{{ $service->price ? '$'.number_format($service->price, 0) : __('Previa Valoración') }}</span>
                                 </div>
                                 <div class="flex justify-between items-center text-slate-300">
-                                    <span>Modalidad:</span>
-                                    <span class="font-bold text-emerald-400">Atención Presencial</span>
+                                    <span>{{ __('Modalidad') }}:</span>
+                                    <span class="font-bold text-emerald-400">{{ __('Atención Presencial') }}</span>
                                 </div>
                             </div>
 
@@ -195,18 +176,22 @@
                                 href="{{ route('schedule', ['service_id' => $service->id]) }}"
                                 class="w-full bg-sky-500 hover:bg-sky-600 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-wider shadow-xl shadow-sky-500/30 transition-all flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 text-center"
                             >
-                                <span>Agendar Cita para este Servicio »</span>
+                                <span>{{ __('Agendar Cita para este Servicio »') }}</span>
                             </a>
                         </div>
 
                         <!-- Emergency Call Box -->
                         <div class="bg-rose-50 border border-rose-200 rounded-3xl p-6 text-rose-900 space-y-2">
                             <div class="flex items-center gap-2 font-black text-xs uppercase tracking-wider text-rose-700">
-                                <span>🚨</span>
-                                <span>¿Dolor agudo o urgencia?</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-rose-600 shrink-0">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                                <span>{{ __('¿Dolor agudo o urgencia?') }}</span>
                             </div>
                             <p class="text-xs text-rose-800">
-                                Contamos con espacios de atención inmediata el mismo día. Llama a nuestra línea prioritaria:
+                                {{ __('Contamos con espacios de atención inmediata el mismo día. Llama a nuestra línea prioritaria:') }}
                             </p>
                             <a href="tel:{{ preg_replace('/[^0-9+]/', '', $clinic->emergency_phone ?? $clinic->phone) }}" class="font-black text-sm text-rose-600 hover:underline block pt-1">
                                 {{ $clinic->emergency_phone ?? $clinic->phone }}
@@ -217,7 +202,7 @@
                         @if(isset($relatedServices) && $relatedServices->count() > 0)
                             <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
                                 <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider">
-                                    Otros Tratamientos
+                                    {{ __('Otros Tratamientos') }}
                                 </h4>
                                 <div class="space-y-2">
                                     @foreach($relatedServices as $rel)
@@ -226,7 +211,7 @@
                                             class="block p-3 rounded-xl hover:bg-slate-50 transition-colors border border-slate-100 group"
                                         >
                                             <p class="text-xs font-bold text-slate-800 group-hover:text-sky-600 transition-colors">{{ $rel->name }}</p>
-                                            <p class="text-[10px] text-slate-400 mt-0.5">{{ $rel->category }} • {{ $rel->price ? '$'.number_format($rel->price, 0) : 'Cotizar' }}</p>
+                                            <p class="text-[10px] text-slate-400 mt-0.5">{{ $rel->category }} • {{ $rel->price ? '$'.number_format($rel->price, 0) : __('Cotizar') }}</p>
                                         </a>
                                     @endforeach
                                 </div>

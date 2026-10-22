@@ -7,8 +7,13 @@
 
     @include('partials.favicon')
 
-    <title>{{ $post->title }} | Blog {{ $clinic->clinic_name }}</title>
-    <meta name="description" content="{{ Str::limit($post->excerpt, 150) }}">
+    @include('partials.seo-meta', [
+        'title' => $post->title . ' | Blog ' . $clinic->clinic_name,
+        'description' => Str::limit(strip_tags($post->excerpt ?? $post->content), 150),
+        'ogType' => 'article',
+        'ogImage' => $post->image_asset_url ?? $clinic->logo_asset_url,
+        'post' => $post,
+    ])
 
     <!-- Google Fonts: Instrument Sans -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -37,16 +42,16 @@
             <div class="max-w-4xl mx-auto relative z-10">
                 <!-- Breadcrumbs -->
                 <nav class="flex items-center space-x-2 text-xs text-slate-400 mb-6 font-medium">
-                    <a href="{{ route('home') }}" class="hover:text-sky-400 transition-colors">Inicio</a>
+                    <a href="{{ route('home') }}" class="hover:text-sky-400 transition-colors">{{ __('Inicio') }}</a>
                     <span>/</span>
-                    <a href="{{ route('blog.index') }}" class="hover:text-sky-400 transition-colors">Blog</a>
+                    <a href="{{ route('blog.index') }}" class="hover:text-sky-400 transition-colors">{{ __('Blog') }}</a>
                     <span>/</span>
                     <span class="text-slate-300 font-bold truncate max-w-xs">{{ $post->title }}</span>
                 </nav>
 
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-300 text-xs font-bold uppercase tracking-wider mb-4">
                     <span class="w-2 h-2 rounded-full bg-sky-400"></span>
-                    <span>{{ $post->category ?? 'Salud Dental' }}</span>
+                    <span>{{ $post->category ?? __('Salud Dental') }}</span>
                 </div>
 
                 <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-6">
@@ -60,17 +65,17 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
-                        <span class="font-bold text-white">Equipo Odontológico de {{ $clinic->clinic_name }}</span>
+                        <span class="font-bold text-white">{{ __('Equipo Odontológico de :clinic', ['clinic' => $clinic->clinic_name]) }}</span>
                     </div>
                     <span>•</span>
                     <span class="flex items-center gap-1">
                         <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        {{ ($post->updated_at ?? $post->published_at)?->translatedFormat('d \d\e F, Y') ?? 'Reciente' }}
+                        {{ ($post->updated_at ?? $post->published_at)?->translatedFormat('d \d\e F, Y') ?? __('Reciente') }}
                     </span>
                     <span>•</span>
                     <span class="text-teal-400 font-bold flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-teal-400"></span>
-                        Revisión médica certificada
+                        {{ __('Revisión médica certificada') }}
                     </span>
                 </div>
             </div>
@@ -118,8 +123,8 @@
                                     </svg>
                                 </div>
                                 <div class="text-xs text-slate-600 leading-relaxed text-center sm:text-left">
-                                    <p class="font-bold text-slate-900 text-sm mb-1">Nota médica informativa</p>
-                                    <p>Este contenido tiene fines puramente educativos e informativos con base odontológica. No reemplaza el diagnóstico presencial o tratamiento médico indicado por un odontólogo colegiado.</p>
+                                    <p class="font-bold text-slate-900 text-sm mb-1">{{ __('Nota médica informativa') }}</p>
+                                    <p>{{ __('Este contenido tiene fines puramente educativos e informativos con base odontológica. No reemplaza el diagnóstico presencial o tratamiento médico indicado por un odontólogo colegiado.') }}</p>
                                 </div>
                             </div>
 
@@ -129,14 +134,14 @@
                                     href="{{ route('blog.index') }}" 
                                     class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-sky-600 transition-colors"
                                 >
-                                    <span>« Volver al Blog</span>
+                                    <span>{{ __('« Volver al Blog') }}</span>
                                 </a>
 
                                 <a 
                                     href="{{ route('schedule') }}" 
                                     class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm hover:scale-105 transition-all"
                                 >
-                                    <span>Agendar Consulta »</span>
+                                    <span>{{ __('Agendar Consulta »') }}</span>
                                 </a>
                             </div>
                         </div>
@@ -150,20 +155,20 @@
                             <div class="absolute -top-12 -right-12 w-40 h-40 bg-sky-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
                             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-300 text-[10px] font-black uppercase tracking-wider">
-                                <span>Reserva Inmediata</span>
+                                <span>{{ __('Reserva Inmediata') }}</span>
                             </div>
 
-                            <h3 class="text-xl font-black">Agenda tu Chequeo Dental</h3>
+                            <h3 class="text-xl font-black">{{ __('Agenda tu Chequeo Dental') }}</h3>
 
                             <p class="text-slate-300 text-xs leading-relaxed font-light">
-                                Elige tu especialista y confirma tu cita en 3 sencillos pasos con recordatorio automático a tu WhatsApp.
+                                {{ __('Elige tu especialista y confirma tu cita en 3 sencillos pasos con recordatorio automático a tu WhatsApp.') }}
                             </p>
 
                             <a 
                                 href="{{ route('schedule') }}" 
                                 class="w-full inline-flex items-center justify-center py-3.5 px-4 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-sky-500/25 hover:scale-102"
                             >
-                                Reservar Cita Online »
+                                {{ __('Reservar Cita Online »') }}
                             </a>
                         </div>
 
@@ -171,7 +176,7 @@
                         @if($relatedPosts->count() > 0)
                             <div class="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-xs space-y-4">
                                 <h4 class="text-xs font-black uppercase tracking-wider text-slate-400 border-b border-slate-100 pb-3">
-                                    Artículos Relacionados
+                                    {{ __('Artículos Relacionados') }}
                                 </h4>
                                 <div class="space-y-4">
                                     @foreach($relatedPosts as $rel)
@@ -181,7 +186,7 @@
                                             </p>
                                             <span class="text-[10px] text-slate-400 font-medium inline-flex items-center gap-1 mt-1">
                                                 <svg class="w-3 h-3 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                                <span>{{ ($rel->updated_at ?? $rel->published_at)?->format('d/m/Y') ?? 'Reciente' }}</span>
+                                                <span>{{ ($rel->updated_at ?? $rel->published_at)?->format('d/m/Y') ?? __('Reciente') }}</span>
                                             </span>
                                         </a>
                                     @endforeach
@@ -191,20 +196,20 @@
 
                         <!-- Clinic Contact Details Card -->
                         <div class="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-xs space-y-3 text-xs">
-                            <h4 class="font-bold text-slate-900 uppercase tracking-wider text-xs">Atención al Paciente</h4>
-                            <p class="text-slate-500 leading-relaxed">¿Deseas consultar con un asesor o agendar por vía directa?</p>
+                            <h4 class="font-bold text-slate-900 uppercase tracking-wider text-xs">{{ __('Atención al Paciente') }}</h4>
+                            <p class="text-slate-500 leading-relaxed">{{ __('¿Deseas consultar con un asesor o agendar por vía directa?') }}</p>
                             <div class="space-y-2.5 pt-3 border-t border-slate-100">
                                 <p class="flex items-center gap-2">
                                     <svg class="w-3.5 h-3.5 text-sky-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                                    <span class="font-bold text-slate-700">Teléfono:</span> {{ $clinic->phone }}
+                                    <span class="font-bold text-slate-700">{{ __('Teléfono') }}:</span> {{ $clinic->phone }}
                                 </p>
                                 <p class="flex items-center gap-2">
                                     <svg class="w-3.5 h-3.5 text-rose-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                                    <span class="font-bold text-slate-700">Urgencias:</span> {{ $clinic->emergency_phone ?? $clinic->phone }}
+                                    <span class="font-bold text-slate-700">{{ __('Urgencias') }}:</span> {{ $clinic->emergency_phone ?? $clinic->phone }}
                                 </p>
                                 <p class="flex items-center gap-2">
                                     <svg class="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                                    <span class="font-bold text-slate-700">Ubicación:</span> {{ $clinic->address }}
+                                    <span class="font-bold text-slate-700">{{ __('Ubicación') }}:</span> {{ $clinic->address }}
                                 </p>
                             </div>
                         </div>
@@ -219,13 +224,13 @@
                 <div class="bg-gradient-to-r from-sky-500 to-sky-600 text-white rounded-3xl p-8 sm:p-12 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
                     <div class="max-w-xl text-center md:text-left">
                         <span class="inline-block px-3 py-1 rounded-full bg-white/20 text-white text-[10px] font-extrabold uppercase tracking-widest mb-3">
-                            VALORACIÓN CLÍNICA INICIAL
+                            {{ __('VALORACIÓN CLÍNICA INICIAL') }}
                         </span>
                         <h3 class="text-2xl sm:text-3xl font-black leading-tight">
-                            ¿Necesitas una opinión profesional sobre tu salud dental?
+                            {{ __('¿Necesitas una opinión profesional sobre tu salud dental?') }}
                         </h3>
                         <p class="text-sky-100 text-xs sm:text-sm mt-2 font-light">
-                            Agenda una consulta diagnóstica presencial con escaneo digital en 3D para evaluar la salud de tu sonrisa.
+                            {{ __('Agenda una consulta diagnóstica presencial con escaneo digital en 3D para evaluar la salud de tu sonrisa.') }}
                         </p>
                     </div>
 
@@ -233,7 +238,7 @@
                         href="{{ route('schedule') }}"
                         class="px-8 py-4 rounded-full bg-white text-sky-600 hover:bg-sky-50 font-black text-xs uppercase tracking-wider shadow-lg hover:scale-105 active:scale-95 transition-all text-center flex-shrink-0"
                     >
-                        Agendar Valoración Ahora »
+                        {{ __('Agendar Valoración Ahora »') }}
                     </a>
                 </div>
 

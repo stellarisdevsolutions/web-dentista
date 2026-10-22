@@ -17,17 +17,17 @@
     $searchItems = $allServices->map(function($s) {
         return [
             'title' => $s->name,
-            'type' => 'Tratamiento',
-            'category' => $s->category ?? 'Clínico',
+            'type' => __('Tratamiento'),
+            'category' => $s->category ? __($s->category) : __('Clínico'),
             'url' => route('services.show', $s->slug),
             'price' => '$' . number_format($s->price, 0),
         ];
     })->values()->all();
 
-    $searchItems[] = ['title' => 'Sobre Nosotros y Doctores', 'type' => 'Página', 'category' => 'Clínica', 'url' => route('about'), 'price' => ''];
-    $searchItems[] = ['title' => 'Artículos y Consejos de Salud Dental', 'type' => 'Página', 'category' => 'Blog', 'url' => route('blog.index'), 'price' => ''];
-    $searchItems[] = ['title' => 'Ubicación, Teléfonos y Contacto', 'type' => 'Página', 'category' => 'Contacto', 'url' => route('contact'), 'price' => ''];
-    $searchItems[] = ['title' => 'Agendamiento y Reserva de Citas Online', 'type' => 'Cita', 'category' => 'Reservas', 'url' => route('schedule'), 'price' => '24/7'];
+    $searchItems[] = ['title' => __('Sobre Nosotros y Doctores'), 'type' => __('Página'), 'category' => __('Clínica'), 'url' => route('about'), 'price' => ''];
+    $searchItems[] = ['title' => __('Artículos y Consejos de Salud Dental'), 'type' => __('Página'), 'category' => __('Blog'), 'url' => route('blog.index'), 'price' => ''];
+    $searchItems[] = ['title' => __('Ubicación, Teléfonos y Contacto'), 'type' => __('Página'), 'category' => __('Contacto'), 'url' => route('contact'), 'price' => ''];
+    $searchItems[] = ['title' => __('Agendamiento y Reserva de Citas Online'), 'type' => __('Cita'), 'category' => __('Reservas'), 'url' => route('schedule'), 'price' => '24/7'];
 
     $searchItemsJson = json_encode($searchItems, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
 @endphp
@@ -73,7 +73,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400 group-hover:scale-110 transition-transform">
                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                         </svg>
-                        <span>{{ app()->getLocale() === 'en' ? 'Emergency' : 'Urgencias' }}: <strong class="text-white group-hover:text-sky-300 font-semibold">{{ $navClinic->emergency_phone ?? $navClinic->phone }}</strong></span>
+                        <span>{{ __('Urgencias') }}: <strong class="text-white group-hover:text-sky-300 font-semibold">{{ $navClinic->emergency_phone ?? $navClinic->phone }}</strong></span>
                     </a>
 
                     <!-- Correo Electrónico -->
@@ -172,6 +172,26 @@
                             </svg>
                         </a>
                     </div>
+
+                    <div class="h-3 w-px bg-slate-700"></div>
+
+                    <!-- Language Selector (ES | EN) -->
+                    <div class="inline-flex items-center text-[10px] font-black tracking-wider rounded-lg bg-slate-800/90 p-0.5 border border-slate-700">
+                        <a 
+                            href="{{ \App\Services\LocalizationService::getAlternateUrl('es') }}"
+                            class="px-2 py-0.5 rounded-md transition-all {{ app()->getLocale() === 'es' ? 'bg-sky-500 text-white font-black shadow-xs' : 'text-slate-400 hover:text-white' }}"
+                            title="Versión en Español"
+                        >
+                            ES
+                        </a>
+                        <a 
+                            href="{{ \App\Services\LocalizationService::getAlternateUrl('en') }}"
+                            class="px-2 py-0.5 rounded-md transition-all {{ app()->getLocale() === 'en' ? 'bg-sky-500 text-white font-black shadow-xs' : 'text-slate-400 hover:text-white' }}"
+                            title="English Version"
+                        >
+                            EN
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -223,7 +243,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400 shrink-0">
                                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                             </svg>
-                            <span class="truncate">{{ app()->getLocale() === 'en' ? 'Emergency' : 'Urgencias' }}: <strong class="text-white font-semibold">{{ $navClinic->emergency_phone ?? $navClinic->phone }}</strong></span>
+                            <span class="truncate">{{ __('Urgencias') }}: <strong class="text-white font-semibold">{{ $navClinic->emergency_phone ?? $navClinic->phone }}</strong></span>
                         </a>
                     </div>
                     @php $currSlide++; @endphp
@@ -376,7 +396,7 @@
                     class="text-xs font-bold uppercase tracking-wider transition-colors hover:text-sky-500 {{ request()->routeIs('home') ? 'text-sky-500 font-black' : 'text-slate-700' }}" 
                     href="{{ route('home') }}"
                 >
-                    Inicio
+                    {{ __('Inicio') }}
                 </a>
 
                 <!-- 2. Nosotros -->
@@ -384,7 +404,7 @@
                     class="text-xs font-bold uppercase tracking-wider transition-colors hover:text-sky-500 {{ request()->routeIs('about') ? 'text-sky-500 font-black' : 'text-slate-700' }}" 
                     href="{{ route('about') }}"
                 >
-                    Nosotros
+                    {{ __('Nosotros') }}
                 </a>
 
                 <!-- 3. Servicios -->
@@ -392,7 +412,7 @@
                     class="text-xs font-bold uppercase tracking-wider transition-colors hover:text-sky-500 {{ request()->routeIs('services.*') ? 'text-sky-500 font-black' : 'text-slate-700' }}" 
                     href="{{ route('services.index') }}"
                 >
-                    Servicios
+                    {{ __('Servicios') }}
                 </a>
 
                 <!-- 4. Blog -->
@@ -400,7 +420,7 @@
                     class="text-xs font-bold uppercase tracking-wider transition-colors hover:text-sky-500 {{ request()->routeIs('blog.*') ? 'text-sky-500 font-black' : 'text-slate-700' }}" 
                     href="{{ route('blog.index') }}"
                 >
-                    Blog
+                    {{ __('Blog') }}
                 </a>
 
                 <!-- 5. Contacto -->
@@ -408,7 +428,7 @@
                     class="text-xs font-bold uppercase tracking-wider transition-colors hover:text-sky-500 {{ request()->routeIs('contact') ? 'text-sky-500 font-black' : 'text-slate-700' }}" 
                     href="{{ route('contact') }}"
                 >
-                    Contacto
+                    {{ __('Contacto') }}
                 </a>
             </div>
 
@@ -418,8 +438,8 @@
                     type="button" 
                     @click="searchOpen = true" 
                     class="w-10 h-10 rounded-full bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-500 flex items-center justify-center transition-all hover:scale-105 active:scale-95" 
-                    title="Buscar tratamientos o servicios (Ctrl + K)"
-                    aria-label="Buscar tratamientos"
+                    title="{{ __('Buscar tratamientos o servicios (Ctrl + K)') }}"
+                    aria-label="{{ __('Buscar tratamientos') }}"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
@@ -431,7 +451,7 @@
                     href="{{ route('schedule') }}" 
                     class="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-sky-500/25 flex items-center gap-1.5 hover:scale-105 active:scale-95"
                 >
-                    <span>Reservar »</span>
+                    <span>{{ __('Reservar') }} »</span>
                 </a>
             </div>
 
@@ -441,7 +461,7 @@
                     type="button" 
                     @click="searchOpen = true" 
                     class="p-2 rounded-xl bg-slate-100 text-slate-700 hover:text-sky-500 focus:outline-none"
-                    aria-label="Buscar"
+                    aria-label="{{ __('Buscar') }}"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
@@ -464,19 +484,38 @@
 
         <!-- Mobile Drawer Menu -->
         <div x-show="mobileMenuOpen" x-cloak style="display: none;" class="md:hidden mt-4 pt-4 border-t border-slate-100 space-y-3 pb-3">
-            <a @click="mobileMenuOpen = false" class="block text-xs font-bold uppercase tracking-wider {{ request()->routeIs('home') ? 'text-sky-500 font-black' : 'text-slate-700' }} py-1" href="{{ route('home') }}">Inicio</a>
+            <a @click="mobileMenuOpen = false" class="block text-xs font-bold uppercase tracking-wider {{ request()->routeIs('home') ? 'text-sky-500 font-black' : 'text-slate-700' }} py-1" href="{{ route('home') }}">{{ __('Inicio') }}</a>
             
-            <a @click="mobileMenuOpen = false" class="block text-xs font-bold uppercase tracking-wider {{ request()->routeIs('about') ? 'text-sky-500 font-black' : 'text-slate-700' }} py-1" href="{{ route('about') }}">Nosotros</a>
+            <a @click="mobileMenuOpen = false" class="block text-xs font-bold uppercase tracking-wider {{ request()->routeIs('about') ? 'text-sky-500 font-black' : 'text-slate-700' }} py-1" href="{{ route('about') }}">{{ __('Nosotros') }}</a>
 
-            <a @click="mobileMenuOpen = false" class="block text-xs font-bold uppercase tracking-wider {{ request()->routeIs('services.*') ? 'text-sky-500 font-black' : 'text-slate-700' }} py-1" href="{{ route('services.index') }}">Servicios</a>
+            <a @click="mobileMenuOpen = false" class="block text-xs font-bold uppercase tracking-wider {{ request()->routeIs('services.*') ? 'text-sky-500 font-black' : 'text-slate-700' }} py-1" href="{{ route('services.index') }}">{{ __('Servicios') }}</a>
 
-            <a @click="mobileMenuOpen = false" class="block text-xs font-bold uppercase tracking-wider {{ request()->routeIs('blog.*') ? 'text-sky-500 font-black' : 'text-slate-700' }} py-1" href="{{ route('blog.index') }}">Blog</a>
+            <a @click="mobileMenuOpen = false" class="block text-xs font-bold uppercase tracking-wider {{ request()->routeIs('blog.*') ? 'text-sky-500 font-black' : 'text-slate-700' }} py-1" href="{{ route('blog.index') }}">{{ __('Blog') }}</a>
             
-            <a @click="mobileMenuOpen = false" class="block text-xs font-bold uppercase tracking-wider {{ request()->routeIs('contact') ? 'text-sky-500 font-black' : 'text-slate-700' }} py-1" href="{{ route('contact') }}">Contacto</a>
+            <a @click="mobileMenuOpen = false" class="block text-xs font-bold uppercase tracking-wider {{ request()->routeIs('contact') ? 'text-sky-500 font-black' : 'text-slate-700' }} py-1" href="{{ route('contact') }}">{{ __('Contacto') }}</a>
             
             <a @click="mobileMenuOpen = false" class="block text-center bg-sky-500 text-white font-bold text-xs uppercase py-3 rounded-full mt-2 shadow-md shadow-sky-500/25" href="{{ route('schedule') }}">
-                Reservar Cita Online »
+                {{ __('Reservar Cita Online') }} »
             </a>
+
+            <!-- Mobile Language Switcher -->
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">{{ __('Idioma') }}</span>
+                <div class="inline-flex items-center text-xs font-black rounded-xl bg-slate-100 p-1 border border-slate-200">
+                    <a 
+                        href="{{ \App\Services\LocalizationService::getAlternateUrl('es') }}"
+                        class="px-3 py-1 rounded-lg transition-all {{ app()->getLocale() === 'es' ? 'bg-sky-500 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900' }}"
+                    >
+                        Español
+                    </a>
+                    <a 
+                        href="{{ \App\Services\LocalizationService::getAlternateUrl('en') }}"
+                        class="px-3 py-1 rounded-lg transition-all {{ app()->getLocale() === 'en' ? 'bg-sky-500 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900' }}"
+                    >
+                        English
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -500,7 +539,7 @@
                             <path d="m21 21-4.3-4.3"></path>
                         </svg>
                     </span>
-                    <h3 class="text-sm font-bold text-slate-800">Buscador Clínico Inteligente</h3>
+                    <h3 class="text-sm font-bold text-slate-800">{{ __('Buscador Clínico Inteligente') }}</h3>
                 </div>
                 <button @click="searchOpen = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -515,7 +554,7 @@
                     type="text" 
                     x-model="searchQuery" 
                     x-ref="searchInput"
-                    placeholder="Escribe un tratamiento (ej. Blanqueamiento, Ortodoncia, Implante)..."
+                    placeholder="{{ __('Escribe un tratamiento (ej. Blanqueamiento, Ortodoncia, Implante)...') }}"
                     class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 pl-11 pr-4 text-sm text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
                 />
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3.5 top-3.5 text-slate-400">
@@ -548,13 +587,13 @@
                     </a>
                 </template>
                 <div x-show="filteredSearchResults.length === 0" class="text-center py-6 text-slate-400 text-xs">
-                    No se encontraron tratamientos con ese término.
+                    {{ __('No se encontraron tratamientos con ese término.') }}
                 </div>
             </div>
 
             <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-                <span>Presiona <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded font-mono text-[10px]">Esc</kbd> para salir</span>
-                <span>Atajo: <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded font-mono text-[10px]">Ctrl + K</kbd></span>
+                <span>{{ __('Presiona') }} <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded font-mono text-[10px]">Esc</kbd> {{ __('para salir') }}</span>
+                <span>{{ __('Atajo:') }} <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded font-mono text-[10px]">Ctrl + K</kbd></span>
             </div>
         </div>
     </div>

@@ -17,7 +17,7 @@ class ListUsers extends ListRecords
     {
         return [
             CreateAction::make()
-                ->label('+ Nuevo Usuario')
+                ->label('+ '.__('New User'))
                 ->extraAttributes([
                     'style' => 'border-radius: 9999px !important; background-color: #0EA5E9 !important; color: #0F172A !important; font-weight: 800 !important; min-height: 48px !important; padding: 0 24px !important; box-shadow: 0 10px 24px rgba(14, 165, 233, 0.40) !important; border: none !important; font-size: 14px !important;',
                 ]),
@@ -41,10 +41,10 @@ class ListUsers extends ListRecords
             }
 
             $roleDescription = match ($user->role) {
-                UserRole::Admin => 'Acceso total y sin restricciones a todos los módulos clínicos, reportería, ajustes del sistema y gestión de usuarios.',
-                UserRole::Receptionist => 'Autorizado para la recepción de pacientes, agendamiento y confirmación de citas, y catálogo de servicios.',
-                UserRole::Dentist => 'Acceso personalizado enfocado en su agenda médica propia y consulta de citas de sus pacientes asignados.',
-                default => 'Rol sin permisos específicos definidos.',
+                UserRole::Admin => __('Full and unrestricted access to all clinical modules, reports, system settings, and user management.'),
+                UserRole::Receptionist => __('Authorized for patient reception, appointment scheduling and confirmation, and service catalog.'),
+                UserRole::Dentist => __('Personalized access focused on own medical schedule and consultation of assigned patient appointments.'),
+                default => __('Role with no specific permissions defined.'),
             };
 
             return [
@@ -66,7 +66,7 @@ class ListUsers extends ListRecords
                     'initials' => $user->dentist->initials,
                 ] : null,
                 'created_at' => $user->created_at?->format('d M, Y H:i'),
-                'created_at_human' => $user->created_at?->diffForHumans(),
+                'created_at_human' => $user->created_at?->locale(app()->getLocale())->diffForHumans(),
                 'edit_url' => UserResource::getUrl('edit', ['record' => $user->id]),
             ];
         } catch (\Throwable $e) {

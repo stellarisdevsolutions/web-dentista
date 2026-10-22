@@ -7,8 +7,10 @@
 
     @include('partials.favicon')
 
-    <title>Nosotros y Especialistas | {{ $clinic->clinic_name }}</title>
-    <meta name="description" content="Conoce a nuestro equipo médico odontológico de especialistas y nuestra trayectoria de excelencia clínica en {{ $clinic->clinic_name }}.">
+    @include('partials.seo-meta', [
+        'title' => __('Nosotros y Especialistas') . ' | ' . $clinic->clinic_name,
+        'description' => __('Conoce a nuestro equipo médico odontológico de especialistas y nuestra trayectoria de excelencia clínica en :clinic.', ['clinic' => $clinic->clinic_name]),
+    ])
 
     <!-- Google Fonts: Instrument Sans -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -31,20 +33,20 @@
         $aboutHeroActive = $sectionsMap->get('about_hero')?->is_active ?? true;
         $isEditor = request()->has('editor_preview');
 
-        $heroEyebrow = $aboutHero['eyebrow'] ?? ('CONOCE ' . strtoupper($clinic->clinic_name));
-        $heroTitle = $aboutHero['title'] ?? 'Más de 20+ Años Brindando Excelencia Odontológica';
-        $heroSubtitle = $aboutHero['subtitle'] ?? 'Un equipo multidisciplinario de odontólogos especialistas apasionados por tu bienestar, tecnología mínimamente invasiva y una experiencia clínica libre de dolor.';
+        $heroEyebrow = $aboutHero['eyebrow'] ?? __('CONOCE :clinic', ['clinic' => strtoupper($clinic->clinic_name)]);
+        $heroTitle = $aboutHero['title'] ?? __('Más de 20+ Años Brindando Excelencia Odontológica');
+        $heroSubtitle = $aboutHero['subtitle'] ?? __('Un equipo multidisciplinario de odontólogos especialistas apasionados por tu bienestar, tecnología mínimamente invasiva y una experiencia clínica libre de dolor.');
 
         $primaryText = $aboutHero['button_primary_text'] ?? null;
         $primaryUrl = $aboutHero['button_primary_url'] ?? '#dentists';
         if (!array_key_exists('button_primary_text', $aboutHero)) {
-            $primaryText = 'Conocer Especialistas ↓';
+            $primaryText = __('Conocer Especialistas ↓');
         }
 
         $secondaryText = $aboutHero['button_secondary_text'] ?? null;
         $secondaryUrl = $aboutHero['button_secondary_url'] ?? route('schedule');
         if (!array_key_exists('button_secondary_text', $aboutHero)) {
-            $secondaryText = 'Agendar Consulta Online »';
+            $secondaryText = __('Agendar Consulta Online »');
         }
 
         $hasPrimaryBtn = filled(trim($primaryText ?? ''));
@@ -53,38 +55,38 @@
         $aboutStory = $sectionsMap->get('about_story')?->content ?? [];
         $aboutStoryActive = $sectionsMap->get('about_story')?->is_active ?? true;
 
-        $storyEyebrow = $aboutStory['eyebrow'] ?? 'NUESTRA FILOSOFÍA MÉDICA';
-        $storyTitle = $aboutStory['title'] ?? 'Cuidado Odontológico Integral, Cálido y Sin Dolor.';
-        $storyDescription = $aboutStory['description'] ?? ('En ' . $clinic->clinic_name . ', combinamos ciencia médica de vanguardia con un trato profundamente humano. Nuestro compromiso es que cada visita sea una experiencia tranquila y gratificante, cuidando tanto de la salud funcional de tus dientes como de la estética natural de tu sonrisa.');
+        $storyEyebrow = $aboutStory['eyebrow'] ?? __('NUESTRA FILOSOFÍA MÉDICA');
+        $storyTitle = $aboutStory['title'] ?? __('Cuidado Odontológico Integral, Cálido y Sin Dolor.');
+        $storyDescription = $aboutStory['description'] ?? __('En :clinic, combinamos ciencia médica de vanguardia con un trato profundamente humano. Nuestro compromiso es que cada visita sea una experiencia tranquila y gratificante, cuidando tanto de la salud funcional de tus dientes como de la estética natural de tu sonrisa.', ['clinic' => $clinic->clinic_name]);
 
         $storyImage1 = !empty($aboutStory['image_1_url']) ? $aboutStory['image_1_url'] : 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=800&q=80';
         $storyImage2 = !empty($aboutStory['image_2_url']) ? $aboutStory['image_2_url'] : 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80';
         $badgeYears = $aboutStory['badge_years'] ?? '20+';
-        $badgeText = $aboutStory['badge_text'] ?? 'Años de Trayectoria';
+        $badgeText = $aboutStory['badge_text'] ?? __('Años de Trayectoria');
 
         $feature1Title = $aboutStory['feature_1_title'] ?? null;
         $feature1Desc = $aboutStory['feature_1_desc'] ?? null;
         if (!array_key_exists('feature_1_title', $aboutStory)) {
-            $feature1Title = 'Acompañamiento Cercano';
-            $feature1Desc = 'Orientación clara y soporte antes, durante y después de cada tratamiento.';
+            $feature1Title = __('Acompañamiento Cercano');
+            $feature1Desc = __('Orientación clara y soporte antes, durante y después de cada tratamiento.');
         }
 
         $feature2Title = $aboutStory['feature_2_title'] ?? null;
         $feature2Desc = $aboutStory['feature_2_desc'] ?? null;
         if (!array_key_exists('feature_2_title', $aboutStory)) {
-            $feature2Title = 'Especialistas Certificados';
-            $feature2Desc = 'Postgrados universitarios y formación continua en cada área odontológica.';
+            $feature2Title = __('Especialistas Certificados');
+            $feature2Desc = __('Postgrados universitarios y formación continua en cada área odontológica.');
         }
 
         $checkText = $aboutStory['check_text'] ?? null;
         if (!array_key_exists('check_text', $aboutStory)) {
-            $checkText = 'Contamos con quirófanos digitales, escáner intraoral 3D y sedación consciente.';
+            $checkText = __('Contamos con quirófanos digitales, escáner intraoral 3D y sedación consciente.');
         }
 
         $storyButtonText = $aboutStory['button_text'] ?? null;
         $storyButtonUrl = $aboutStory['button_url'] ?? route('schedule');
         if (!array_key_exists('button_text', $aboutStory)) {
-            $storyButtonText = 'Agendar Cita con un Especialista »';
+            $storyButtonText = __('Agendar Cita con un Especialista »');
         }
 
         $hasFeature1 = filled(trim($feature1Title ?? ''));
@@ -99,28 +101,28 @@
         $stat1Label = $aboutTrustbar['stat_1_label'] ?? null;
         if (!array_key_exists('stat_1_number', $aboutTrustbar)) {
             $stat1Number = '567+';
-            $stat1Label = 'Pacientes Felices';
+            $stat1Label = __('Pacientes Felices');
         }
 
         $stat2Number = $aboutTrustbar['stat_2_number'] ?? null;
         $stat2Label = $aboutTrustbar['stat_2_label'] ?? null;
         if (!array_key_exists('stat_2_number', $aboutTrustbar)) {
             $stat2Number = '23K+';
-            $stat2Label = 'Atenciones Realizadas';
+            $stat2Label = __('Atenciones Realizadas');
         }
 
         $stat3Number = $aboutTrustbar['stat_3_number'] ?? null;
         $stat3Label = $aboutTrustbar['stat_3_label'] ?? null;
         if (!array_key_exists('stat_3_number', $aboutTrustbar)) {
             $stat3Number = '241+';
-            $stat3Label = 'Casos de Sonrisa';
+            $stat3Label = __('Casos de Sonrisa');
         }
 
         $stat4Number = $aboutTrustbar['stat_4_number'] ?? null;
         $stat4Label = $aboutTrustbar['stat_4_label'] ?? null;
         if (!array_key_exists('stat_4_number', $aboutTrustbar)) {
             $stat4Number = '16+';
-            $stat4Label = 'Certificaciones de Calidad';
+            $stat4Label = __('Certificaciones de Calidad');
         }
 
         $hasStat1 = filled(trim($stat1Number ?? ''));
@@ -133,17 +135,17 @@
 
         $specialistsEyebrow = $aboutSpecialists['eyebrow'] ?? null;
         if (!array_key_exists('eyebrow', $aboutSpecialists)) {
-            $specialistsEyebrow = 'CUERPO MÉDICO DE ÉLITE';
+            $specialistsEyebrow = __('CUERPO MÉDICO DE ÉLITE');
         }
 
         $specialistsTitle = $aboutSpecialists['title'] ?? null;
         if (!array_key_exists('title', $aboutSpecialists)) {
-            $specialistsTitle = 'Nuestros Especialistas Odontológicos';
+            $specialistsTitle = __('Nuestros Especialistas Odontológicos');
         }
 
         $specialistsSubtitle = $aboutSpecialists['subtitle'] ?? null;
         if (!array_key_exists('subtitle', $aboutSpecialists)) {
-            $specialistsSubtitle = 'Doctores colegiados con postgrados y amplia experiencia en cirugía, implantes, ortodoncia, odontopediatría y diseño de sonrisa.';
+            $specialistsSubtitle = __('Doctores colegiados con postgrados y amplia experiencia en cirugía, implantes, ortodoncia, odontopediatría y diseño de sonrisa.');
         }
 
         $hasSpecialistsEyebrow = filled(trim($specialistsEyebrow ?? ''));
@@ -417,7 +419,7 @@
                                                 @click="activeDentist = {{ Js::from($dentistData) }}; isDentistModalOpen = true"
                                                 class="text-xs font-bold text-sky-600 hover:text-sky-700 flex items-center gap-1 group/btn transition-colors"
                                             >
-                                                <span>Saber más</span>
+                                                <span>{{ __('Saber más') }}</span>
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                                                 </svg>
@@ -430,7 +432,7 @@
                     </div>
                 @else
                     <div class="text-center py-12 bg-white rounded-3xl border border-slate-200 p-8">
-                        <p class="text-slate-500 text-sm">Nuestro equipo de especialistas estará disponible muy pronto para agendar en línea.</p>
+                        <p class="text-slate-500 text-sm">{{ __('Nuestro equipo de especialistas estará disponible muy pronto para agendar en línea.') }}</p>
                     </div>
                 @endif
 
@@ -482,7 +484,7 @@
                                 type="button" 
                                 @click="isDentistModalOpen = false" 
                                 class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
-                                aria-label="Cerrar modal"
+                                aria-label="{{ __('Cerrar modal') }}"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -517,7 +519,7 @@
                             <div class="py-5 space-y-6">
                                 <!-- Section: Descripción -->
                                 <div>
-                                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Descripción</h4>
+                                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">{{ __('Descripción') }}</h4>
                                     <div class="bg-slate-50/80 rounded-2xl p-4 sm:p-5 border border-slate-100">
                                         <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line" x-text="activeDentist?.bio"></p>
                                     </div>
@@ -526,7 +528,7 @@
                                 <!-- Section: Tratamientos que realiza -->
                                 <template x-if="activeDentist?.services && activeDentist?.services.length > 0">
                                     <div>
-                                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Tratamientos que realiza</h4>
+                                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">{{ __('Tratamientos que realiza') }}</h4>
                                         <div class="flex flex-wrap gap-2">
                                             <template x-for="service in activeDentist.services" :key="service.slug">
                                                 <a :href="'/servicios/' + service.slug" class="group/item inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-sky-50 hover:text-sky-600 hover:border-sky-300 px-3.5 py-2 rounded-xl border border-slate-200/80 shadow-xs transition-all">
@@ -547,7 +549,7 @@
                                     @click="isDentistModalOpen = false" 
                                     class="px-6 py-2.5 rounded-full text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
                                 >
-                                    Cerrar
+                                    {{ __('Cerrar') }}
                                 </button>
                             </div>
                         </div>

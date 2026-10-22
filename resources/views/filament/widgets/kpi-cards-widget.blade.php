@@ -25,7 +25,7 @@
                 <div class="aura-kpi-zone-c">
                     @php
                         $trendCountsList = collect($kpi->weeklyTrend)->map(fn($b) => $b['count'])->implode(', ');
-                        $trendAria = "Citas confirmadas últimos 7 días: {$trendCountsList}";
+                        $trendAria = __("Confirmed appointments last 7 days: :list", ['list' => $trendCountsList]);
                         $maxCount = collect($kpi->weeklyTrend)->max('count') ?: 1;
                     @endphp
                     <div class="aura-kpi-pills-trend" role="img" aria-label="{{ $trendAria }}">
@@ -40,7 +40,7 @@
                             <div 
                                 class="aura-kpi-pill-bar {{ $isToday ? 'aura-kpi-pill-today' : '' }}" 
                                 style="height: {{ $h }}px;" 
-                                title="{{ $bar['date'] }}: {{ $bar['count'] }} citas"
+                                title="{{ $bar['date'] }}: {{ $bar['count'] }} {{ __('appointments') }}"
                             ></div>
                         @endforeach
                     </div>
@@ -56,11 +56,11 @@
             <div class="aura-kpi-card aura-kpi-card-2">
                 <!-- Zona A: Cabecera -->
                 <div class="aura-kpi-zone-a">
-                    <span class="aura-kpi-label">POR CONFIRMAR</span>
+                    <span class="aura-kpi-label">{{ __('TO CONFIRM') }}</span>
                     @if($kpi->pendingCount > 0)
-                        <span class="aura-kpi-chip aura-kpi-chip-amber">Pendiente</span>
+                        <span class="aura-kpi-chip aura-kpi-chip-amber">{{ __('Pending') }}</span>
                     @else
-                        <span class="aura-kpi-chip aura-kpi-chip-green">Al día</span>
+                        <span class="aura-kpi-chip aura-kpi-chip-green">{{ __('Up to date') }}</span>
                     @endif
                 </div>
 
@@ -77,7 +77,7 @@
                             <span>{{ $kpi->pendingButtonText }}</span>
                         </a>
                     @else
-                        <span class="aura-kpi-discreet-text">No hay recordatorios pendientes</span>
+                        <span class="aura-kpi-discreet-text">{{ __('No pending reminders') }}</span>
                     @endif
                 </div>
 
@@ -87,17 +87,13 @@
 
             <!-- ==========================================
                  TARJETA 3: SERVICIOS CLÍNICOS
-                 (2 servicios en su propia fila + chip +N más)
-                 ========================================== -->
-            <!-- ==========================================
-                 TARJETA 3: SERVICIOS CLÍNICOS
                  (Máximo 2 filas: Fila 1 = 1er y 2do servicio; Fila 2 = 3er servicio acortado + chip +N)
                  ========================================== -->
             <div class="aura-kpi-card aura-kpi-card-3">
                 <!-- Zona A: Cabecera -->
                 <div class="aura-kpi-zone-a">
-                    <span class="aura-kpi-label">SERVICIOS CLÍNICOS</span>
-                    <span class="aura-kpi-chip aura-kpi-chip-blue">Activo</span>
+                    <span class="aura-kpi-label">{{ __('CLINICAL SERVICES') }}</span>
+                    <span class="aura-kpi-chip aura-kpi-chip-blue">{{ __('Active') }}</span>
                 </div>
 
                 <!-- Zona B: Valor -->
@@ -116,8 +112,8 @@
                         $hiddenServices = array_slice($kpi->topServices, 3);
                         $totalHidden = count($hiddenServices) + $kpi->remainingServicesCount;
                         $tooltipText = !empty($hiddenServices)
-                            ? implode(', ', $hiddenServices) . ($kpi->remainingServicesCount > 0 ? " y {$kpi->remainingServicesCount} más" : '')
-                            : "{$totalHidden} tratamientos más";
+                            ? implode(', ', $hiddenServices) . ($kpi->remainingServicesCount > 0 ? ' ' . __('and :count more', ['count' => $kpi->remainingServicesCount]) : '')
+                            : __(':count more treatments', ['count' => $totalHidden]);
                     @endphp
                     <div class="aura-kpi-services-list">
                         <!-- Fila 1: Primeros servicios (hasta 2) -->
@@ -189,7 +185,7 @@
                                 viewBox="0 0 42 42" 
                                 class="aura-kpi-ring-svg"
                                 role="img" 
-                                aria-label="Ocupación: {{ $p }} por ciento"
+                                aria-label="{{ __('Occupancy: :p percent', ['p' => $p]) }}"
                             >
                                 <!-- Pista circular de fondo azul marino oscuro -->
                                 <circle 
@@ -222,7 +218,7 @@
                         <!-- 2. Número y porcentaje en el medio + Texto a la derecha -->
                         <div class="aura-kpi-occupancy-data">
                             <span class="aura-kpi-occupancy-val">{{ $kpi->occupancyPercentage }}%</span>
-                            <span class="aura-kpi-subtext aura-kpi-subtext-occupancy">de la agenda reservada</span>
+                            <span class="aura-kpi-subtext aura-kpi-subtext-occupancy">{{ __('of schedule booked') }}</span>
                         </div>
                     </div>
                 </div>
@@ -232,7 +228,7 @@
 
                 <!-- Zona D: Pie (Libre: X%) -->
                 <div class="aura-kpi-zone-d">
-                    <span class="aura-kpi-free-text">Libre: <strong>{{ $kpi->freePercentage }}%</strong></span>
+                    <span class="aura-kpi-free-text">{{ __('Free:') }} <strong>{{ $kpi->freePercentage }}%</strong></span>
                 </div>
             </div>
         </div>

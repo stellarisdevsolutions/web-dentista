@@ -16,7 +16,7 @@ class ListDentists extends ListRecords
     {
         return [
             CreateAction::make()
-                ->label('+ Nuevo Especialista')
+                ->label('+ '.__('New Specialist'))
                 ->extraAttributes([
                     'style' => 'border-radius: 9999px !important; background-color: #0EA5E9 !important; color: #0F172A !important; font-weight: 800 !important; min-height: 48px !important; padding: 0 24px !important; box-shadow: 0 10px 24px rgba(14, 165, 233, 0.40) !important; border: none !important; font-size: 14px !important;',
                 ]),
@@ -49,12 +49,12 @@ class ListDentists extends ListRecords
             }
 
             $daysMap = [
-                'monday' => 'Lunes',
-                'tuesday' => 'Martes',
-                'wednesday' => 'Miércoles',
-                'thursday' => 'Jueves',
-                'friday' => 'Viernes',
-                'saturday' => 'Sábado',
+                'monday' => __('Monday'),
+                'tuesday' => __('Tuesday'),
+                'wednesday' => __('Wednesday'),
+                'thursday' => __('Thursday'),
+                'friday' => __('Friday'),
+                'saturday' => __('Saturday'),
             ];
 
             $scheduleDays = [];
@@ -63,7 +63,7 @@ class ListDentists extends ListRecords
             foreach ($daysMap as $dayKey => $dayName) {
                 $dayConfig = $weeklySchedule[$dayKey] ?? null;
                 $isWorking = false;
-                $scheduleText = 'No labora';
+                $scheduleText = __('Non-working');
 
                 if ($dayConfig && ! empty($dayConfig['is_working'])) {
                     $isWorking = true;
@@ -74,7 +74,7 @@ class ListDentists extends ListRecords
                     if (! empty($dayConfig['afternoon_start']) && ! empty($dayConfig['afternoon_end'])) {
                         $parts[] = "{$dayConfig['afternoon_start']} - {$dayConfig['afternoon_end']}";
                     }
-                    $scheduleText = ! empty($parts) ? implode(' / ', $parts) : 'Horario general';
+                    $scheduleText = ! empty($parts) ? implode(' / ', $parts) : __('General hours');
                 } elseif (empty($weeklySchedule) && $dentist->isAvailableOn($dayKey)) {
                     $isWorking = true;
                     $start = substr((string) ($dentist->working_hours_start ?? '09:00'), 0, 5);

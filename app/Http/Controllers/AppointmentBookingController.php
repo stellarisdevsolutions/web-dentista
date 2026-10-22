@@ -151,32 +151,39 @@ class AppointmentBookingController extends Controller
         $dentist = $appointment->dentist;
         $dentistName = $dentist ? $dentist->name : 'Especialista de turno';
 
-        // Prepare WhatsApp message for 1-click confirmation with clinic
-        $clinicPhone = preg_replace('/[^0-9]/', '', (string) ($clinic?->whatsapp ?? '15552345678'));
-        $formattedDate = Carbon::parse($appointment->appointment_date)->translatedFormat('d \d\e F, Y');
+        // Prepare WhatsApp message for 1-click confirmation with clinic in Spanish locales
+        $isEnglish = app()->getLocale() === 'en';
+        $whatsappUrl = null;
 
-        $whatsappMessage = "¡Hola {$clinic?->clinic_name}! Acabo de agendar una cita por la web.\n\n"
-            ."📌 *Código de reserva:* {$appointment->code}\n"
-            ."👤 *Paciente:* {$appointment->patient_name}\n"
-            ."🦷 *Tratamiento:* {$service->name}\n"
-            ."👨‍⚕️ *Especialista:* {$dentistName}\n"
-            ."📅 *Fecha:* {$formattedDate}\n"
-            ."⏰ *Horario:* {$appointment->formatted_time}\n"
-            ."📱 *Teléfono:* {$appointment->patient_phone}\n\n"
-            .'¿Podrían confirmarme los detalles para mi consulta? ¡Muchas gracias!';
+        if (! $isEnglish) {
+            $clinicPhone = preg_replace('/[^0-9]/', '', (string) ($clinic?->whatsapp ?? '15552345678'));
+            $formattedDate = Carbon::parse($appointment->appointment_date)->translatedFormat('d \d\e F, Y');
 
-        $whatsappUrl = "https://wa.me/{$clinicPhone}?text=".urlencode($whatsappMessage);
+            $whatsappMessage = "Hola {$clinic?->clinic_name}. Acabo de agendar una cita por la web.\n\n"
+                ."- Codigo de reserva: {$appointment->code}\n"
+                ."- Paciente: {$appointment->patient_name}\n"
+                ."- Tratamiento: {$service->name}\n"
+                ."- Especialista: {$dentistName}\n"
+                ."- Fecha: {$formattedDate}\n"
+                ."- Horario: {$appointment->formatted_time}\n"
+                ."- Telefono: {$appointment->patient_phone}\n\n"
+                .'Podrian confirmarme los detalles para mi consulta? Muchas gracias.';
+
+            $whatsappUrl = "https://wa.me/{$clinicPhone}?text=".urlencode($whatsappMessage);
+        }
+
+        $formattedDateDisplay = Carbon::parse($appointment->appointment_date)->locale(app()->getLocale())->isoFormat(app()->getLocale() === 'es' ? 'D [de] MMMM, YYYY' : 'MMMM D, YYYY');
 
         $responsePayload = [
             'success' => true,
-            'message' => '¡Tu cita ha sido registrada con éxito! Te esperamos con la mejor atención.',
+            'message' => __('¡Tu cita ha sido registrada con éxito! Te esperamos con la mejor atención.'),
             'code' => $appointment->code,
             'whatsapp_url' => $whatsappUrl,
             'appointment' => [
                 'code' => $appointment->code,
                 'service' => $service->name,
                 'dentist' => $dentistName,
-                'date' => $formattedDate,
+                'date' => $formattedDateDisplay,
                 'time' => $appointment->formatted_time,
                 'time_raw' => $appointment->appointment_time,
                 'duration' => $appointment->duration_minutes.' min',

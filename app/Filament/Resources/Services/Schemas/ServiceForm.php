@@ -27,8 +27,8 @@ class ServiceForm
                 // ==========================================
                 // SECCIÓN 1: INFORMACIÓN PRINCIPAL Y MULTIMEDIA
                 // ==========================================
-                Section::make('Información Principal y Multimedia')
-                    ->description('Define el título, enlace permanente (slug), categoría y fotografía oficial del tratamiento.')
+                Section::make(__('Main Information & Media'))
+                    ->description(__('Define title, permalink (slug), category, and official photography for the treatment.'))
                     ->icon('heroicon-o-sparkles')
                     ->columnSpanFull()
                     ->schema([
@@ -39,7 +39,7 @@ class ServiceForm
                                     ->columnSpan(['default' => 12, 'lg' => 4, 'xl' => 4])
                                     ->schema([
                                         FileUpload::make('image')
-                                            ->label('Fotografía del Tratamiento (4:3)')
+                                            ->label(__('Treatment Photo (4:3)'))
                                             ->image()
                                             ->required()
                                             ->imageCropAspectRatio('4:3')
@@ -56,7 +56,7 @@ class ServiceForm
                                             ->imagePreviewHeight('220')
                                             ->directory('services')
                                             ->disk('public')
-                                            ->helperText('Obligatorio. Formato recomendado 4:3 (1200×900 px). Se optimiza automáticamente a WebP para máxima velocidad en la web.'),
+                                            ->helperText(__('Required. Recommended format 4:3 (1200×900 px). Automatically optimized to WebP for maximum website speed.')),
                                     ]),
 
                                 // Columna Derecha: Campos de Identidad, Categoría y Slug Híbrido
@@ -68,7 +68,7 @@ class ServiceForm
                                             ->dehydrated(false),
 
                                         TextInput::make('name')
-                                            ->label('Nombre del Tratamiento')
+                                            ->label(__('Treatment Name'))
                                             ->prefixIcon('heroicon-o-sparkles')
                                             ->placeholder('ej. Blanqueamiento Dental Láser')
                                             ->required()
@@ -82,7 +82,7 @@ class ServiceForm
                                             }),
 
                                         TextInput::make('category')
-                                            ->label('Categoría')
+                                            ->label(__('Category'))
                                             ->prefixIcon('heroicon-o-tag')
                                             ->placeholder('ej. Odontología Estética, Ortodoncia')
                                             ->datalist(fn (): array => Service::query()
@@ -91,17 +91,17 @@ class ServiceForm
                                                 ->distinct()
                                                 ->pluck('category')
                                                 ->toArray())
-                                            ->helperText('Selecciona de las sugerencias o escribe una nueva.')
+                                            ->helperText(__('Select from suggestions or type a new one.'))
                                             ->maxLength(100),
 
                                         TextInput::make('short_description')
-                                            ->label('Descripción Breve')
+                                            ->label(__('Short Description'))
                                             ->prefixIcon('heroicon-o-document-text')
-                                            ->placeholder('Resumen para las tarjetas del sitio web y catálogo...')
+                                            ->placeholder(__('Summary for website cards and catalog...'))
                                             ->maxLength(255),
 
                                         TextInput::make('slug')
-                                            ->label('Enlace Web / Slug (URL)')
+                                            ->label(__('Web Link / Slug (URL)'))
                                             ->prefixIcon('heroicon-o-link')
                                             ->prefix($urlPrefix)
                                             ->required()
@@ -117,7 +117,7 @@ class ServiceForm
                                             ->suffixAction(
                                                 Action::make('toggle_slug_edit')
                                                     ->icon(fn (callable $get): string => $get('is_slug_editable') ? 'heroicon-m-check' : 'heroicon-m-pencil-square')
-                                                    ->tooltip(fn (callable $get): string => $get('is_slug_editable') ? 'Bloquear edición de enlace' : 'Personalizar enlace web')
+                                                    ->tooltip(fn (callable $get): string => $get('is_slug_editable') ? __('Lock link editing') : __('Customize web link'))
                                                     ->color(fn (callable $get): string => $get('is_slug_editable') ? 'success' : 'gray')
                                                     ->action(function (callable $set, callable $get): void {
                                                         $set('is_slug_editable', ! $get('is_slug_editable'));
@@ -131,8 +131,8 @@ class ServiceForm
                                             })
                                             ->dehydrateStateUsing(fn (?string $state, ?Service $record) => blank($state) ? null : Service::generateUniqueSlug($state, $record?->id))
                                             ->helperText(fn (callable $get): string => $get('is_slug_editable')
-                                                ? 'Modo edición activado: personaliza el enlace a tu gusto (sin acentos ni espacios; las colisiones se resuelven solas).'
-                                                : 'Generado automáticamente según el nombre. Protegido contra cambios accidentales (pulsa el lápiz para personalizar).'
+                                                ? __('Edit mode active: customize link to your liking (no accents or spaces; collisions resolve automatically).')
+                                                : __('Automatically generated from name. Protected against accidental changes (click pencil to customize).')
                                             ),
                                     ]),
                             ]),
@@ -141,24 +141,24 @@ class ServiceForm
                 // ==========================================
                 // SECCIÓN 2: PROTOCOLO CLÍNICO Y ESPECIALISTAS
                 // ==========================================
-                Section::make('Protocolo Clínico y Especialistas Asignados')
-                    ->description('Detalle del procedimiento clínico y qué doctores del equipo están habilitados para atenderlo.')
+                Section::make(__('Clinical Protocol & Assigned Specialists'))
+                    ->description(__('Detail of clinical procedure and which team doctors are qualified to perform it.'))
                     ->icon('heroicon-o-academic-cap')
                     ->columnSpanFull()
                     ->schema([
                         Select::make('dentists')
-                            ->label('Doctores / Especialistas Habilitados')
+                            ->label(__('Authorized Doctors / Specialists'))
                             ->prefixIcon('heroicon-o-user-group')
                             ->multiple()
                             ->relationship('dentists', 'name')
                             ->preload()
                             ->searchable()
                             ->columnSpanFull()
-                            ->helperText('Especialistas autorizados para atender este procedimiento en la agenda médica y reservas online.'),
+                            ->helperText(__('Specialists authorized to perform this procedure in medical schedule and online booking.')),
 
                         Textarea::make('description')
-                            ->label('Descripción Completa y Protocolo Clínico')
-                            ->placeholder('Detalla las etapas del tratamiento, beneficios y recomendaciones clínicas...')
+                            ->label(__('Full Clinical Description & Protocol'))
+                            ->placeholder(__('Detail treatment stages, benefits, and clinical recommendations...'))
                             ->rows(4)
                             ->columnSpanFull(),
                     ]),
@@ -166,23 +166,23 @@ class ServiceForm
                 // ==========================================
                 // SECCIÓN 3: TARIFAS, DURACIÓN Y AGENDA
                 // ==========================================
-                Section::make('Tarifas, Tiempos y Visibilidad Web')
-                    ->description('Valores económicos, tiempo de bloqueo en agenda médica y disponibilidad pública.')
+                Section::make(__('Pricing, Duration & Web Visibility'))
+                    ->description(__('Economic pricing, time blocked in medical schedule, and public availability.'))
                     ->icon('heroicon-o-currency-dollar')
                     ->columnSpanFull()
                     ->schema([
                         Grid::make(['default' => 1, 'sm' => 3])
                             ->schema([
                                 TextInput::make('price')
-                                    ->label('Precio Base ($)')
+                                    ->label(__('Base Price ($)'))
                                     ->prefixIcon('heroicon-o-currency-dollar')
                                     ->prefix('$')
                                     ->numeric()
                                     ->placeholder('85.00')
-                                    ->helperText('Tarifa estándar de referencia.'),
+                                    ->helperText(__('Standard reference rate.')),
 
                                 TextInput::make('duration_minutes')
-                                    ->label('Duración Estándar')
+                                    ->label(__('Standard Duration'))
                                     ->prefixIcon('heroicon-o-clock')
                                     ->numeric()
                                     ->suffix('min')
@@ -191,39 +191,39 @@ class ServiceForm
                                     ->step(15)
                                     ->rule('multiple_of:15')
                                     ->validationMessages([
-                                        'required' => 'La duración del tratamiento es obligatoria.',
-                                        'min' => 'La duración mínima debe ser de al menos 30 minutos.',
-                                        'multiple_of' => 'La duración debe especificarse en saltos de 15 minutos (30, 45, 60, 75, 90, etc.).',
+                                        'required' => __('Treatment duration is required.'),
+                                        'min' => __('Minimum duration must be at least 30 minutes.'),
+                                        'multiple_of' => __('Duration must be in 15-minute intervals (30, 45, 60, 75, 90, etc.).'),
                                     ])
                                     ->default(45)
-                                    ->helperText('Requerido. Mínimo 30 min, en intervalos de 15 min (30, 45, 60, 75, 90...).'),
+                                    ->helperText(__('Required. Minimum 30 min, in 15 min intervals (30, 45, 60, 75, 90...).')),
 
                                 TextInput::make('order')
-                                    ->label('Orden de Visualización')
+                                    ->label(__('Display Order'))
                                     ->prefixIcon('heroicon-o-arrows-up-down')
                                     ->numeric()
                                     ->nullable()
                                     ->placeholder('0')
                                     ->default(0)
                                     ->dehydrateStateUsing(fn ($state) => (int) ($state ?? 0))
-                                    ->helperText('Opcional. Entre más bajo el número, primero aparecerá (ej. 1 va antes que 2). Si se deja vacío, será 0.'),
+                                    ->helperText(__('Optional. Lower numbers appear first (e.g. 1 before 2). If left blank, defaults to 0.')),
                             ]),
 
                         Grid::make(['default' => 1, 'sm' => 3])
                             ->schema([
                                 Toggle::make('allows_online_booking')
-                                    ->label('Permitir Reserva Online')
-                                    ->helperText('Habilita que los pacientes reserven este servicio por la web.')
+                                    ->label(__('Allow Online Booking'))
+                                    ->helperText(__('Allows patients to book this service online.'))
                                     ->default(true),
 
                                 Toggle::make('is_featured')
-                                    ->label('Destacar en Inicio')
-                                    ->helperText('Muestra este tratamiento en la portada de la web.')
+                                    ->label(__('Feature on Home'))
+                                    ->helperText(__('Shows this treatment on the website homepage.'))
                                     ->default(false),
 
                                 Toggle::make('is_active')
-                                    ->label('Servicio Activo')
-                                    ->helperText('Habilita este tratamiento en el catálogo y sistema.')
+                                    ->label(__('Active Service'))
+                                    ->helperText(__('Enables this treatment in catalog and system.'))
                                     ->default(true),
                             ]),
                     ]),

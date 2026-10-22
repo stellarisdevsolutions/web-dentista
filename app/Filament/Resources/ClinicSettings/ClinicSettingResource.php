@@ -36,29 +36,29 @@ class ClinicSettingResource extends Resource
     {
         /** @var ClinicSetting $record */
         return [
-            'Teléfono' => $record->phone,
+            __('Phone') => $record->phone,
             'WhatsApp' => $record->whatsapp,
         ];
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Ajustes';
+        return __('Settings');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Perfil y Ajustes de la Clínica';
+        return __('Clinic Profile & Settings');
     }
 
     public static function getModelLabel(): string
     {
-        return 'Ajuste de la Clínica';
+        return __('Clinic Setting');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Perfil y Ajustes de la Clínica';
+        return __('Clinic Profile & Settings');
     }
 
     public static function form(Schema $schema): Schema

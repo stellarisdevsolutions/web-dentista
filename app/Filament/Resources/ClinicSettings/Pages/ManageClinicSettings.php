@@ -46,7 +46,7 @@ class ManageClinicSettings extends Page
 
     public function getTitle(): string
     {
-        return 'Perfil y Ajustes de la Clínica';
+        return __('Clinic Profile & Settings');
     }
 
     public function getHeading(): string
@@ -67,13 +67,13 @@ class ManageClinicSettings extends Page
     public function editAction(): Action
     {
         return Action::make('edit')
-            ->label('Editar Ajustes')
+            ->label(__('Edit Settings'))
             ->icon('heroicon-m-pencil-square')
             ->color('primary')
-            ->modalHeading('Editar Perfil y Ajustes de la Clínica')
-            ->modalDescription('Actualiza los datos institucionales, teléfonos de atención, horarios y enlaces de redes.')
+            ->modalHeading(__('Edit Clinic Profile & Settings'))
+            ->modalDescription(__('Update institutional data, contact phones, opening hours, and social media links.'))
             ->modalWidth(Width::FourExtraLarge)
-            ->modalSubmitActionLabel('Guardar Cambios')
+            ->modalSubmitActionLabel(__('Save Changes'))
             ->fillForm(function (): array {
                 $this->loadRecord();
 
@@ -97,8 +97,8 @@ class ManageClinicSettings extends Page
                 $this->record->update($data);
 
                 Notification::make()
-                    ->title('Ajustes guardados correctamente')
-                    ->body('Los datos de la clínica se han actualizado en todo el sistema.')
+                    ->title(__('Settings saved successfully'))
+                    ->body(__('Clinic details have been updated throughout the system.'))
                     ->success()
                     ->send();
 

@@ -1,1 +1,2 @@
 *.sqlite*
+!demo_template.sqlite

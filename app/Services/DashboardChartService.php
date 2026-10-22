@@ -50,8 +50,9 @@ class DashboardChartService
             $count = (int) ($countsByDate[$rawDate] ?? 0);
             $isToday = ($i === 0);
 
-            $label = str_replace('.', '', ucfirst($date->locale('es')->isoFormat('ddd D')));
-            $fullDate = ucfirst($date->locale('es')->isoFormat('dddd D [de] MMMM'));
+            $locale = app()->getLocale();
+            $label = str_replace('.', '', ucfirst($date->locale($locale)->isoFormat($locale === 'es' ? 'ddd D' : 'ddd, MMM D')));
+            $fullDate = ucfirst($date->locale($locale)->isoFormat($locale === 'es' ? 'dddd D [de] MMMM' : 'dddd, MMMM D'));
 
             $color = $isToday ? '#0A1730' : '#7DD3FC';
 
@@ -73,9 +74,13 @@ class DashboardChartService
 
         $ariaParts = [];
         foreach ($tableRows as $row) {
-            $ariaParts[] = "{$row['label']}: {$row['count']} cita(s)";
+            $unit = $row['count'] === 1 ? __('appointment') : __('appointments');
+            $ariaParts[] = "{$row['label']}: {$row['count']} {$unit}";
         }
-        $ariaLabel = "Demanda de citas últimos 7 días. Total: {$totalAppointments} citas. ".implode(', ', $ariaParts);
+        $ariaLabel = __('Appointment demand last 7 days. Total: :total appointments. :parts', [
+            'total' => $totalAppointments,
+            'parts' => implode(', ', $ariaParts),
+        ]);
 
         return new AppointmentDemandChartData(
             labels: $labels,
@@ -134,7 +139,7 @@ class DashboardChartService
                 tableRows: [],
                 totalAppointments: 0,
                 isEmpty: true,
-                ariaLabel: 'Distribución de tratamientos: Aún no hay tratamientos registrados en los últimos 30 días.',
+                ariaLabel: __('Treatment distribution: No treatments registered in the last 30 days yet.'),
             );
         }
 
@@ -154,7 +159,7 @@ class DashboardChartService
 
         if ($otherCount > 0) {
             $items[] = [
-                'name' => 'Otros',
+                'name' => __('Other'),
                 'count' => $otherCount,
             ];
         }
@@ -170,10 +175,11 @@ class DashboardChartService
         $legendItems = [];
         $tableRows = [];
         $ariaParts = [];
+        $otherLabel = __('Other');
 
         foreach ($items as $idx => $item) {
             $pct = $percentages[$idx] ?? 0;
-            $color = ($item['name'] === 'Otros') ? '#CFE3F4' : ($colorPalette[$idx] ?? '#CFE3F4');
+            $color = ($item['name'] === $otherLabel || $item['name'] === 'Otros') ? '#CFE3F4' : ($colorPalette[$idx] ?? '#CFE3F4');
 
             $labels[] = $item['name'];
             $counts[] = $item['count'];
@@ -192,10 +198,14 @@ class DashboardChartService
                 'percentage' => $pct,
             ];
 
-            $ariaParts[] = "{$item['name']}: {$pct}% ({$item['count']} citas)";
+            $unit = $item['count'] === 1 ? __('appointment') : __('appointments');
+            $ariaParts[] = "{$item['name']}: {$pct}% ({$item['count']} {$unit})";
         }
 
-        $ariaLabel = "Distribución de tratamientos últimos 30 días. Total: {$totalAppointments} citas. ".implode(', ', $ariaParts);
+        $ariaLabel = __('Treatment distribution last 30 days. Total: :total appointments. :parts', [
+            'total' => $totalAppointments,
+            'parts' => implode(', ', $ariaParts),
+        ]);
 
         return new TreatmentDistributionChartData(
             labels: $labels,

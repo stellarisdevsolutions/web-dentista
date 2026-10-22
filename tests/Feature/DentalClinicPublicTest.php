@@ -108,7 +108,7 @@ class DentalClinicPublicTest extends TestCase
 
         $responseSchedule = $this->get('/schedule');
         $responseSchedule->assertSuccessful();
-        $responseSchedule->assertSee('Agenda tu Cita Dental en 3 Pasos');
+        $responseSchedule->assertSee(__('Agenda tu Cita Dental en 3 Pasos'));
     }
 
     public function test_patient_can_book_appointment_online(): void

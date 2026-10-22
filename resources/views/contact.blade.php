@@ -7,8 +7,10 @@
 
     @include('partials.favicon')
 
-    <title>Contacto y Ubicación | {{ $clinic->clinic_name }}</title>
-    <meta name="description" content="Ponte en contacto con {{ $clinic->clinic_name }}. Atención de urgencias dentales 24/7, consultas generales, ubicación y horarios de atención.">
+    @include('partials.seo-meta', [
+        'title' => __('Contacto y Ubicación') . ' | ' . $clinic->clinic_name,
+        'description' => __('Ponte en contacto con :clinic. Atención de urgencias dentales 24/7, consultas generales, ubicación y horarios de atención.', ['clinic' => $clinic->clinic_name]),
+    ])
 
     <!-- Google Fonts: Instrument Sans -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -33,17 +35,17 @@
 
         $heroEyebrow = $contactHero['eyebrow'] ?? null;
         if (!array_key_exists('eyebrow', $contactHero)) {
-            $heroEyebrow = 'ESTAMOS PARA AYUDARTE';
+            $heroEyebrow = __('ESTAMOS PARA AYUDARTE');
         }
 
         $heroTitle = $contactHero['title'] ?? null;
         if (!array_key_exists('title', $contactHero)) {
-            $heroTitle = 'Contacta con ' . $clinic->clinic_name;
+            $heroTitle = __('Contacta con :clinic', ['clinic' => $clinic->clinic_name]);
         }
 
         $heroSubtitle = $contactHero['subtitle'] ?? null;
         if (!array_key_exists('subtitle', $contactHero)) {
-            $heroSubtitle = '¿Tienes dudas sobre un tratamiento o necesitas atención inmediata? Escríbenos, llámanos o visítanos en nuestras instalaciones.';
+            $heroSubtitle = __('¿Tienes dudas sobre un tratamiento o necesitas atención inmediata? Escríbenos, llámanos o visítanos en nuestras instalaciones.');
         }
 
         $hasHeroEyebrow = filled(trim($heroEyebrow ?? ''));
@@ -55,29 +57,29 @@
 
         $card1Title = $contactCards['card_1_title'] ?? null;
         if (!array_key_exists('card_1_title', $contactCards)) {
-            $card1Title = 'Teléfono y Urgencias';
+            $card1Title = __('Teléfono y Urgencias');
         }
         $card1Desc = $contactCards['card_1_desc'] ?? null;
         if (!array_key_exists('card_1_desc', $contactCards)) {
-            $card1Desc = 'Línea directa para consultas generales y emergencias odontológicas 24/7.';
+            $card1Desc = __('Línea directa para consultas generales y emergencias odontológicas 24/7.');
         }
 
         $card2Title = $contactCards['card_2_title'] ?? null;
         if (!array_key_exists('card_2_title', $contactCards)) {
-            $card2Title = 'Correo Electrónico';
+            $card2Title = __('Correo Electrónico');
         }
         $card2Desc = $contactCards['card_2_desc'] ?? null;
         if (!array_key_exists('card_2_desc', $contactCards)) {
-            $card2Desc = 'Envíanos tus dudas, historial clínico o consultas sobre presupuestos.';
+            $card2Desc = __('Envíanos tus dudas, historial clínico o consultas sobre presupuestos.');
         }
 
         $card3Title = $contactCards['card_3_title'] ?? null;
         if (!array_key_exists('card_3_title', $contactCards)) {
-            $card3Title = 'Ubicación de la Clínica';
+            $card3Title = __('Ubicación de la Clínica');
         }
         $card3Desc = $contactCards['card_3_desc'] ?? null;
         if (!array_key_exists('card_3_desc', $contactCards)) {
-            $card3Desc = 'Ubicación céntrica con estacionamiento gratuito para pacientes.';
+            $card3Desc = __('Ubicación céntrica con estacionamiento gratuito para pacientes.');
         }
 
         $hasCard1Title = filled(trim($card1Title ?? ''));
@@ -92,17 +94,17 @@
 
         $faqEyebrow = $contactFaqs['eyebrow'] ?? null;
         if (!array_key_exists('eyebrow', $contactFaqs)) {
-            $faqEyebrow = 'PREGUNTAS FRECUENTES';
+            $faqEyebrow = __('PREGUNTAS FRECUENTES');
         }
 
         $faqTitle = $contactFaqs['title'] ?? null;
         if (!array_key_exists('title', $contactFaqs)) {
-            $faqTitle = 'Orientación al Paciente';
+            $faqTitle = __('Orientación al Paciente');
         }
 
         $faqSubtitle = $contactFaqs['subtitle'] ?? null;
         if (!array_key_exists('subtitle', $contactFaqs)) {
-            $faqSubtitle = 'Respuestas a las dudas más comunes antes de visitar nuestra clínica.';
+            $faqSubtitle = __('Respuestas a las dudas más comunes antes de visitar nuestra clínica.');
         }
 
         $hasFaqEyebrow = filled(trim($faqEyebrow ?? ''));
@@ -122,16 +124,16 @@
         if (empty($contactFaqItems)) {
             $contactFaqItems = [
                 [
-                    'question' => '¿Debo reservar turno previo para una consulta o urgencia?',
-                    'answer' => 'Para consultas programadas recomendamos reservar online con anticipación. Para urgencias odontológicas de dolor agudo, atendemos prioritariamente con llamada previa.',
+                    'question' => __('¿Debo reservar turno previo para una consulta o urgencia?'),
+                    'answer' => __('Para consultas programadas recomendamos reservar online con anticipación. Para urgencias odontológicas de dolor agudo, atendemos prioritariamente con llamada previa.'),
                 ],
                 [
-                    'question' => '¿Cuentan con opciones de financiamiento y seguro médico?',
-                    'answer' => 'Sí, trabajamos con los principales seguros dentales y disponemos de planes de pago en cuotas fijas para tratamientos de ortodoncia e implantes.',
+                    'question' => __('¿Cuentan con opciones de financiamiento y seguro médico?'),
+                    'answer' => __('Sí, trabajamos con los principales seguros dentales y disponemos de planes de pago en cuotas fijas para tratamientos de ortodoncia e implantes.'),
                 ],
                 [
-                    'question' => '¿Dónde puedo estacionar cuando asisto a la clínica?',
-                    'answer' => 'Contamos con estacionamiento exclusivo y gratuito para nuestros pacientes justo frente al ingreso principal de la clínica.',
+                    'question' => __('¿Dónde puedo estacionar cuando asisto a la clínica?'),
+                    'answer' => __('Contamos con estacionamiento exclusivo y gratuito para nuestros pacientes justo frente al ingreso principal de la clínica.'),
                 ],
             ];
         }
@@ -188,7 +190,7 @@
                             {{ $clinic->phone }}
                         </a>
                         <a href="tel:{{ preg_replace('/[^0-9+]/', '', $clinic->emergency_phone ?? $clinic->phone) }}" class="text-slate-500 font-bold text-xs hover:underline block mt-1">
-                            Urgencias: {{ $clinic->emergency_phone ?? $clinic->phone }}
+                            {{ __('Urgencias') }}: {{ $clinic->emergency_phone ?? $clinic->phone }}
                         </a>
                     </div>
 
@@ -226,7 +228,7 @@
                             {{ $card3Desc }}
                         </p>
                         <span class="text-slate-800 font-extrabold text-xs block">{{ $clinic->address }}</span>
-                        <a href="#mapSection" class="text-sky-500 font-bold text-xs hover:underline block mt-1">Ver mapa interactivo »</a>
+                        <a href="#mapSection" class="text-sky-500 font-bold text-xs hover:underline block mt-1">{{ __('Ver mapa interactivo »') }}</a>
                     </div>
 
                 </div>
@@ -239,9 +241,9 @@
                     <!-- Left Column: Contact Form -->
                     <div class="bg-slate-50 p-8 sm:p-10 rounded-3xl border border-slate-200/80 shadow-lg">
                         <div class="mb-6">
-                            <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">MENSAJE DIRECTO</span>
-                            <h2 class="text-3xl font-black text-slate-900">Envíanos un Mensaje</h2>
-                            <p class="text-xs text-slate-500 mt-1">Nuestro equipo de atención al paciente te responderá prontamente.</p>
+                            <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">{{ __('MENSAJE DIRECTO') }}</span>
+                            <h2 class="text-3xl font-black text-slate-900">{{ __('Envíanos un Mensaje') }}</h2>
+                            <p class="text-xs text-slate-500 mt-1">{{ __('Nuestro equipo de atención al paciente te responderá prontamente.') }}</p>
                         </div>
 
                         <!-- Feedback Success Alert -->
@@ -249,12 +251,12 @@
                             <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-2xl font-bold">
                                 ✓
                             </div>
-                            <h3 class="text-2xl font-black">¡Mensaje Enviado con Éxito!</h3>
+                            <h3 class="text-2xl font-black">{{ __('¡Mensaje Enviado con Éxito!') }}</h3>
                             <p class="text-xs text-emerald-700 leading-relaxed max-w-md mx-auto">
-                                Gracias por escribir a {{ $clinic->clinic_name }}. Nuestro equipo de recepción se pondrá en contacto contigo a la brevedad.
+                                {{ __('Gracias por escribir a :clinic. Nuestro equipo de recepción se pondrá en contacto contigo a la brevedad.', ['clinic' => $clinic->clinic_name]) }}
                             </p>
                             <button type="button" @click="contactSubmitted = false" class="text-xs text-sky-600 font-bold underline">
-                                Enviar otro mensaje
+                                {{ __('Enviar otro mensaje') }}
                             </button>
                         </div>
 
@@ -282,12 +284,12 @@
                                         contactSubmitted = true;
                                         formEl.reset();
                                     } else {
-                                        errorMessage = body.message || 'Ocurrió un error al enviar el mensaje. Verifica los datos.';
+                                        errorMessage = body.message || '{{ __('Ocurrió un error al enviar el mensaje. Verifica los datos.') }}';
                                     }
                                 })
                                 .catch(err => {
                                     isSubmitting = false;
-                                    errorMessage = 'Error de conexión. Intenta nuevamente o contáctanos por WhatsApp.';
+                                    errorMessage = '{{ __('Error de conexión. Intenta nuevamente o contáctanos por WhatsApp.') }}';
                                 })
                             "
                             class="space-y-4"
@@ -297,29 +299,29 @@
                             <div x-show="errorMessage" x-cloak class="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold" x-text="errorMessage"></div>
 
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre Completo *</label>
-                                <input type="text" name="name" required placeholder="Ej: Marcela Gómez" class="w-full p-3.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800 focus:outline-hidden focus:border-sky-500 transition-colors" />
+                                <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">{{ __('Nombre Completo') }} *</label>
+                                <input type="text" name="name" required placeholder="{{ __('Ej: Marcela Gómez') }}" class="w-full p-3.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800 focus:outline-hidden focus:border-sky-500 transition-colors" />
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Correo Electrónico *</label>
-                                    <input type="email" name="email" required placeholder="marcela@ejemplo.com" class="w-full p-3.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800 focus:outline-hidden focus:border-sky-500 transition-colors" />
+                                    <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">{{ __('Correo Electrónico') }} *</label>
+                                    <input type="email" name="email" required placeholder="{{ __('marcela@ejemplo.com') }}" class="w-full p-3.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800 focus:outline-hidden focus:border-sky-500 transition-colors" />
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Teléfono / WhatsApp</label>
+                                    <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">{{ __('Teléfono / WhatsApp') }}</label>
                                     <input type="tel" name="phone" placeholder="+1 (555) 000-0000" class="w-full p-3.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800 focus:outline-hidden focus:border-sky-500 transition-colors" />
                                 </div>
                             </div>
 
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Asunto o Consulta</label>
-                                <input type="text" name="subject" placeholder="Ej: Consulta sobre ortodoncia invisible, seguro médico, etc." class="w-full p-3.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800 focus:outline-hidden focus:border-sky-500 transition-colors" />
+                                <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">{{ __('Asunto o Consulta') }}</label>
+                                <input type="text" name="subject" placeholder="{{ __('Ej: Consulta sobre ortodoncia invisible, seguro médico, etc.') }}" class="w-full p-3.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800 focus:outline-hidden focus:border-sky-500 transition-colors" />
                             </div>
 
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Mensaje *</label>
-                                <textarea name="message" rows="4" required placeholder="Escribe aquí tu consulta o requerimiento específico..." class="w-full p-3.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800 focus:outline-hidden focus:border-sky-500 transition-colors"></textarea>
+                                <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">{{ __('Mensaje') }} *</label>
+                                <textarea name="message" rows="4" required placeholder="{{ __('Escribe aquí tu consulta o requerimiento específico...') }}" class="w-full p-3.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-800 focus:outline-hidden focus:border-sky-500 transition-colors"></textarea>
                             </div>
 
                             <button
@@ -327,7 +329,7 @@
                                 :disabled="isSubmitting"
                                 class="w-full bg-sky-500 hover:bg-sky-600 disabled:opacity-50 text-white py-4 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-sky-500/25 transition-all flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95"
                             >
-                                <span x-text="isSubmitting ? 'Enviando mensaje...' : 'Enviar Mensaje Directo »'"></span>
+                                <span x-text="isSubmitting ? '{{ __('Enviando mensaje...') }}' : '{{ __('Enviar Mensaje Directo »') }}'"></span>
                             </button>
                         </form>
                     </div>
@@ -338,7 +340,7 @@
                         <!-- Map Container -->
                         <div class="rounded-3xl overflow-hidden shadow-xl border border-slate-200 h-[380px] bg-slate-100">
                             <iframe
-                                title="Ubicación de la clínica"
+                                title="{{ __('Ubicación de la clínica') }}"
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2886.536648785863!2d-79.38705428450209!3d43.64256627912166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x882b34d68bf33a9b%3A0x15f79d4949544e3!2sCN%20Tower!5e0!3m2!1sen!2sca!4v1650000000000!5m2!1sen!2sca"
                                 width="100%"
                                 height="100%"
@@ -359,14 +361,14 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <h4 class="font-extrabold text-white text-sm">Horarios de Atención Clínica</h4>
+                                    <h4 class="font-extrabold text-white text-sm">{{ __('Horarios de Atención Clínica') }}</h4>
                                     <p class="text-xs text-slate-300 mt-0.5">
-                                        {{ $clinic->opening_hours ?? 'Lunes a Viernes: 8:00 AM - 7:00 PM | Sábados: 9:00 AM - 3:00 PM' }}
+                                        {{ $clinic->opening_hours ?? __('Lunes a Viernes: 8:00 AM - 7:00 PM | Sábados: 9:00 AM - 3:00 PM') }}
                                     </p>
                                 </div>
                             </div>
                             <a href="{{ route('schedule') }}" class="hidden sm:inline-block px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sky-400 font-bold text-xs uppercase tracking-wider transition-colors">
-                                Reservar Cita
+                                {{ __('Reservar Cita') }}
                             </a>
                         </div>
 

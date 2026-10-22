@@ -23,92 +23,92 @@ class ClinicSettingForm
             // ==========================================
             // SECCIÓN 1: IDENTIDAD, MARCA Y LOGOTIPOS
             // ==========================================
-            Section::make('Identidad, Marca y Logotipos')
-                ->description('Nombre comercial, eslogan, logotipo oficial y favicon para las pestañas del navegador.')
+            Section::make(__('Brand Identity & Logos'))
+                ->description(__('Commercial name, tagline, official logo, and browser favicon.'))
                 ->icon('heroicon-o-building-office-2')
                 ->schema([
                     Grid::make(['default' => 1, 'sm' => 2])
                         ->schema([
                             TextInput::make('clinic_name')
-                                ->label('Nombre de la Clínica')
-                                ->placeholder('ej. Aura Dental Studio')
+                                ->label(__('Clinic Name'))
+                                ->placeholder('Aura Dental Studio')
                                 ->prefixIcon('heroicon-o-sparkles')
                                 ->required()
                                 ->maxLength(255)
-                                ->helperText('Nombre principal visible en la cabecera, pie de página y metadatos.'),
+                                ->helperText(__('Main name visible on header, footer, and metadata.')),
 
                             TextInput::make('tagline')
-                                ->label('Lema / Eslogan Institucional')
-                                ->placeholder('ej. Odontología moderna, integral y sin dolor...')
+                                ->label(__('Tagline / Institutional Slogan'))
+                                ->placeholder(__('e.g. Modern, comprehensive, and pain-free dentistry...'))
                                 ->prefixIcon('heroicon-o-chat-bubble-bottom-center-text')
                                 ->maxLength(255)
-                                ->helperText('Frase representativa mostrada en la página de inicio y el pie de página.'),
+                                ->helperText(__('Representative tagline displayed on the homepage and footer.')),
                         ]),
 
                     Grid::make(['default' => 1, 'sm' => 2])
                         ->schema([
                             FileUpload::make('logo_url')
-                                ->label('Logo Oficial de la Clínica')
+                                ->label(__('Official Clinic Logo'))
                                 ->image()
                                 ->directory('clinic')
                                 ->disk('public')
                                 ->maxSize(2048)
                                 ->imagePreviewHeight('120')
                                 ->nullable()
-                                ->helperText('Logotipo en formato PNG transparente, SVG o WebP. Se muestra en la cabecera y pie de página de la web.'),
+                                ->helperText(__('Logo in transparent PNG, SVG, or WebP. Displayed on website header and footer.')),
 
                             FileUpload::make('favicon_url')
-                                ->label('Favicon para Pestaña del Navegador')
+                                ->label(__('Browser Tab Favicon'))
                                 ->image()
                                 ->directory('clinic')
                                 ->disk('public')
                                 ->maxSize(1024)
                                 ->imagePreviewHeight('120')
                                 ->nullable()
-                                ->helperText('Icono cuadrado (PNG, ICO o SVG, 32×32 o 64×64 px) que aparece en la pestaña del navegador de los pacientes.'),
+                                ->helperText(__('Square icon (PNG, ICO, or SVG, 32×32 or 64×64 px) appearing in patient browser tabs.')),
                         ]),
                 ]),
 
             // ==========================================
             // SECCIÓN 2: CANALES DE CONTACTO Y URGENCIAS
             // ==========================================
-            Section::make('Canales de Comunicación y Contacto')
-                ->description('Líneas telefónicas y correo electrónico oficial para atención de pacientes y urgencias.')
+            Section::make(__('Communication & Contact Channels'))
+                ->description(__('Phone lines and official email for patient care and emergencies.'))
                 ->icon('heroicon-o-phone')
                 ->schema([
                     Grid::make(['default' => 1, 'sm' => 2])
                         ->schema([
                             TextInput::make('phone')
-                                ->label('Teléfono Principal')
+                                ->label(__('Main Phone'))
                                 ->tel()
                                 ->telRegex('/^[+0-9\s()\-.]+$/')
                                 ->validationMessages([
-                                    'regex' => 'El formato del teléfono no es válido (solo números, espacios, +, -, ()).',
+                                    'regex' => __('Invalid phone format (numbers, spaces, +, -, () only).'),
                                 ])
                                 ->prefixIcon('heroicon-o-phone')
                                 ->placeholder('+1 (555) 234-5678')
                                 ->required()
-                                ->helperText('Línea telefónica principal de atención al paciente y reservas.'),
+                                ->helperText(__('Main telephone line for patient care and appointments.')),
 
                             TextInput::make('email')
-                                ->label('Correo Electrónico de Contacto')
+                                ->label(__('Contact Email'))
                                 ->email()
                                 ->prefixIcon('heroicon-o-envelope')
                                 ->placeholder('contacto@auradental.com')
                                 ->required()
-                                ->helperText('Buzón para confirmaciones de citas y consultas generales.'),
+                                ->helperText(__('Mailbox for appointment confirmations and general inquiries.')),
 
                             TextInput::make('emergency_phone')
-                                ->label('Teléfono de Urgencias (Opcional)')
+                                ->label(__('Emergency Phone (Optional)'))
                                 ->tel()
                                 ->telRegex('/^[+0-9\s()\-.]+$/')
                                 ->validationMessages([
-                                    'regex' => 'El formato del teléfono no es válido (solo números, espacios, +, -, ()).',
+                                    'regex' => __('Invalid phone format (numbers, spaces, +, -, () only).'),
                                 ])
                                 ->prefixIcon('heroicon-o-shield-exclamation')
                                 ->placeholder('+1 (555) 911-7775')
                                 ->nullable()
-                                ->helperText('Línea prioritaria destacada para dolores agudos o urgencias fuera de hora.')
+                                ->helperText(__('Priority hotline for acute pain or after-hours emergencies.'))
                                 ->columnSpanFull(),
                         ]),
                 ]),
@@ -116,38 +116,38 @@ class ClinicSettingForm
             // ==========================================
             // SECCIÓN 3: SEDE FÍSICA Y HORARIOS
             // ==========================================
-            Section::make('Ubicación y Horarios de Atención')
-                ->description('Dirección de las instalaciones físicas, enlace cartográfico y disponibilidad horaria.')
+            Section::make(__('Location & Operating Hours'))
+                ->description(__('Physical premises address, map link, and schedule availability.'))
                 ->icon('heroicon-o-map-pin')
                 ->schema([
                     TextInput::make('address')
-                        ->label('Dirección Física')
+                        ->label(__('Physical Address'))
                         ->prefixIcon('heroicon-o-map-pin')
-                        ->placeholder('ej. 742 Evergreen Terrace, Suite 100, Beverly Hills, CA 90210')
+                        ->placeholder('742 Evergreen Terrace, Suite 100, Beverly Hills, CA 90210')
                         ->required()
                         ->maxLength(255),
 
                     TextInput::make('google_maps_url')
-                        ->label('Enlace de Google Maps (URL)')
+                        ->label(__('Google Maps Link (URL)'))
                         ->prefixIcon('heroicon-o-map')
                         ->placeholder('https://maps.google.com/?q=...')
                         ->url()
                         ->nullable()
-                        ->helperText('Permite a los pacientes abrir la ruta de navegación GPS directamente en su móvil.'),
+                        ->helperText(__('Allows patients to open GPS navigation directions directly on mobile.')),
 
                     Textarea::make('opening_hours')
-                        ->label('Horario de Atención al Público')
+                        ->label(__('Opening Hours'))
                         ->rows(3)
-                        ->placeholder("Lunes a Viernes: 8:00 AM - 7:00 PM\nSábado: 9:00 AM - 3:00 PM\nDomingo: Solo Urgencias")
-                        ->helperText('Escribe un horario por línea para que se organice con claridad en la presentación web.')
+                        ->placeholder(__("Monday to Friday: 8:00 AM - 7:00 PM\nSaturday: 9:00 AM - 3:00 PM\nSunday: Emergencies Only"))
+                        ->helperText(__('Write one schedule per line for clear display on the website.'))
                         ->required(),
                 ]),
 
             // ==========================================
             // SECCIÓN 4: PRESENCIA WEB Y REDES SOCIALES
             // ==========================================
-            Section::make('Presencia Digital y Redes Sociales')
-                ->description('Enlaces oficiales a los perfiles de redes sociales de la clínica.')
+            Section::make(__('Digital Presence & Social Media'))
+                ->description(__('Official links to the clinic social media profiles.'))
                 ->icon('heroicon-o-globe-alt')
                 ->schema([
                     Grid::make(['default' => 1, 'sm' => 3])

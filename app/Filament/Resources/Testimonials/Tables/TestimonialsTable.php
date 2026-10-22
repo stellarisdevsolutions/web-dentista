@@ -19,45 +19,45 @@ class TestimonialsTable
             ->defaultSort('order', 'asc')
             ->columns([
                 ImageColumn::make('patient_avatar')
-                    ->label('Foto')
+                    ->label(__('Photo'))
                     ->circular()
                     ->disk('public'),
 
                 TextColumn::make('patient_name')
-                    ->label('Paciente')
+                    ->label(__('Patient'))
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
                 TextColumn::make('rating')
-                    ->label('Calificación')
-                    ->formatStateUsing(fn ($state) => str_repeat('★', (int) $state).str_repeat('☆', 5 - (int) $state))
-                    ->color('warning')
+                    ->label(__('Rating'))
+                    ->formatStateUsing(fn ($state) => number_format((float) $state, 1).' / 5.0')
+                    ->color('primary')
                     ->sortable(),
 
                 TextColumn::make('treatment')
-                    ->label('Tratamiento Realizado')
+                    ->label(__('Completed Treatment'))
                     ->searchable(),
 
                 TextColumn::make('source')
-                    ->label('Origen')
+                    ->label(__('Source'))
                     ->badge(),
 
                 ToggleColumn::make('is_verified')
-                    ->label('Verificado'),
+                    ->label(__('Verified')),
 
                 ToggleColumn::make('is_active')
-                    ->label('Activo'),
+                    ->label(__('Active')),
 
                 TextColumn::make('order')
-                    ->label('Orden')
+                    ->label(__('Sort Order'))
                     ->sortable(),
             ])
             ->filters([
                 TernaryFilter::make('is_verified')
-                    ->label('Solo Verificados'),
+                    ->label(__('Only verified')),
                 TernaryFilter::make('is_active')
-                    ->label('Solo Activos'),
+                    ->label(__('Only active')),
             ])
             ->recordActions([
                 EditAction::make(),

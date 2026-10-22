@@ -24,101 +24,101 @@ class ServicesTable
             ->recordAction(null)
             ->recordUrl(null)
             ->header(view('filament.resources.services.table-header'))
-            ->emptyStateHeading('No hay tratamientos registrados')
-            ->emptyStateDescription('Comienza añadiendo los servicios y procedimientos odontológicos de la clínica.')
+            ->emptyStateHeading(__('No treatments registered'))
+            ->emptyStateDescription(__('Start by adding clinic services and dental procedures.'))
             ->emptyStateIcon('heroicon-o-sparkles')
             ->columns([
                 ImageColumn::make('image')
-                    ->label('Imagen')
+                    ->label(__('Image'))
                     ->disk('public')
                     ->defaultImageUrl(fn (Service $record): string => $record->image_url)
                     ->extraImgAttributes(['class' => 'rounded-xl object-cover shadow-xs border border-slate-200/80'])
                     ->size(46),
 
                 TextColumn::make('name')
-                    ->label('Tratamiento')
+                    ->label(__('Treatment'))
                     ->searchable()
                     ->sortable()
                     ->weight(FontWeight::Bold)
                     ->description(fn (Service $record): string => $record->short_description ? Str::limit($record->short_description, 50) : '—'),
 
                 TextColumn::make('category')
-                    ->label('Categoría')
+                    ->label(__('Category'))
                     ->badge()
                     ->color('info')
                     ->searchable(),
 
                 TextColumn::make('price')
-                    ->label('Precio Base')
+                    ->label(__('Base Price'))
                     ->money('USD')
                     ->sortable(),
 
                 TextColumn::make('duration_minutes')
-                    ->label('Duración')
+                    ->label(__('Duration'))
                     ->suffix(' min')
                     ->icon('heroicon-o-clock')
                     ->sortable(),
 
                 TextColumn::make('dentists_count')
                     ->counts('dentists')
-                    ->label('Especialistas')
+                    ->label(__('Specialists'))
                     ->badge()
                     ->color('success')
                     ->icon('heroicon-o-user-group')
                     ->sortable(),
 
                 ToggleColumn::make('allows_online_booking')
-                    ->label('Reserva Web')
+                    ->label(__('Online Booking'))
                     ->afterStateUpdated(function (Service $record, bool $state): void {
                         Notification::make()
-                            ->title($state ? 'Reserva online habilitada' : 'Reserva online pausada')
-                            ->body($state ? "Los pacientes pueden reservar '{$record->name}' en la web." : "Se pausó la reserva online para '{$record->name}'.")
+                            ->title($state ? __('Online booking enabled') : __('Online booking paused'))
+                            ->body($state ? __("Patients can book ':name' on the website.", ['name' => $record->name]) : __("Online booking paused for ':name'.", ['name' => $record->name]))
                             ->color($state ? 'success' : 'gray')
                             ->icon($state ? 'heroicon-o-globe-alt' : 'heroicon-o-pause-circle')
                             ->send();
                     }),
 
                 ToggleColumn::make('is_featured')
-                    ->label('Destacado')
+                    ->label(__('Featured'))
                     ->afterStateUpdated(function (Service $record, bool $state): void {
                         Notification::make()
-                            ->title($state ? 'Tratamiento destacado' : 'Tratamiento no destacado')
-                            ->body($state ? "'{$record->name}' ahora se muestra en la portada web." : "'{$record->name}' se quitó de la portada web.")
+                            ->title($state ? __('Featured treatment') : __('Not featured treatment'))
+                            ->body($state ? __("':name' is now featured on the website homepage.", ['name' => $record->name]) : __("':name' removed from website homepage.", ['name' => $record->name]))
                             ->color($state ? 'success' : 'gray')
                             ->icon($state ? 'heroicon-o-star' : 'heroicon-o-minus-circle')
                             ->send();
                     }),
 
                 ToggleColumn::make('is_active')
-                    ->label('Activo')
+                    ->label(__('Active'))
                     ->afterStateUpdated(function (Service $record, bool $state): void {
                         Notification::make()
-                            ->title($state ? 'Tratamiento activado' : 'Tratamiento desactivado')
-                            ->body($state ? "'{$record->name}' está activo en el catálogo y sistema." : "'{$record->name}' se desactivó del catálogo.")
+                            ->title($state ? __('Treatment activated') : __('Treatment deactivated'))
+                            ->body($state ? __("':name' is active in catalog and system.", ['name' => $record->name]) : __("':name' deactivated from catalog.", ['name' => $record->name]))
                             ->color($state ? 'success' : 'gray')
                             ->icon($state ? 'heroicon-o-check-circle' : 'heroicon-o-pause-circle')
                             ->send();
                     }),
 
                 TextColumn::make('order')
-                    ->label('Orden')
+                    ->label(__('Order'))
                     ->sortable(),
             ])
             ->filters([
                 TernaryFilter::make('is_active')
-                    ->label('Estado Activo'),
+                    ->label(__('Active Status')),
                 TernaryFilter::make('allows_online_booking')
-                    ->label('Reserva Online Permitida'),
+                    ->label(__('Online Booking Allowed')),
                 TernaryFilter::make('is_featured')
-                    ->label('Destacado en Inicio'),
+                    ->label(__('Featured on Home')),
             ])
             ->recordActions([
                 EditAction::make()
                     ->iconButton()
-                    ->tooltip('Editar tratamiento'),
+                    ->tooltip(__('Edit treatment')),
                 DeleteAction::make()
                     ->iconButton()
-                    ->tooltip('Eliminar tratamiento'),
+                    ->tooltip(__('Delete treatment')),
             ]);
     }
 }

@@ -13,35 +13,33 @@ class FaqForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $isSpanish = app()->getLocale() === 'es';
-
         return $schema
             ->components([
-                Section::make($isSpanish ? 'Pregunta y Respuesta' : 'FAQ Content')
+                Section::make(__('FAQ Content'))
                     ->schema([
                         TextInput::make('category')
-                            ->label('Categoría')
-                            ->placeholder('ej. Citas y Reservas, Precios y Seguros')
+                            ->label(__('Category'))
+                            ->placeholder(__('e.g. Appointments & Bookings, Pricing & Insurance'))
                             ->maxLength(100),
                         TextInput::make('question')
-                            ->label('Pregunta')
+                            ->label(__('Question'))
                             ->required()
                             ->maxLength(255),
                         Textarea::make('answer')
-                            ->label('Respuesta')
+                            ->label(__('Answer'))
                             ->required()
                             ->rows(4),
                     ]),
 
-                Section::make($isSpanish ? 'Orden y Visibilidad' : 'Display Order & Status')
+                Section::make(__('Display Order & Status'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 Toggle::make('is_active')
-                                    ->label($isSpanish ? 'Visible en la Web' : 'Visible on Website')
+                                    ->label(__('Visible on Website'))
                                     ->default(true),
                                 TextInput::make('order')
-                                    ->label($isSpanish ? 'Orden' : 'Sort Order')
+                                    ->label(__('Sort Order'))
                                     ->numeric()
                                     ->default(0),
                             ]),

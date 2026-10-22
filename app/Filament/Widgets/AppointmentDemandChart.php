@@ -43,7 +43,7 @@ class AppointmentDemandChart extends ChartWidget
 
     public function getHeading(): string|Htmlable|null
     {
-        return 'Demanda de citas · últimos 7 días';
+        return __('Appointment demand · last 7 days');
     }
 
     public function getChartDataProperty(): AppointmentDemandChartData
@@ -58,7 +58,7 @@ class AppointmentDemandChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Citas agendadas',
+                    'label' => __('Scheduled appointments'),
                     'data' => $data->counts,
                     'backgroundColor' => $data->backgroundColors,
                     'borderRadius' => 12,
@@ -78,7 +78,10 @@ class AppointmentDemandChart extends ChartWidget
 
     protected function getOptions(): array|RawJs|null
     {
-        return RawJs::make(<<<'JS'
+        $single = addslashes(__('appointment'));
+        $plural = addslashes(__('appointments'));
+
+        return RawJs::make(<<<JS
             {
                 maintainAspectRatio: false,
                 responsive: true,
@@ -102,7 +105,7 @@ class AppointmentDemandChart extends ChartWidget
                             },
                             label: function(context) {
                                 const count = context.parsed.y;
-                                return count === 1 ? '1 cita' : count + ' citas';
+                                return count === 1 ? '1 {$single}' : count + ' {$plural}';
                             }
                         }
                     },

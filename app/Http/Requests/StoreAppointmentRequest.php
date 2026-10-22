@@ -54,7 +54,7 @@ class StoreAppointmentRequest extends FormRequest
             'patient_name.required' => 'Por favor, ingresa tu nombre completo.',
             'patient_email.required' => 'Por favor, ingresa tu correo electrónico.',
             'patient_email.email' => 'El correo electrónico no es válido.',
-            'patient_phone.required' => 'Por favor, ingresa tu número de teléfono o WhatsApp.',
+            'patient_phone.required' => __('Por favor, ingresa tu número de teléfono o WhatsApp.'),
         ];
     }
 }

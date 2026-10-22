@@ -16,7 +16,7 @@ class ListPosts extends ListRecords
     {
         return [
             CreateAction::make()
-                ->label('+ Nuevo Artículo')
+                ->label('+ '.__('New Article'))
                 ->extraAttributes([
                     'style' => 'border-radius: 9999px !important; background-color: #0EA5E9 !important; color: #0F172A !important; font-weight: 800 !important; min-height: 48px !important; padding: 0 24px !important; box-shadow: 0 10px 24px rgba(14, 165, 233, 0.40) !important; border: none !important; font-size: 14px !important;',
                 ]),
@@ -47,13 +47,13 @@ class ListPosts extends ListRecords
                 'id' => $post->id,
                 'title' => $post->title,
                 'slug' => $post->slug,
-                'category' => $post->category ?? 'Sin categoría',
+                'category' => $post->category ?? __('Uncategorized'),
                 'excerpt' => $post->excerpt,
                 'content' => $post->content,
                 'cover_image_url' => $post->cover_image_url,
                 'is_published' => (bool) $post->is_published,
                 'published_at' => $post->published_at?->format('d M, Y H:i'),
-                'published_at_human' => $post->published_at?->diffForHumans(),
+                'published_at_human' => $post->published_at?->locale(app()->getLocale())->diffForHumans(),
                 'reading_time' => $post->reading_time,
                 'public_url' => url('/blog/'.$post->slug),
                 'display_url' => $displayUrl,

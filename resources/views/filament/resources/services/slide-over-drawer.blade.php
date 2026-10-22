@@ -25,7 +25,7 @@
             try {
                 const res = await $wire.getServiceDetails(id);
                 if (!res) {
-                    this.errorMessage = 'No se encontró el tratamiento solicitado o no tienes permisos para verlo.';
+                    this.errorMessage = '{{ __('The requested treatment was not found or you do not have permission to view it.') }}';
                     this.isLoading = false;
                     return;
                 }
@@ -33,7 +33,7 @@
                 this.isLoading = false;
             } catch (err) {
                 console.error('Error al cargar datos del tratamiento:', err);
-                this.errorMessage = 'Ocurrió un error inesperado al cargar la información del tratamiento.';
+                this.errorMessage = '{{ __('An unexpected error occurred while loading treatment information.') }}';
                 this.isLoading = false;
             }
         },
@@ -87,10 +87,10 @@
                     </div>
                     <div>
                         <h3 class="font-black text-slate-900 dark:text-white text-base tracking-tight leading-tight">
-                            Detalle del Tratamiento
+                            {{ __('Treatment Details') }}
                         </h3>
                         <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
-                            Ficha clínica, tarifas y especialistas asignados
+                            {{ __('Clinical record, fees and assigned specialists') }}
                         </p>
                     </div>
                 </div>
@@ -102,13 +102,13 @@
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
-                            Editar
+                            {{ __('Edit') }}
                         </a>
                     </template>
                     <button @click="close()"
                             type="button"
                             class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white transition-colors"
-                            aria-label="Cerrar panel">
+                            aria-label="{{ __('Close panel') }}">
                         <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -141,7 +141,7 @@
                     </div>
                     <p class="text-sm font-semibold text-slate-800 dark:text-white" x-text="errorMessage"></p>
                     <button @click="retry()" class="mt-4 px-4 py-2 bg-sky-500 text-white rounded-lg text-xs font-bold hover:bg-sky-600 transition-colors">
-                        Reintentar
+                        {{ __('Retry') }}
                     </button>
                 </div>
 
@@ -164,7 +164,7 @@
                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold"
                               :class="data.is_active ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'">
                             <span class="w-2 h-2 rounded-full" :class="data.is_active ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'"></span>
-                            <span x-text="data.is_active ? 'Activo en Catálogo' : 'Inactivo'"></span>
+                            <span x-text="data.is_active ? '{{ __('Active in Catalog') }}' : '{{ __('Inactive') }}'"></span>
                         </span>
 
                         <template x-if="data.is_featured">
@@ -172,7 +172,7 @@
                                 <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                 </svg>
-                                Destacado en Inicio
+                                {{ __('Featured on Home') }}
                             </span>
                         </template>
 
@@ -181,7 +181,7 @@
                                 <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
-                                Reserva Online
+                                {{ __('Online Booking') }}
                             </span>
                         </template>
                     </div>
@@ -203,7 +203,7 @@
                                 </svg>
                             </div>
                             <div class="min-w-0">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">URL Pública</span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{{ __('Public URL') }}</span>
                                 <span class="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 truncate block" x-text="data.display_url || (window.location.host + '/servicios/' + data.slug)"></span>
                             </div>
                         </div>
@@ -211,7 +211,7 @@
                             <a :href="data.public_url"
                                target="_blank"
                                class="p-2 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-white/5 transition-colors shrink-0"
-                               title="Ver en el sitio web">
+                               title="{{ __('View on website') }}">
                                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
@@ -222,17 +222,17 @@
                     <!-- MÉTRICAS CLAVE (PRECIO, TIEMPO, ORDEN) -->
                     <div class="grid grid-cols-3 gap-3">
                         <div class="bg-white dark:bg-[#0A1730] p-3.5 rounded-xl border border-slate-200/80 dark:border-white/10 text-center">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Precio Base</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">{{ __('Base Price') }}</span>
                             <span class="text-lg font-black text-slate-900 dark:text-white" x-text="data.formatted_price"></span>
                         </div>
 
                         <div class="bg-white dark:bg-[#0A1730] p-3.5 rounded-xl border border-slate-200/80 dark:border-white/10 text-center">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Duración</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">{{ __('Duration') }}</span>
                             <span class="text-lg font-black text-sky-600 dark:text-sky-400" x-text="data.duration_minutes + ' min'"></span>
                         </div>
 
                         <div class="bg-white dark:bg-[#0A1730] p-3.5 rounded-xl border border-slate-200/80 dark:border-white/10 text-center">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Prioridad</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">{{ __('Priority') }}</span>
                             <span class="text-lg font-black text-slate-900 dark:text-white" x-text="'#' + (data.order ?? 0)"></span>
                         </div>
                     </div>
@@ -243,10 +243,10 @@
                             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-sky-500">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
-                            Protocolo Clínico y Detalles
+                            {{ __('Clinical Protocol & Details') }}
                         </div>
                         <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal whitespace-pre-line"
-                           x-text="data.description || 'Sin protocolo clínico detallado registrado.'">
+                           x-text="data.description || '{{ __('No detailed clinical protocol registered.') }}'">
                         </p>
                     </div>
 
@@ -257,10 +257,10 @@
                                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-sky-500">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
-                                Especialistas Asignados
+                                {{ __('Assigned Specialists') }}
                             </div>
                             <span class="text-xs font-bold text-sky-600 dark:text-sky-400"
-                                  x-text="(data.dentists ? data.dentists.length : 0) + ' doctores'">
+                                  x-text="(data.dentists ? data.dentists.length : 0) + ' {{ __('doctors') }}'">
                             </span>
                         </div>
 
@@ -277,14 +277,14 @@
                                     </template>
                                     <div class="min-w-0 flex-1">
                                         <span class="text-xs font-bold text-slate-900 dark:text-white block truncate" x-text="dentist.name"></span>
-                                        <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400 block truncate" x-text="dentist.specialty || dentist.title || 'Cirujano Dentista'"></span>
+                                        <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400 block truncate" x-text="dentist.specialty || dentist.title || '{{ __('Dental Surgeon') }}'"></span>
                                     </div>
                                 </div>
                             </template>
 
                             <template x-if="!data.dentists || data.dentists.length === 0">
                                 <p class="text-xs text-slate-400 italic py-2 text-center">
-                                    No hay especialistas habilitados para este procedimiento aún.
+                                    {{ __('No specialists qualified for this procedure yet.') }}
                                 </p>
                             </template>
                         </div>
@@ -299,7 +299,7 @@
                 <button @click="close()"
                         type="button"
                         class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
-                    Cerrar
+                    {{ __('Close') }}
                 </button>
 
                 <template x-if="data?.edit_url">
@@ -308,7 +308,7 @@
                         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
-                        Editar Tratamiento
+                        {{ __('Edit Treatment') }}
                     </a>
                 </template>
             </div>

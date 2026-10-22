@@ -87,7 +87,7 @@ class EditAppointment extends EditRecord
                     return "https://wa.me/{$phone}?text={$msg}";
                 })
                 ->openUrlInNewTab()
-                ->visible(fn (Appointment $record): bool => filled($record->patient_phone)),
+                ->visible(fn (Appointment $record): bool => filled($record->patient_phone) && app()->getLocale() !== 'en'),
 
             DeleteAction::make(),
         ];

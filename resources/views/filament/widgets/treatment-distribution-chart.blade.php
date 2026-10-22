@@ -54,7 +54,7 @@
                 @if ($data->isEmpty)
                     <div class="aura-donut-empty-overlay">
                         <span class="aura-donut-empty-text">
-                            Aún no hay tratamientos registrados
+                            {{ __('No treatments registered yet') }}
                         </span>
                     </div>
                 @endif
@@ -64,7 +64,7 @@
             <div class="aura-donut-legend" aria-hidden="true">
                 @if ($data->isEmpty)
                     <div class="aura-donut-empty-legend-hint">
-                        Sin datos en los últimos 30 días
+                        {{ __('No data in the last 30 days') }}
                     </div>
                 @else
                     @foreach ($data->legendItems as $item)
@@ -86,12 +86,12 @@
         {{-- Tabla de datos accesible para lectores de pantalla --}}
         <div class="sr-only fi-sr-only" style="position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important;">
             <table>
-                <caption>Distribución de tratamientos en los últimos 30 días</caption>
+                <caption>{{ __('Treatment distribution for the last 30 days') }}</caption>
                 <thead>
                     <tr>
-                        <th scope="col">Tratamiento</th>
-                        <th scope="col">Citas</th>
-                        <th scope="col">Porcentaje</th>
+                        <th scope="col">{{ __('Treatment') }}</th>
+                        <th scope="col">{{ __('Appointments') }}</th>
+                        <th scope="col">{{ __('Percentage') }}</th>
                     </tr>
                 </thead>
                 <tbody>

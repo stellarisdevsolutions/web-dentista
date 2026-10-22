@@ -25,7 +25,7 @@
             try {
                 const res = await $wire.getPostDetails(id);
                 if (!res) {
-                    this.errorMessage = 'No se encontró el artículo solicitado o no tienes permisos para verlo.';
+                    this.errorMessage = '{{ __('The requested article was not found or you do not have permission to view it.') }}';
                     this.isLoading = false;
                     return;
                 }
@@ -33,7 +33,7 @@
                 this.isLoading = false;
             } catch (err) {
                 console.error('Error al cargar datos del artículo:', err);
-                this.errorMessage = 'Ocurrió un error inesperado al cargar la información del artículo.';
+                this.errorMessage = '{{ __('An unexpected error occurred while loading article information.') }}';
                 this.isLoading = false;
             }
         },
@@ -87,10 +87,10 @@
                     </div>
                     <div>
                         <h3 class="font-black text-slate-900 dark:text-white text-base tracking-tight leading-tight">
-                            Detalle del Artículo
+                            {{ __('Article Details') }}
                         </h3>
                         <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
-                            Lectura editorial, estado y publicación web
+                            {{ __('Editorial reading, status and web publication') }}
                         </p>
                     </div>
                 </div>
@@ -102,13 +102,13 @@
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
-                            Editar
+                            {{ __('Edit') }}
                         </a>
                     </template>
                     <button @click="close()"
                             type="button"
                             class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white transition-colors"
-                            aria-label="Cerrar panel">
+                            aria-label="{{ __('Close') }}">
                         <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -140,7 +140,7 @@
                     </div>
                     <p class="text-sm font-semibold text-slate-800 dark:text-white" x-text="errorMessage"></p>
                     <button @click="retry()" class="mt-4 px-4 py-2 bg-sky-500 text-white rounded-lg text-xs font-bold hover:bg-sky-600 transition-colors">
-                        Reintentar
+                        {{ __('Retry') }}
                     </button>
                 </div>
 
@@ -163,7 +163,7 @@
                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold"
                               :class="data.is_published ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'">
                             <span class="w-2 h-2 rounded-full" :class="data.is_published ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'"></span>
-                            <span x-text="data.is_published ? 'Publicado en la Web' : 'Borrador Privado'"></span>
+                            <span x-text="data.is_published ? '{{ __('Published on the Web') }}' : '{{ __('Private Draft') }}'"></span>
                         </span>
 
                         <template x-if="data.reading_time">
@@ -171,7 +171,7 @@
                                 <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                <span x-text="data.reading_time + ' min de lectura'"></span>
+                                <span x-text="data.reading_time + ' ' + '{{ __('min read') }}'"></span>
                             </span>
                         </template>
                     </div>
@@ -193,7 +193,7 @@
                                 </svg>
                             </div>
                             <div class="min-w-0">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">URL Pública</span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{{ __('Public URL') }}</span>
                                 <span class="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 truncate block" x-text="data.display_url || (window.location.host + '/blog/' + data.slug)"></span>
                             </div>
                         </div>
@@ -201,7 +201,7 @@
                             <a :href="data.public_url"
                                target="_blank"
                                class="p-2 rounded-lg text-slate-400 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-white/5 transition-colors shrink-0"
-                               title="Ver en el sitio web">
+                               title="{{ __('View on website') }}">
                                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
@@ -212,12 +212,12 @@
                     <!-- FECHA DE PUBLICACIÓN Y TIEMPOS -->
                     <div class="grid grid-cols-2 gap-3">
                         <div class="bg-white dark:bg-[#0A1730] p-3.5 rounded-xl border border-slate-200/80 dark:border-white/10 text-center">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Fecha de Publicación</span>
-                            <span class="text-sm font-black text-slate-900 dark:text-white" x-text="data.published_at || 'Sin fecha'"></span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">{{ __('Publication Date') }}</span>
+                            <span class="text-sm font-black text-slate-900 dark:text-white" x-text="data.published_at || '{{ __('No date') }}'"></span>
                         </div>
 
                         <div class="bg-white dark:bg-[#0A1730] p-3.5 rounded-xl border border-slate-200/80 dark:border-white/10 text-center">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Antigüedad</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">{{ __('Age') }}</span>
                             <span class="text-sm font-black text-sky-600 dark:text-sky-400" x-text="data.published_at_human || '—'"></span>
                         </div>
                     </div>
@@ -228,10 +228,10 @@
                             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-sky-500">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
                             </svg>
-                            Contenido del Artículo
+                            {{ __('Article Content') }}
                         </div>
                         <div class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal prose dark:prose-invert max-w-none"
-                             x-html="data.content || '<p class=\'italic text-slate-400\'>Sin contenido redactado aún.</p>'">
+                             x-html="data.content || '<p class=\'italic text-slate-400\'>{{ __('No written content yet.') }}</p>'">
                         </div>
                     </div>
 
@@ -244,7 +244,7 @@
                 <button @click="close()"
                         type="button"
                         class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
-                    Cerrar
+                    {{ __('Close') }}
                 </button>
 
                 <template x-if="data?.edit_url">
@@ -253,7 +253,7 @@
                         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
-                        Editar Artículo
+                        {{ __('Edit Article') }}
                     </a>
                 </template>
             </div>

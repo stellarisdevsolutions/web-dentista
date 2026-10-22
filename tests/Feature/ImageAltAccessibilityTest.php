@@ -47,6 +47,7 @@ class ImageAltAccessibilityTest extends TestCase
     public function test_home_page_renders_english_alt_texts_when_locale_is_en(): void
     {
         config(['app.locale' => 'en']);
+        app()->setLocale('en');
 
         $response = $this->get('/');
 

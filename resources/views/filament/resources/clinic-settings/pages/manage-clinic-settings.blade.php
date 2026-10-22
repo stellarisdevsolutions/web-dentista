@@ -35,19 +35,19 @@
                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                                     <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
                                 </span>
-                                Clínica Activa & Sincronizada
+                                {{ __('Clinic Active & Synchronized') }}
                             </span>
                         </div>
 
                         <p class="text-slate-300 text-sm sm:text-base font-normal max-w-2xl leading-relaxed">
-                            {{ $record->tagline ?: 'Odontología moderna, integral y sin dolor para sonrisas radiantes.' }}
+                            {{ $record->tagline ?: __('Modern, comprehensive, and pain-free dentistry for radiant smiles.') }}
                         </p>
 
                         <div class="pt-1 flex items-center gap-2 text-xs text-slate-400">
                             <svg class="w-4 h-4 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span>Última actualización: {{ $record->updated_at ? $record->updated_at->diffForHumans() : 'Recientemente' }}</span>
+                            <span>{{ __('Last updated:') }} {{ $record->updated_at ? $record->updated_at->locale(app()->getLocale())->diffForHumans() : __('Recently') }}</span>
                         </div>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                         </svg>
-                        <span>Editar Ajustes</span>
+                        <span>{{ __('Edit Settings') }}</span>
                     </button>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                     <svg class="w-4 h-4 text-sky-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
                     </svg>
-                    <span class="truncate">Llamar: {{ $record->phone }}</span>
+                    <span class="truncate">{{ __('Call:') }} {{ $record->phone }}</span>
                 </a>
 
                 <a href="mailto:{{ $record->email }}"
@@ -80,7 +80,7 @@
                     <svg class="w-4 h-4 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                     </svg>
-                    <span class="truncate">Enviar Correo: {{ $record->email }}</span>
+                    <span class="truncate">{{ __('Send Email:') }} {{ $record->email }}</span>
                 </a>
 
                 @if($record->google_maps_url)
@@ -92,7 +92,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                         </svg>
-                        <span class="truncate">Ver Ubicación GPS</span>
+                        <span class="truncate">{{ __('View GPS Location') }}</span>
                     </a>
                 @else
                     <div class="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/5 text-xs text-slate-400">
@@ -100,7 +100,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                         </svg>
-                        <span class="truncate">Sin mapa configurado</span>
+                        <span class="truncate">{{ __('No map configured') }}</span>
                     </div>
                 @endif
             </div>
@@ -123,8 +123,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-base font-bold text-slate-900 dark:text-white">Canales de Atención</h2>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Líneas directas para citas, consultas y urgencias</p>
+                            <h2 class="text-base font-bold text-slate-900 dark:text-white">{{ __('Patient Care Channels') }}</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Direct lines for appointments, inquiries, and emergencies') }}</p>
                         </div>
                     </div>
                 </div>
@@ -139,12 +139,12 @@
                                 </svg>
                             </div>
                             <div class="min-w-0">
-                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Teléfono Principal</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">{{ __('Main Phone') }}</span>
                                 <span class="text-sm font-black text-slate-900 dark:text-white truncate block">{{ $record->phone }}</span>
                             </div>
                         </div>
                         <a href="tel:{{ $record->phone }}" class="px-3 py-1.5 rounded-lg bg-sky-50 dark:bg-sky-500/20 text-sky-700 dark:text-sky-300 hover:bg-sky-100 text-xs font-bold transition-colors">
-                            Llamar
+                            {{ __('Call') }}
                         </a>
                     </div>
 
@@ -157,12 +157,12 @@
                                 </svg>
                             </div>
                             <div class="min-w-0">
-                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Correo de Atención</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">{{ __('Contact Email') }}</span>
                                 <span class="text-sm font-black text-slate-900 dark:text-white truncate block">{{ $record->email }}</span>
                             </div>
                         </div>
                         <a href="mailto:{{ $record->email }}" class="px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 text-xs font-bold transition-colors">
-                            Escribir
+                            {{ __('Write') }}
                         </a>
                     </div>
 
@@ -176,17 +176,17 @@
                             </div>
                             <div class="min-w-0">
                                 <div class="flex items-center gap-2">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 block">Línea de Urgencias</span>
-                                    <span class="px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-rose-500 text-white">Prioritario</span>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 block">{{ __('Emergency Line') }}</span>
+                                    <span class="px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-rose-500 text-white">{{ __('Priority') }}</span>
                                 </div>
                                 <span class="text-sm font-black text-slate-900 dark:text-white truncate block">
-                                    {{ $record->emergency_phone ?: 'Sin línea de urgencias configurada' }}
+                                    {{ $record->emergency_phone ?: __('No emergency line configured') }}
                                 </span>
                             </div>
                         </div>
                         @if($record->emergency_phone)
                             <a href="tel:{{ $record->emergency_phone }}" class="px-3 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold transition-colors">
-                                Llamar
+                                {{ __('Call') }}
                             </a>
                         @endif
                     </div>
@@ -207,8 +207,8 @@
                                 </svg>
                             </div>
                             <div>
-                                <h2 class="text-base font-bold text-slate-900 dark:text-white">Sede y Ubicación</h2>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">Dirección física e integración con mapas GPS</p>
+                                <h2 class="text-base font-bold text-slate-900 dark:text-white">{{ __('Location & Facility') }}</h2>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Physical address and GPS map integration') }}</p>
                             </div>
                         </div>
                     </div>
@@ -216,7 +216,7 @@
                     <div class="space-y-4 pt-4">
                         <!-- Dirección -->
                         <div class="p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/5">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Dirección Registrada</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">{{ __('Registered Address') }}</span>
                             <p class="text-sm font-bold text-slate-800 dark:text-slate-200 leading-relaxed">
                                 {{ $record->address }}
                             </p>
@@ -230,17 +230,17 @@
                                         <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                        Enlace GPS Activo para Pacientes
+                                        {{ __('Active GPS Link for Patients') }}
                                     </span>
                                 </div>
                                 <p class="text-xs text-slate-600 dark:text-slate-300">
-                                    El enlace configurado permite a los visitantes abrir la ruta exacta hacia la clínica desde cualquier app de navegación.
+                                    {{ __('The configured link allows visitors to open exact directions to the clinic from any navigation app.') }}
                                 </p>
                                 <a href="{{ $record->google_maps_url }}"
                                    target="_blank"
                                    rel="noopener noreferrer"
                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition-colors">
-                                    <span>Abrir en Google Maps</span>
+                                    <span>{{ __('Open in Google Maps') }}</span>
                                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                                     </svg>
@@ -249,7 +249,7 @@
                         @else
                             <div class="p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/5 text-center">
                                 <p class="text-xs text-slate-500 dark:text-slate-400">
-                                    No has añadido un enlace a Google Maps. Añade uno editando este perfil para que tus pacientes puedan navegar con 1 clic.
+                                    {{ __('You have not added a Google Maps link. Add one by editing this profile so your patients can navigate in 1 click.') }}
                                 </p>
                             </div>
                         @endif
@@ -258,7 +258,7 @@
 
                 <div class="pt-4 border-t border-slate-100 dark:border-white/5">
                     <span class="text-[11px] text-slate-400 dark:text-slate-500 block">
-                        Visible en la sección de Contacto y en el Pie de Página (Footer) del portal público.
+                        {{ __('Visible in the Contact section and Website Footer.') }}
                     </span>
                 </div>
             </div>
@@ -275,8 +275,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-base font-bold text-slate-900 dark:text-white">Horarios de Atención</h2>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Jornadas y disponibilidad semanal para citas</p>
+                            <h2 class="text-base font-bold text-slate-900 dark:text-white">{{ __('Opening Hours') }}</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Weekly shifts and availability for appointments') }}</p>
                         </div>
                     </div>
                 </div>
@@ -299,7 +299,7 @@
                         </div>
                     @empty
                         <div class="p-4 rounded-xl bg-slate-50 dark:bg-white/5 text-center text-xs text-slate-400">
-                            No hay horarios configurados actualmente.
+                            {{ __('No operating hours configured currently.') }}
                         </div>
                     @endforelse
                 </div>
@@ -309,7 +309,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
                     </svg>
                     <p class="text-xs text-slate-600 dark:text-slate-300">
-                        Estos horarios se reflejan en el footer del portal y en la tarjeta informativa de reservas.
+                        {{ __('These hours are reflected in the portal footer and booking information card.') }}
                     </p>
                 </div>
             </div>
@@ -326,15 +326,15 @@
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-base font-bold text-slate-900 dark:text-white">Presencia Web y Redes</h2>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Configuración global del sitio y perfiles sociales</p>
+                            <h2 class="text-base font-bold text-slate-900 dark:text-white">{{ __('Web Presence & Social') }}</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Global site settings and social profiles') }}</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Identidad Visual en la Web (Logo y Favicon) -->
                 <div class="space-y-3">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Identidad Visual Web</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">{{ __('Web Visual Identity') }}</span>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <!-- Preview Logo -->
                         <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/5 flex items-center gap-3">
@@ -348,9 +348,9 @@
                                 @endif
                             </div>
                             <div class="min-w-0 flex-1">
-                                <span class="text-xs font-bold text-slate-900 dark:text-white block">Logo de la Clínica</span>
+                                <span class="text-xs font-bold text-slate-900 dark:text-white block">{{ __('Clinic Logo') }}</span>
                                 <span class="text-[11px] text-slate-500 dark:text-slate-400 block truncate">
-                                    {{ $record->logo_url ? 'Logotipo oficial activo' : 'Usando isotipo por defecto' }}
+                                    {{ $record->logo_url ? __('Official logo active') : __('Using default logomark') }}
                                 </span>
                             </div>
                         </div>
@@ -367,9 +367,9 @@
                                 @endif
                             </div>
                             <div class="min-w-0 flex-1">
-                                <span class="text-xs font-bold text-slate-900 dark:text-white block">Favicon de Pestaña</span>
+                                <span class="text-xs font-bold text-slate-900 dark:text-white block">{{ __('Browser Favicon') }}</span>
                                 <span class="text-[11px] text-slate-500 dark:text-slate-400 block truncate">
-                                    {{ $record->favicon_url ? 'Icono de pestaña activo' : 'Icono SVG por defecto' }}
+                                    {{ $record->favicon_url ? __('Active tab icon') : __('Default SVG icon') }}
                                 </span>
                             </div>
                         </div>
@@ -378,7 +378,7 @@
 
                 <!-- Redes Sociales -->
                 <div class="space-y-3 pt-2">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Redes Sociales Oficiales</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">{{ __('Official Social Networks') }}</span>
 
                     @php
                         $socials = $record->social_links ?? [];
@@ -455,7 +455,7 @@
                 </svg>
             </div>
             <span>
-                Los datos configurados en este módulo se sincronizan instantáneamente con el portal público, horarios de consulta y correos electrónicos del sistema.
+                {{ __('The data configured in this module synchronizes instantly with the public portal, consultation hours, and system notification emails.') }}
             </span>
         </div>
 

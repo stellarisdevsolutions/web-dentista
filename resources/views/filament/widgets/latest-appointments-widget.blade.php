@@ -1,11 +1,11 @@
 <x-filament-widgets::widget class="fi-wi-appointments-feed">
     @php
         $isDentist = $currentUser->isDentist();
-        $pageTitle = $isDentist ? 'Mis citas · hoy' : 'Citas y solicitudes de pacientes · hoy';
+        $pageTitle = $isDentist ? __('My appointments · today') : __('Patient appointments and requests · today');
         $pageSubtitle = $isDentist 
-            ? 'Tus consultas y pacientes programados para la jornada de hoy.' 
-            : 'Monitorea las citas programadas y solicitudes de atención en tiempo real.';
-        $headerBtnText = $isDentist ? 'Ver mi agenda' : 'Ver agenda completa';
+            ? __('Your consultations and patients scheduled for today.') 
+            : __('Monitor scheduled appointments and requests in real time.');
+        $headerBtnText = $isDentist ? __('View my schedule') : __('View full schedule');
     @endphp
 
     <div class="aura-feed-container">
@@ -40,21 +40,21 @@
                         wire:click="setTab('all')" 
                         class="aura-feed-tab-btn {{ $activeTab === 'all' ? 'aura-tab-active' : '' }}"
                     >
-                        Todos ({{ $counts['all'] }})
+                        {{ __('All (filter)') }} ({{ $counts['all'] }})
                     </button>
                     <button 
                         type="button" 
                         wire:click="setTab('confirmed')" 
                         class="aura-feed-tab-btn {{ $activeTab === 'confirmed' ? 'aura-tab-active' : '' }}"
                     >
-                        Confirmados ({{ $counts['confirmed'] }})
+                        {{ __('Confirmed (filter)') }} ({{ $counts['confirmed'] }})
                     </button>
                     <button 
                         type="button" 
                         wire:click="setTab('pending')" 
                         class="aura-feed-tab-btn {{ $activeTab === 'pending' ? 'aura-tab-active' : '' }}"
                     >
-                        Sin confirmar ({{ $counts['pending'] }})
+                        {{ __('Unconfirmed') }} ({{ $counts['pending'] }})
                     </button>
                 </div>
             </div>
@@ -75,12 +75,12 @@
                         : (string) $appointment->status;
 
                     $statusMap = [
-                        'confirmed' => ['label' => 'Confirmada', 'class' => 'aura-status-confirmed', 'dot' => '#10b981'],
-                        'pending' => ['label' => 'Por Confirmar', 'class' => 'aura-status-pending', 'dot' => '#f59e0b'],
-                        'in_progress' => ['label' => 'En Consulta', 'class' => 'aura-status-progress', 'dot' => '#0ea5e9'],
-                        'completed' => ['label' => 'Completada', 'class' => 'aura-status-completed', 'dot' => '#64748b'],
-                        'cancelled' => ['label' => 'Cancelada', 'class' => 'aura-status-cancelled', 'dot' => '#ef4444'],
-                        'no_show' => ['label' => 'No Asistió', 'class' => 'aura-status-noshow', 'dot' => '#ef4444'],
+                        'confirmed' => ['label' => __('Confirmed'), 'class' => 'aura-status-confirmed', 'dot' => '#10b981'],
+                        'pending' => ['label' => __('Pending confirmation'), 'class' => 'aura-status-pending', 'dot' => '#f59e0b'],
+                        'in_progress' => ['label' => __('In consultation'), 'class' => 'aura-status-progress', 'dot' => '#0ea5e9'],
+                        'completed' => ['label' => __('Completed'), 'class' => 'aura-status-completed', 'dot' => '#64748b'],
+                        'cancelled' => ['label' => __('Cancelled'), 'class' => 'aura-status-cancelled', 'dot' => '#ef4444'],
+                        'no_show' => ['label' => __('No show'), 'class' => 'aura-status-noshow', 'dot' => '#ef4444'],
                     ];
                     $statusInfo = $statusMap[$statusKey] ?? ['label' => ucfirst($statusKey), 'class' => 'aura-status-completed', 'dot' => '#64748b'];
                 @endphp
@@ -105,7 +105,7 @@
                     <!-- Columna 2: Servicio y Dentista (Oculto para Dentista) -->
                     <div class="aura-feed-service-col">
                         <span class="aura-service-badge">
-                            {{ $appointment->service?->name ?? 'Consulta General' }}
+                            {{ $appointment->service?->name ?? __('General consultation') }}
                         </span>
                         @if (! $isDentist)
                             <span class="aura-dentist-tag">
@@ -113,7 +113,7 @@
                                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
-                                {{ $appointment->dentist?->name ?? 'Por Asignar' }}
+                                {{ $appointment->dentist?->name ?? __('To assign') }}
                             </span>
                         @endif
                     </div>
@@ -147,8 +147,8 @@
                             <line x1="3" y1="10" x2="21" y2="10"></line>
                         </svg>
                     </div>
-                    <h4>No hay citas registradas en esta vista</h4>
-                    <p>La agenda se encuentra despejada en este momento.</p>
+                    <h4>{{ __('No appointments registered in this view') }}</h4>
+                    <p>{{ __('The schedule is clear at the moment.') }}</p>
                 </div>
             @endforelse
         </div>
@@ -156,7 +156,7 @@
         <!-- Botón Inferior para ir a Citas -->
         <div class="aura-feed-bottom-action">
             <a href="{{ url('/admin/appointments') }}" class="aura-btn-footer-appointments">
-                <span>{{ $isDentist ? 'Ver todas mis citas en la agenda' : 'Ver todas las citas en la agenda' }}</span>
+                <span>{{ $isDentist ? __('View all my appointments in schedule') : __('View all appointments in schedule') }}</span>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>

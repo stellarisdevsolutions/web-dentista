@@ -22,37 +22,37 @@ class DentistsTable
             ->recordAction(null)
             ->recordUrl(null)
             ->header(view('filament.resources.dentists.table-header'))
-            ->emptyStateHeading('No hay especialistas registrados')
-            ->emptyStateDescription('Comienza añadiendo los doctores y cirujanos de la clínica.')
+            ->emptyStateHeading(__('No specialists registered'))
+            ->emptyStateDescription(__('Start by adding clinic doctors and surgeons.'))
             ->emptyStateIcon('heroicon-o-user-group')
             ->columns([
                 TextColumn::make('photo')
-                    ->label('Foto')
+                    ->label(__('Photo'))
                     ->view('filament.resources.dentists.columns.photo-column'),
 
                 TextColumn::make('name')
-                    ->label('Especialista')
+                    ->label(__('Specialist'))
                     ->searchable()
                     ->sortable()
                     ->weight(FontWeight::Bold)
                     ->description(fn ($record): string => $record->title ?: ($record->email ?? '—')),
 
                 TextColumn::make('specialty')
-                    ->label('Especialidad')
+                    ->label(__('Specialty'))
                     ->badge()
                     ->color('info')
                     ->icon('heroicon-o-academic-cap')
                     ->searchable(),
 
                 TextColumn::make('phone')
-                    ->label('Contacto')
+                    ->label(__('Contact'))
                     ->icon('heroicon-o-phone')
                     ->copyable()
-                    ->copyMessage('Teléfono copiado al portapapeles')
-                    ->placeholder('Sin teléfono'),
+                    ->copyMessage(__('Phone copied to clipboard'))
+                    ->placeholder(__('No phone')),
 
                 TextColumn::make('license_number')
-                    ->label('Colegiatura')
+                    ->label(__('Medical License'))
                     ->badge()
                     ->color('gray')
                     ->searchable()
@@ -60,43 +60,43 @@ class DentistsTable
 
                 TextColumn::make('services_count')
                     ->counts('services')
-                    ->label('Tratamientos')
+                    ->label(__('Treatments'))
                     ->badge()
                     ->color('primary')
-                    ->suffix(' serv.')
+                    ->suffix(' '.__('serv.'))
                     ->sortable(),
 
                 ToggleColumn::make('is_active')
-                    ->label('Disponible')
+                    ->label(__('Available'))
                     ->onColor('success')
                     ->offColor('gray')
                     ->afterStateUpdated(function (Dentist $record, bool $state): void {
                         Notification::make()
-                            ->title($state ? 'Disponibilidad activada' : 'Disponibilidad pausada')
-                            ->body($state ? "{$record->name} ahora está disponible para citas." : "{$record->name} ya no recibirá nuevas citas.")
+                            ->title($state ? __('Availability activated') : __('Availability paused'))
+                            ->body($state ? __(':name is now available for appointments.', ['name' => $record->name]) : __(':name will no longer receive new appointments.', ['name' => $record->name]))
                             ->color($state ? 'success' : 'gray')
                             ->icon($state ? 'heroicon-o-check-circle' : 'heroicon-o-pause-circle')
                             ->send();
                     }),
 
                 TextColumn::make('order')
-                    ->label('Orden')
+                    ->label(__('Order'))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 TernaryFilter::make('is_active')
-                    ->label('Disponibilidad')
-                    ->trueLabel('Solo disponibles')
-                    ->falseLabel('No disponibles'),
+                    ->label(__('Availability'))
+                    ->trueLabel(__('Available only'))
+                    ->falseLabel(__('Unavailable')),
             ])
             ->recordActions([
                 EditAction::make()
                     ->iconButton()
-                    ->tooltip('Editar especialista'),
+                    ->tooltip(__('Edit specialist')),
                 DeleteAction::make()
                     ->iconButton()
-                    ->tooltip('Eliminar especialista'),
+                    ->tooltip(__('Delete specialist')),
             ]);
     }
 }

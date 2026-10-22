@@ -21,7 +21,7 @@ class PostResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 4;
 
     public static function getRecordTitleAttribute(): ?string
     {
@@ -42,16 +42,14 @@ class PostResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         /** @var Post $record */
-        $isSpanish = app()->getLocale() === 'es';
-
         return [
-            $isSpanish ? 'Categoría' : 'Category' => $record->category,
+            __('Category') => $record->category,
         ];
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Web Content & CMS');
+        return __('Clinical Management');
     }
 
     public static function getNavigationLabel(): string

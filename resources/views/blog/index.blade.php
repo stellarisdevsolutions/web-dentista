@@ -7,8 +7,10 @@
 
     @include('partials.favicon')
 
-    <title>Blog y Consejos Clínicos | {{ $clinic->clinic_name }}</title>
-    <meta name="description" content="Aprende sobre higiene oral, ortodoncia invisible, implantes y estética dental con los especialistas de {{ $clinic->clinic_name }}.">
+    @include('partials.seo-meta', [
+        'title' => __('Blog y Consejos Clínicos') . ' | ' . $clinic->clinic_name,
+        'description' => __('Aprende sobre higiene oral, ortodoncia invisible, implantes y estética dental con los especialistas de :clinic.', ['clinic' => $clinic->clinic_name]),
+    ])
 
     <!-- Google Fonts: Instrument Sans -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -36,17 +38,17 @@
         // Hero Fields
         $heroEyebrow = $blogHero['eyebrow'] ?? null;
         if (!array_key_exists('eyebrow', $blogHero)) {
-            $heroEyebrow = 'DIVULGACIÓN CIENTÍFICA & SALUD BUCAL';
+            $heroEyebrow = __('DIVULGACIÓN CIENTÍFICA & SALUD BUCAL');
         }
 
         $heroTitle = $blogHero['title'] ?? null;
         if (!array_key_exists('title', $blogHero)) {
-            $heroTitle = 'Blog y Consejos Clínicos';
+            $heroTitle = __('Blog y Consejos Clínicos');
         }
 
         $heroSubtitle = $blogHero['subtitle'] ?? null;
         if (!array_key_exists('subtitle', $blogHero)) {
-            $heroSubtitle = 'Artículos con base científica y recomendaciones prácticas de nuestros odontólogos para el cuidado diario de tu salud bucal.';
+            $heroSubtitle = __('Artículos con base científica y recomendaciones prácticas de nuestros odontólogos para el cuidado diario de tu salud bucal.');
         }
 
         $hasHeroEyebrow = filled(trim($heroEyebrow ?? ''));
@@ -56,29 +58,29 @@
         // CTA Fields
         $ctaEyebrow = $blogCta['eyebrow'] ?? null;
         if (!array_key_exists('eyebrow', $blogCta)) {
-            $ctaEyebrow = 'CONSULTA PERSONALIZADA';
+            $ctaEyebrow = __('CONSULTA PERSONALIZADA');
         }
 
         $ctaTitle = $blogCta['title'] ?? null;
         if (!array_key_exists('title', $blogCta)) {
-            $ctaTitle = '¿Tienes dudas sobre algún síntoma o tratamiento dental?';
+            $ctaTitle = __('¿Tienes dudas sobre algún síntoma o tratamiento dental?');
         }
 
         $ctaSubtitle = $blogCta['subtitle'] ?? null;
         if (!array_key_exists('subtitle', $blogCta)) {
-            $ctaSubtitle = 'Nuestros especialistas certificados están disponibles para una evaluación presencial o responder a tus inquietudes de inmediato.';
+            $ctaSubtitle = __('Nuestros especialistas certificados están disponibles para una evaluación presencial o responder a tus inquietudes de inmediato.');
         }
 
         $ctaPrimaryText = $blogCta['button_primary_text'] ?? null;
         $ctaPrimaryUrl = $blogCta['button_primary_url'] ?? route('schedule');
         if (!array_key_exists('button_primary_text', $blogCta)) {
-            $ctaPrimaryText = 'Reservar Turno Online »';
+            $ctaPrimaryText = __('Reservar Turno Online »');
         }
 
         $ctaSecondaryText = $blogCta['button_secondary_text'] ?? null;
         $ctaSecondaryUrl = $blogCta['button_secondary_url'] ?? route('contact');
         if (!array_key_exists('button_secondary_text', $blogCta)) {
-            $ctaSecondaryText = 'Contactar »';
+            $ctaSecondaryText = __('Contactar »');
         }
 
         $hasCtaEyebrow = filled(trim($ctaEyebrow ?? ''));
@@ -128,7 +130,7 @@
                             :class="activeFilter === 'all' ? 'bg-sky-500 text-white shadow-md shadow-sky-500/30' : 'bg-white text-slate-700 hover:border-sky-300 border border-slate-200'"
                             class="px-5 py-2.5 rounded-full text-xs font-bold transition-all"
                         >
-                            Todos los Artículos ({{ $posts->count() }})
+                            {{ __('Todos los Artículos') }} ({{ $posts->count() }})
                         </button>
                         @foreach($categories as $cat)
                             <button
@@ -175,11 +177,11 @@
                                     <!-- Category & Metadata Row (no capsule, update date with icon) -->
                                     <div class="flex items-center justify-between gap-2 mb-2.5">
                                         <span class="text-sky-600 font-bold uppercase tracking-wider text-[11px]">
-                                            {{ $post->category ?? 'Salud Dental' }}
+                                            {{ $post->category ?? __('Salud Dental') }}
                                         </span>
                                         <div class="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
                                             <svg class="w-3.5 h-3.5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                            <span>{{ ($post->updated_at ?? $post->published_at)?->translatedFormat('d M, Y') ?? 'Reciente' }}</span>
+                                            <span>{{ ($post->updated_at ?? $post->published_at)?->translatedFormat('d M, Y') ?? __('Reciente') }}</span>
                                         </div>
                                     </div>
 
@@ -202,7 +204,7 @@
                                         href="{{ route('blog.show', $post->slug) }}" 
                                         class="text-xs font-extrabold text-sky-600 hover:text-sky-700 flex items-center gap-1 group/btn transition-colors"
                                     >
-                                        <span>Leer artículo</span>
+                                        <span>{{ __('Leer artículo') }}</span>
                                         <span class="group-hover/btn:translate-x-1 transition-transform">»</span>
                                     </a>
 
@@ -210,7 +212,7 @@
                                         href="{{ route('schedule') }}"
                                         class="px-3.5 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-500 text-sky-700 hover:text-white font-bold text-xs uppercase tracking-wider transition-all"
                                     >
-                                        Agendar Cita
+                                        {{ __('Agendar Cita') }}
                                     </a>
                                 </div>
                             </article>
@@ -223,8 +225,8 @@
                                 <path stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
                             </svg>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-800 mb-2">Próximamente más artículos</h3>
-                        <p class="text-slate-500 text-xs">Estamos preparando contenido educativo y guías clínicas para compartir contigo en breve.</p>
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">{{ __('Próximamente más artículos') }}</h3>
+                        <p class="text-slate-500 text-xs">{{ __('Estamos preparando contenido educativo y guías clínicas para compartir contigo en breve.') }}</p>
                     </div>
                 @endif
 

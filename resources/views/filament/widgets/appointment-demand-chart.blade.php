@@ -53,7 +53,7 @@
             @if ($data->isEmpty)
                 <div class="aura-demand-empty-overlay">
                     <span class="aura-demand-empty-badge">
-                        Sin citas en los últimos 7 días
+                        {{ __('No appointments in the last 7 days') }}
                     </span>
                 </div>
             @endif
@@ -63,23 +63,23 @@
         <div class="aura-demand-legend" aria-hidden="true">
             <div class="aura-demand-legend-item">
                 <span class="aura-demand-dot" style="background-color: #7DD3FC;"></span>
-                <span class="aura-demand-legend-text">Citas agendadas</span>
+                <span class="aura-demand-legend-text">{{ __('Scheduled appointments') }}</span>
             </div>
             <div class="aura-demand-legend-item">
                 <span class="aura-demand-dot" style="background-color: #0A1730;"></span>
-                <span class="aura-demand-legend-text">Hoy</span>
+                <span class="aura-demand-legend-text">{{ __('Today') }}</span>
             </div>
         </div>
 
         {{-- Tabla de datos accesible para lectores de pantalla --}}
         <div class="sr-only fi-sr-only" style="position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important;">
             <table>
-                <caption>Demanda de citas de los últimos 7 días</caption>
+                <caption>{{ __('Appointment demand for the last 7 days') }}</caption>
                 <thead>
                     <tr>
-                        <th scope="col">Día</th>
-                        <th scope="col">Fecha completa</th>
-                        <th scope="col">Citas agendadas</th>
+                        <th scope="col">{{ __('Day') }}</th>
+                        <th scope="col">{{ __('Full date') }}</th>
+                        <th scope="col">{{ __('Scheduled appointments') }}</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -44,10 +44,8 @@ class FaqResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         /** @var Faq $record */
-        $isSpanish = app()->getLocale() === 'es';
-
         return [
-            $isSpanish ? 'Categoría' : 'Category' => $record->category,
+            __('Category') => $record->category,
         ];
     }
 

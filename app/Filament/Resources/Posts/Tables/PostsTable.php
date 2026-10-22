@@ -24,43 +24,43 @@ class PostsTable
             ->recordAction(null)
             ->recordUrl(null)
             ->header(view('filament.resources.posts.table-header'))
-            ->emptyStateHeading('No hay artículos registrados')
-            ->emptyStateDescription('Comienza publicando artículos y consejos de salud bucal para tus pacientes.')
+            ->emptyStateHeading(__('No articles registered'))
+            ->emptyStateDescription(__('Start by publishing oral health articles and tips for your patients.'))
             ->emptyStateIcon('heroicon-o-document-text')
             ->columns([
                 ImageColumn::make('cover_image')
-                    ->label('Portada')
+                    ->label(__('Cover'))
                     ->disk('public')
                     ->defaultImageUrl(fn (Post $record): string => $record->cover_image_url)
                     ->extraImgAttributes(['class' => 'rounded-xl object-cover shadow-xs border border-slate-200/80'])
                     ->size(54),
 
                 TextColumn::make('title')
-                    ->label('Artículo')
+                    ->label(__('Article'))
                     ->searchable()
                     ->sortable()
                     ->weight(FontWeight::Bold)
                     ->description(fn (Post $record): string => $record->excerpt ? Str::limit($record->excerpt, 60) : '—'),
 
                 TextColumn::make('category')
-                    ->label('Categoría')
+                    ->label(__('Category'))
                     ->badge()
                     ->color('info')
                     ->searchable(),
 
                 TextColumn::make('published_at')
-                    ->label('Fecha de Publicación')
+                    ->label(__('Publication Date'))
                     ->dateTime('d M, Y H:i')
                     ->sortable(),
 
                 ToggleColumn::make('is_published')
-                    ->label('Publicado')
+                    ->label(__('Published'))
                     ->onColor('success')
                     ->offColor('gray')
                     ->afterStateUpdated(function (Post $record, bool $state): void {
                         Notification::make()
-                            ->title($state ? 'Artículo publicado' : 'Artículo en borrador')
-                            ->body($state ? "'{$record->title}' ahora es visible públicamente en el blog." : "'{$record->title}' se cambió a borrador y no es visible en la web.")
+                            ->title($state ? __('Article published') : __('Article in draft'))
+                            ->body($state ? __("':title' is now publicly visible on the blog.", ['title' => $record->title]) : __("':title' was moved to draft and is not visible on the website.", ['title' => $record->title]))
                             ->color($state ? 'success' : 'gray')
                             ->icon($state ? 'heroicon-o-check-circle' : 'heroicon-o-pause-circle')
                             ->send();
@@ -68,17 +68,17 @@ class PostsTable
             ])
             ->filters([
                 TernaryFilter::make('is_published')
-                    ->label('Estado')
-                    ->trueLabel('Solo publicados')
-                    ->falseLabel('Solo borradores'),
+                    ->label(__('Status'))
+                    ->trueLabel(__('Published only'))
+                    ->falseLabel(__('Drafts only')),
             ])
             ->recordActions([
                 EditAction::make()
                     ->iconButton()
-                    ->tooltip('Editar artículo'),
+                    ->tooltip(__('Edit article')),
                 DeleteAction::make()
                     ->iconButton()
-                    ->tooltip('Eliminar artículo'),
+                    ->tooltip(__('Delete article')),
             ]);
     }
 }

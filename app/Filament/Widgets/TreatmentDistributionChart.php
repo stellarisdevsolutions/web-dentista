@@ -43,7 +43,7 @@ class TreatmentDistributionChart extends ChartWidget
 
     public function getHeading(): string|Htmlable|null
     {
-        return 'Distribución de tratamientos';
+        return __('Treatment distribution');
     }
 
     public function getChartDataProperty(): TreatmentDistributionChartData
@@ -66,7 +66,7 @@ class TreatmentDistributionChart extends ChartWidget
                         'cutout' => '65%',
                     ],
                 ],
-                'labels' => ['Sin datos'],
+                'labels' => [__('No data')],
                 'percentages' => [0],
             ];
         }
@@ -93,7 +93,12 @@ class TreatmentDistributionChart extends ChartWidget
 
     protected function getOptions(): array|RawJs|null
     {
-        return RawJs::make(<<<'JS'
+        $noDataLabel = addslashes(__('No data'));
+        $noTreatmentsYet = addslashes(__('No treatments registered yet'));
+        $single = addslashes(__('appointment'));
+        $plural = addslashes(__('appointments'));
+
+        return RawJs::make(<<<JS
             {
                 maintainAspectRatio: false,
                 responsive: true,
@@ -112,14 +117,14 @@ class TreatmentDistributionChart extends ChartWidget
                         callbacks: {
                             label: function(context) {
                                 const chart = context.chart;
-                                const isPlaceholder = chart.data.labels[0] === 'Sin datos';
+                                const isPlaceholder = chart.data.labels[0] === '{$noDataLabel}' || chart.data.labels[0] === 'Sin datos';
                                 if (isPlaceholder) {
-                                    return 'Aún no hay tratamientos registrados';
+                                    return '{$noTreatmentsYet}';
                                 }
                                 const count = context.parsed;
                                 const percentages = chart.data.percentages || [];
                                 const pct = percentages[context.dataIndex] !== undefined ? percentages[context.dataIndex] : 0;
-                                const countLabel = count === 1 ? '1 cita' : count + ' citas';
+                                const countLabel = count === 1 ? '1 {$single}' : count + ' {$plural}';
                                 return countLabel + ' (' + pct + '%)';
                             }
                         }

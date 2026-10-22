@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MediaAsset;
+use App\Services\ImageOptimizerService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -95,8 +96,16 @@ class MediaLibraryController extends Controller
     /**
      * Update asset metadata (title and alt text for SEO / Accessibility).
      */
-    public function update(Request $request, MediaAsset $mediaAsset): JsonResponse
+    public function update(Request $request, string|int $id): JsonResponse
     {
+        $mediaAsset = MediaAsset::find($id);
+        if (! $mediaAsset) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El archivo no fue encontrado.',
+            ], 404);
+        }
+
         $validated = $request->validate([
             'title' => ['nullable', 'string', 'max:255'],
             'alt_text' => ['nullable', 'string', 'max:255'],
@@ -114,8 +123,17 @@ class MediaLibraryController extends Controller
     /**
      * Delete an asset from disk and database.
      */
-    public function destroy(MediaAsset $mediaAsset): JsonResponse
+    public function destroy(string|int $id): JsonResponse
     {
+        $mediaAsset = MediaAsset::find($id);
+
+        if (! $mediaAsset) {
+            return response()->json([
+                'success' => true,
+                'message' => 'El archivo ya no existe o fue eliminado previamente.',
+            ]);
+        }
+
         if (Storage::disk($mediaAsset->disk)->exists($mediaAsset->file_path)) {
             Storage::disk($mediaAsset->disk)->delete($mediaAsset->file_path);
         }
@@ -197,19 +215,31 @@ class MediaLibraryController extends Controller
     }
 
     /**
-     * Helper to store and register an uploaded file.
+     * Helper to store and register an uploaded file, automatically optimizing to WebP.
      */
     protected function processAndStoreFile($file, ?string $title = null, ?string $altText = null): MediaAsset
     {
         $originalName = $file->getClientOriginalName();
-        $safeName = Str::random(24).'.'.$file->getClientOriginalExtension();
-        $path = $file->storeAs('media', $safeName, 'public');
+        $isSvg = $file->getMimeType() === 'image/svg+xml' || strtolower($file->getClientOriginalExtension()) === 'svg';
+
+        // Optimize raster images to WebP via ImageOptimizerService
+        $path = ImageOptimizerService::optimizeAndStore(
+            file: $file,
+            directory: 'media',
+            disk: 'public',
+        );
+
+        if (! $path) {
+            $safeName = Str::random(24).'.'.$file->getClientOriginalExtension();
+            $path = $file->storeAs('media', $safeName, 'public');
+        }
 
         $width = null;
         $height = null;
+        $storedFullPath = Storage::disk('public')->path($path);
 
-        if ($file->getMimeType() !== 'image/svg+xml') {
-            $dimensions = @getimagesize($file->getRealPath());
+        if (! $isSvg && file_exists($storedFullPath)) {
+            $dimensions = @getimagesize($storedFullPath);
             if ($dimensions) {
                 $width = $dimensions[0] ?? null;
                 $height = $dimensions[1] ?? null;
@@ -218,13 +248,15 @@ class MediaLibraryController extends Controller
 
         $defaultTitle = $title ?: Str::headline(pathinfo($originalName, PATHINFO_FILENAME));
         $defaultAlt = $altText ?: __('images.media_library_item', ['clinic' => 'Aura Dental Studio']);
+        $fileSize = file_exists($storedFullPath) ? (int) filesize($storedFullPath) : (int) $file->getSize();
+        $mimeType = file_exists($storedFullPath) ? (mime_content_type($storedFullPath) ?: 'image/webp') : (string) $file->getMimeType();
 
         return MediaAsset::create([
             'filename' => $originalName,
             'file_path' => $path,
             'disk' => 'public',
-            'mime_type' => (string) $file->getMimeType(),
-            'file_size' => (int) $file->getSize(),
+            'mime_type' => $mimeType,
+            'file_size' => $fileSize,
             'width' => $width,
             'height' => $height,
             'title' => $defaultTitle,

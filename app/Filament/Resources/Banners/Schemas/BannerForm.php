@@ -14,44 +14,42 @@ class BannerForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $isSpanish = app()->getLocale() === 'es';
-
         return $schema
             ->components([
-                Section::make($isSpanish ? 'Textos del Banner Principal' : 'Hero Banner Texts')
+                Section::make(__('Hero Banner Texts'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextInput::make('badge')
-                                    ->label('Etiqueta Superior')
-                                    ->placeholder('ej. Especial de Primavera')
+                                    ->label(__('Top Badge'))
+                                    ->placeholder(__('e.g. Spring Special'))
                                     ->maxLength(100),
                                 TextInput::make('button_text')
-                                    ->label('Texto del Botón CTA')
-                                    ->placeholder('ej. Agenda tu Consulta')
+                                    ->label(__('Button CTA Text'))
+                                    ->placeholder(__('e.g. Book your Consultation'))
                                     ->maxLength(100),
                             ]),
 
                         TextInput::make('title')
-                            ->label('Título Principal del Hero')
+                            ->label(__('Hero Main Title'))
                             ->required()
                             ->maxLength(255),
 
                         Textarea::make('subtitle')
-                            ->label('Subtítulo / Bajada')
+                            ->label(__('Subtitle / Tagline'))
                             ->rows(3),
                     ]),
 
-                Section::make($isSpanish ? 'Configuración de Enlace y Fondo' : 'Display & Action Settings')
+                Section::make(__('Display & Action Settings'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextInput::make('button_url')
-                                    ->label($isSpanish ? 'Enlace de Destino del Botón' : 'Button Target URL / Anchor')
-                                    ->placeholder('#booking o https://...')
+                                    ->label(__('Button Target URL / Anchor'))
+                                    ->placeholder('#booking '.__('or').' https://...')
                                     ->maxLength(255),
                                 FileUpload::make('background_image')
-                                    ->label($isSpanish ? 'Imagen de Fondo' : 'Hero Background Image')
+                                    ->label(__('Hero Background Image'))
                                     ->image()
                                     ->directory('banners')
                                     ->disk('public'),
@@ -60,10 +58,10 @@ class BannerForm
                         Grid::make(2)
                             ->schema([
                                 Toggle::make('is_active')
-                                    ->label($isSpanish ? 'Activo en la Web' : 'Active / Visible')
+                                    ->label(__('Active / Visible'))
                                     ->default(true),
                                 TextInput::make('order')
-                                    ->label($isSpanish ? 'Orden' : 'Sort Order')
+                                    ->label(__('Sort Order'))
                                     ->numeric()
                                     ->default(0),
                             ]),

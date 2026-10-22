@@ -19,44 +19,44 @@ class SmileCasesTable
             ->defaultSort('order', 'asc')
             ->columns([
                 ImageColumn::make('before_image')
-                    ->label('Antes')
+                    ->label(__('Before'))
                     ->disk('public'),
 
                 ImageColumn::make('after_image')
-                    ->label('Después')
+                    ->label(__('After'))
                     ->disk('public'),
 
                 TextColumn::make('title')
-                    ->label('Título del Caso')
+                    ->label(__('Case Title'))
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
                 TextColumn::make('service.name')
-                    ->label('Tratamiento')
-                    ->placeholder('General')
+                    ->label(__('Treatment'))
+                    ->placeholder(__('General'))
                     ->sortable(),
 
                 TextColumn::make('dentist.name')
-                    ->label('Odontólogo')
-                    ->placeholder('Por Asignar')
+                    ->label(__('Specialist'))
+                    ->placeholder(__('To assign'))
                     ->sortable(),
 
                 ToggleColumn::make('is_featured')
-                    ->label('Destacado'),
+                    ->label(__('Featured')),
 
                 ToggleColumn::make('is_active')
-                    ->label('Activo'),
+                    ->label(__('Active')),
 
                 TextColumn::make('order')
-                    ->label('Orden')
+                    ->label(__('Sort Order'))
                     ->sortable(),
             ])
             ->filters([
                 TernaryFilter::make('is_featured')
-                    ->label('Destacados en Galería'),
+                    ->label(__('Featured in gallery')),
                 TernaryFilter::make('is_active')
-                    ->label('Activos'),
+                    ->label(__('Active')),
             ])
             ->recordActions([
                 EditAction::make(),

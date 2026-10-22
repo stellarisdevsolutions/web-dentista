@@ -44,11 +44,9 @@ class SmileCaseResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         /** @var SmileCase $record */
-        $isSpanish = app()->getLocale() === 'es';
-
         return [
-            $isSpanish ? 'Tratamiento' : 'Service' => $record->service?->name ?? '-',
-            $isSpanish ? 'Especialista' : 'Dentist' => $record->dentist?->name ?? '-',
+            __('Treatment') => $record->service?->name ?? '-',
+            __('Specialist') => $record->dentist?->name ?? '-',
         ];
     }
 

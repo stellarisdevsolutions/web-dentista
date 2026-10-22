@@ -21,7 +21,7 @@ class DentistResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -54,17 +54,17 @@ class DentistResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'Especialistas';
+        return __('Specialists');
     }
 
     public static function getModelLabel(): string
     {
-        return 'Especialista';
+        return __('Specialist');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Especialistas';
+        return __('Specialists');
     }
 
     public static function form(Schema $schema): Schema

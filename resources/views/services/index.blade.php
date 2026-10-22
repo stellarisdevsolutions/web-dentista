@@ -7,8 +7,10 @@
 
     @include('partials.favicon')
 
-    <title>Tratamientos y Procedimientos Odontológicos | {{ $clinic->clinic_name }}</title>
-    <meta name="description" content="Conoce nuestro catálogo completo de tratamientos dentales: limpieza profunda, blanqueamiento láser, implantes guiados 3D, carillas y ortodoncia invisible.">
+    @include('partials.seo-meta', [
+        'title' => __('Tratamientos y Procedimientos Odontológicos') . ' | ' . $clinic->clinic_name,
+        'description' => __('Explora nuestros tratamientos dentales especializados: implantes, ortodoncia invisible, diseño de sonrisa y odontopediatría en :clinic.', ['clinic' => $clinic->clinic_name]),
+    ])
 
     <!-- Google Fonts: Instrument Sans -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -33,17 +35,17 @@
 
         $heroEyebrow = $servicesHero['eyebrow'] ?? null;
         if (!array_key_exists('eyebrow', $servicesHero)) {
-            $heroEyebrow = 'EXCELENCIA CLÍNICA';
+            $heroEyebrow = __('EXCELENCIA CLÍNICA');
         }
 
         $heroTitle = $servicesHero['title'] ?? null;
         if (!array_key_exists('title', $servicesHero)) {
-            $heroTitle = 'Nuestros Tratamientos y Procedimientos';
+            $heroTitle = __('Nuestros Tratamientos y Procedimientos');
         }
 
         $heroSubtitle = $servicesHero['subtitle'] ?? null;
         if (!array_key_exists('subtitle', $servicesHero)) {
-            $heroSubtitle = 'Atención odontológica integral, moderna y sin dolor respaldada por tecnología intraoral 3D y materiales de estándar suizo.';
+            $heroSubtitle = __('Atención odontológica integral, moderna y sin dolor respaldada por tecnología intraoral 3D y materiales de estándar suizo.');
         }
 
         $hasHeroEyebrow = filled(trim($heroEyebrow ?? ''));
@@ -116,14 +118,14 @@
                                     href="{{ route('services.show', $service->slug) }}"
                                     class="text-xs font-extrabold text-slate-700 hover:text-sky-600 transition-colors flex items-center gap-1"
                                 >
-                                    <span>Ver detalles »</span>
+                                    <span>{{ __('Ver detalles') }} »</span>
                                 </a>
 
                                 <a 
                                     href="{{ route('schedule', ['service_id' => $service->id]) }}"
                                     class="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs uppercase tracking-wider shadow-sm hover:scale-105 transition-all"
                                 >
-                                    Agendar Cita
+                                    {{ __('Agendar Cita') }}
                                 </a>
                             </div>
                         </div>

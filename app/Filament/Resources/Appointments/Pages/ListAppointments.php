@@ -119,35 +119,42 @@ class ListAppointments extends ListRecords
         /** @var User|null $user */
         $user = auth()->user();
         if ($user && $user->isDentist()) {
-            return 'Mis citas';
+            return __('My Appointments');
         }
 
-        return 'Agenda';
+        return app()->getLocale() === 'es' ? 'Agenda' : __('Appointments');
     }
 
     public function getSubheading(): ?string
     {
         $dateCarbon = Carbon::parse($this->selectedDate ?: Carbon::today());
-        $dateText = str_replace('.', '', $dateCarbon->locale('es')->isoFormat('dddd D [de] MMMM'));
+        $isSpanish = app()->getLocale() === 'es';
+        $dateText = $isSpanish
+            ? str_replace('.', '', $dateCarbon->locale('es')->isoFormat('dddd D [de] MMMM'))
+            : $dateCarbon->locale('en')->isoFormat('dddd, MMMM D');
 
         $counts = $this->getTabCounts();
         $count = $counts['all'] ?? 0;
 
         $search = trim((string) $this->getTableSearch());
         if (mb_strlen($search) >= 2) {
-            return "{$count} ".($count === 1 ? 'cita encontrada' : 'citas encontradas').' en la búsqueda';
+            return $count === 1
+                ? __('1 appointment found in search')
+                : __(':count appointments found in search', ['count' => $count]);
         }
 
-        return "{$count} ".($count === 1 ? 'cita' : 'citas')." el {$dateText}";
+        return $count === 1
+            ? __('1 appointment on :date', ['date' => $dateText])
+            : __(':count appointments on :date', ['count' => $count, 'date' => $dateText]);
     }
 
     public function getFormattedDateLabel(): string
     {
         $dateCarbon = Carbon::parse($this->selectedDate ?: Carbon::today());
         $isToday = $dateCarbon->isToday();
-        $formatted = str_replace('.', '', $dateCarbon->locale('es')->isoFormat('ddd D MMM'));
+        $formatted = str_replace('.', '', $dateCarbon->locale(app()->getLocale())->isoFormat('ddd D MMM'));
 
-        return $isToday ? "Hoy · {$formatted}" : $formatted;
+        return $isToday ? __('Today')." · {$formatted}" : $formatted;
     }
 
     /**
@@ -195,7 +202,7 @@ class ListAppointments extends ListRecords
     {
         return [
             CreateAction::make()
-                ->label('+ Nueva cita')
+                ->label('+ '.__('New Appointment'))
                 ->extraAttributes([
                     'class' => 'agenda-create-action-btn',
                     'style' => 'border-radius: 9999px !important; background-color: #0EA5E9 !important; color: #0F172A !important; font-weight: 800 !important; min-height: 48px !important; padding: 0 24px !important; box-shadow: 0 10px 24px rgba(14, 165, 233, 0.40) !important; border: none !important; font-size: 14px !important;',
@@ -215,12 +222,12 @@ class ListAppointments extends ListRecords
     public function getTabs(): array
     {
         return [
-            'all' => Tab::make('Todas'),
-            'pending' => Tab::make('Pendientes')
+            'all' => Tab::make(__('All')),
+            'pending' => Tab::make(__('Pending Appointments'))
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'pending')),
-            'confirmed' => Tab::make('Confirmadas')
+            'confirmed' => Tab::make(__('Confirmed Appointments'))
                 ->modifyQueryUsing(fn (Builder $query) => $query->whereIn('status', ['confirmed', 'in_progress'])),
-            'cancelled' => Tab::make('Canceladas')
+            'cancelled' => Tab::make(__('Cancelled Appointments'))
                 ->modifyQueryUsing(fn (Builder $query) => $query->whereIn('status', ['cancelled', 'no_show'])),
         ];
     }
@@ -272,8 +279,8 @@ class ListAppointments extends ListRecords
                 'patient_initials' => $initials,
                 'patient_phone' => $app->patient_phone,
                 'patient_email' => $app->patient_email,
-                'whatsapp_url' => $app->whats_app_url,
-                'appointment_date' => $app->appointment_date ? $app->appointment_date->locale('es')->isoFormat('dddd D [de] MMMM, YYYY') : '—',
+                'whatsapp_url' => app()->getLocale() === 'en' ? null : $app->whats_app_url,
+                'appointment_date' => $app->appointment_date ? $app->appointment_date->locale(app()->getLocale())->isoFormat('dddd D [de] MMMM, YYYY') : '—',
                 'appointment_date_raw' => $app->appointment_date ? $app->appointment_date->toDateString() : '',
                 'appointment_time' => $app->formatted_time,
                 'appointment_time_raw' => $app->appointment_time,
@@ -287,13 +294,13 @@ class ListAppointments extends ListRecords
                 'service_name' => $app->service?->name ?? '—',
                 'service_price' => $app->service?->price_from ? '$'.number_format($app->service->price_from, 0) : null,
                 'dentist_id' => $app->dentist_id,
-                'dentist_name' => $app->dentist?->name ?? 'Por asignar',
+                'dentist_name' => $app->dentist?->name ?? __('Unassigned'),
                 'dentist_specialty' => $app->dentist?->specialty,
                 'internal_notes' => $app->internal_notes,
                 'symptoms' => $app->symptoms,
                 'is_first_visit' => (bool) $app->is_first_visit,
-                'is_first_visit_label' => $app->is_first_visit ? 'Primera visita (Apertura de ficha)' : 'Paciente recurrente',
-                'created_at_formatted' => $app->created_at ? $app->created_at->locale('es')->isoFormat('D MMM YYYY, h:mm a') : '—',
+                'is_first_visit_label' => $app->is_first_visit ? __('First visit (File opening)') : __('Recurring patient'),
+                'created_at_formatted' => $app->created_at ? $app->created_at->locale(app()->getLocale())->isoFormat('D MMM YYYY, h:mm a') : '—',
                 'edit_url' => route('filament.admin.resources.appointments.edit', ['record' => $app]),
                 'can_edit' => ($user?->isAdmin() || $user?->isReceptionist()) && $user?->can('update', $app),
                 'can_confirm' => $user?->can('confirm', $app),
@@ -321,8 +328,8 @@ class ListAppointments extends ListRecords
         abort_unless(auth()->user()?->can('confirm', $appointment), 403);
         $appointment->update(['status' => 'confirmed']);
         Notification::make()
-            ->title('Cita confirmada')
-            ->body("La cita de {$appointment->patient_name} ha sido confirmada.")
+            ->title(__('Appointment confirmed'))
+            ->body(__('Appointment for :name has been confirmed.', ['name' => $appointment->patient_name]))
             ->success()
             ->send();
 
@@ -340,8 +347,8 @@ class ListAppointments extends ListRecords
         abort_unless(auth()->user()?->can('markInProgress', $appointment), 403);
         $appointment->update(['status' => 'in_progress']);
         Notification::make()
-            ->title('Paciente en sala')
-            ->body("La cita de {$appointment->patient_name} se marcó en sala.")
+            ->title(__('Patient in clinic'))
+            ->body(__('Appointment for :name marked in clinic.', ['name' => $appointment->patient_name]))
             ->info()
             ->send();
 
@@ -359,8 +366,8 @@ class ListAppointments extends ListRecords
         abort_unless(auth()->user()?->can('complete', $appointment), 403);
         $appointment->update(['status' => 'completed']);
         Notification::make()
-            ->title('Cita completada')
-            ->body("La atención de {$appointment->patient_name} ha finalizado.")
+            ->title(__('Appointment completed'))
+            ->body(__('Care for :name has been completed.', ['name' => $appointment->patient_name]))
             ->success()
             ->send();
 
@@ -378,15 +385,15 @@ class ListAppointments extends ListRecords
         abort_unless(auth()->user()?->can('cancel', $appointment), 403);
         $notes = $appointment->internal_notes ? $appointment->internal_notes."\n" : '';
         if (! empty($reason)) {
-            $notes .= '[Cancelada]: '.trim($reason);
+            $notes .= '['.__('Cancelled').': '.trim($reason).']';
         }
         $appointment->update([
             'status' => 'cancelled',
             'internal_notes' => $notes ?: $appointment->internal_notes,
         ]);
         Notification::make()
-            ->title('Cita cancelada')
-            ->body("La cita de {$appointment->patient_name} ha sido cancelada.")
+            ->title(__('Appointment cancelled'))
+            ->body(__('Appointment for :name has been cancelled.', ['name' => $appointment->patient_name]))
             ->warning()
             ->send();
 
@@ -456,7 +463,7 @@ class ListAppointments extends ListRecords
                     'morning_slots' => [],
                     'afternoon_slots' => [],
                     'has_available_slots' => false,
-                    'error' => 'No se pueden programar citas en fechas pasadas.',
+                    'error' => __('Past dates cannot be scheduled.'),
                 ];
             }
 
@@ -476,7 +483,7 @@ class ListAppointments extends ListRecords
                         'morning_slots' => [],
                         'afternoon_slots' => [],
                         'has_available_slots' => false,
-                        'error' => 'El especialista seleccionado no realiza este tratamiento.',
+                        'error' => __('The selected specialist does not perform this treatment.'),
                     ];
                 }
 
@@ -538,7 +545,7 @@ class ListAppointments extends ListRecords
                 'morning_slots' => [],
                 'afternoon_slots' => [],
                 'has_available_slots' => false,
-                'error' => 'Error al calcular horarios disponibles.',
+                'error' => __('Error calculating available time slots.'),
             ];
         }
     }
@@ -567,28 +574,28 @@ class ListAppointments extends ListRecords
             // Verify qualification if service has specialists
             if ($service && $service->dentists()->exists() && ! $service->dentists()->where('dentists.id', $dentistId)->exists()) {
                 Notification::make()
-                    ->title('Especialista no calificado')
-                    ->body('El especialista seleccionado no realiza este tratamiento.')
+                    ->title(__('Specialist not qualified'))
+                    ->body(__('The selected specialist does not perform this treatment.'))
                     ->danger()
                     ->send();
 
                 return [
                     'success' => false,
-                    'error' => 'El especialista seleccionado no realiza este tratamiento.',
+                    'error' => __('The selected specialist does not perform this treatment.'),
                 ];
             }
 
             $dentist = Dentist::find($dentistId);
             if ($dentist && ! $dentist->isTimeSlotAvailable($newDate, $newTime, $durationMinutes, $appointment->id)) {
                 Notification::make()
-                    ->title('Conflicto de horario')
-                    ->body('El especialista no tiene disponibilidad en este horario.')
+                    ->title(__('Schedule Conflict'))
+                    ->body(__('The specialist has no availability at this time.'))
                     ->danger()
                     ->send();
 
                 return [
                     'success' => false,
-                    'error' => 'El especialista no tiene disponibilidad en este horario.',
+                    'error' => __('The specialist has no availability at this time.'),
                 ];
             }
         } else {
@@ -609,14 +616,14 @@ class ListAppointments extends ListRecords
 
             if ($availableCandidates->isEmpty()) {
                 Notification::make()
-                    ->title('Horario no disponible')
-                    ->body('Ningún especialista calificado para este tratamiento tiene disponibilidad en este horario.')
+                    ->title(__('Time slot unavailable'))
+                    ->body(__('No specialist qualified for this treatment has availability at this time.'))
                     ->danger()
                     ->send();
 
                 return [
                     'success' => false,
-                    'error' => 'Ningún especialista calificado para este tratamiento tiene disponibilidad en este horario.',
+                    'error' => __('No specialist qualified for this treatment has availability at this time.'),
                 ];
             }
 
@@ -636,8 +643,8 @@ class ListAppointments extends ListRecords
         ]);
 
         Notification::make()
-            ->title('Cita reprogramada')
-            ->body("Cita actualizada al {$newDate} a las {$newTime}.")
+            ->title(__('Appointment Rescheduled'))
+            ->body(__('Appointment updated to :date at :time.', ['date' => $newDate, 'time' => $newTime]))
             ->success()
             ->send();
 

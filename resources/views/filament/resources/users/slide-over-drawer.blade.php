@@ -25,7 +25,7 @@
             try {
                 const res = await $wire.getUserDetails(id);
                 if (!res) {
-                    this.errorMessage = 'No se encontró el usuario solicitado o no tienes permisos para verlo.';
+                    this.errorMessage = '{{ __('The requested user was not found or you do not have permission to view it.') }}';
                     this.isLoading = false;
                     return;
                 }
@@ -33,7 +33,7 @@
                 this.isLoading = false;
             } catch (err) {
                 console.error('Error al cargar datos del usuario:', err);
-                this.errorMessage = 'Ocurrió un error inesperado al cargar la información del usuario.';
+                this.errorMessage = '{{ __('An unexpected error occurred while loading user information.') }}';
                 this.isLoading = false;
             }
         },
@@ -87,10 +87,10 @@
                     </div>
                     <div>
                         <h3 class="font-black text-slate-900 dark:text-white text-base tracking-tight leading-tight">
-                            Detalle del Usuario
+                            {{ __('User Details') }}
                         </h3>
                         <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
-                            Perfil de acceso, rol y asignación clínica
+                            {{ __('Access profile, role, and clinical assignment') }}
                         </p>
                     </div>
                 </div>
@@ -102,13 +102,13 @@
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
-                            Editar
+                            {{ __('Edit') }}
                         </a>
                     </template>
                     <button @click="close()"
                             type="button"
                             class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white transition-colors"
-                            aria-label="Cerrar panel">
+                            aria-label="{{ __('Close') }}">
                         <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -141,7 +141,7 @@
                     </div>
                     <p class="text-sm font-semibold text-slate-800 dark:text-white" x-text="errorMessage"></p>
                     <button @click="retry()" class="mt-4 px-4 py-2 bg-sky-500 text-white rounded-lg text-xs font-bold hover:bg-sky-600 transition-colors">
-                        Reintentar
+                        {{ __('Retry') }}
                     </button>
                 </div>
 
@@ -168,7 +168,7 @@
                                 <h2 class="text-lg font-black text-slate-900 dark:text-white tracking-tight truncate" x-text="data.name"></h2>
                                 <template x-if="data.is_current_user">
                                     <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-sky-100 text-sky-800 dark:bg-sky-500/20 dark:text-sky-300">
-                                        Tu Sesión
+                                        {{ __('Your Session') }}
                                     </span>
                                 </template>
                             </div>
@@ -204,7 +204,7 @@
                             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-sky-500">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
-                            Nivel de Autorización y Acceso
+                            {{ __('Authorization & Access Level') }}
                         </div>
                         <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal"
                            x-text="data.role_description">
@@ -218,7 +218,7 @@
                                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-emerald-500">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
-                                Especialista Clínico Vinculado
+                                {{ __('Linked Clinical Specialist') }}
                             </div>
 
                             <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/5">
@@ -232,7 +232,7 @@
                                 </template>
                                 <div class="min-w-0 flex-1">
                                     <span class="text-xs font-bold text-slate-900 dark:text-white block truncate" x-text="data.dentist.name"></span>
-                                    <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400 block truncate" x-text="data.dentist.specialty || data.dentist.title || 'Cirujano Dentista'"></span>
+                                    <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400 block truncate" x-text="data.dentist.specialty || data.dentist.title || '{{ __('Surgeon Dentist') }}'"></span>
                                 </div>
                             </div>
                         </div>
@@ -241,12 +241,12 @@
                     <!-- METADATOS DE LA CUENTA -->
                     <div class="grid grid-cols-2 gap-3">
                         <div class="bg-white dark:bg-[#0A1730] p-3.5 rounded-xl border border-slate-200/80 dark:border-white/10 text-center">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Fecha de Registro</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">{{ __('Registration Date') }}</span>
                             <span class="text-xs font-black text-slate-900 dark:text-white" x-text="data.created_at || '—'"></span>
                         </div>
 
                         <div class="bg-white dark:bg-[#0A1730] p-3.5 rounded-xl border border-slate-200/80 dark:border-white/10 text-center">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Antigüedad</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">{{ __('Age') }}</span>
                             <span class="text-xs font-black text-sky-600 dark:text-sky-400" x-text="data.created_at_human || '—'"></span>
                         </div>
                     </div>
@@ -260,7 +260,7 @@
                 <button @click="close()"
                         type="button"
                         class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
-                    Cerrar
+                    {{ __('Close') }}
                 </button>
 
                 <template x-if="data?.edit_url">
@@ -269,7 +269,7 @@
                         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
-                        Editar Usuario
+                        {{ __('Edit User') }}
                     </a>
                 </template>
             </div>

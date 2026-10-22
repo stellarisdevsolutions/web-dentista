@@ -52,7 +52,7 @@
             try {
                 const res = await $wire.getAppointmentDetails(id);
                 if (!res) {
-                    this.errorMessage = 'No se encontró la cita solicitada o no tienes permisos para verla.';
+                    this.errorMessage = '{{ __('The requested appointment was not found or you do not have permission to view it.') }}';
                     this.isLoading = false;
                     return;
                 }
@@ -60,7 +60,7 @@
                 this.isLoading = false;
             } catch (err) {
                 console.error(err);
-                this.errorMessage = 'Ocurrió un error al cargar los datos de la cita.';
+                this.errorMessage = '{{ __('An error occurred while loading appointment data.') }}';
                 this.isLoading = false;
             }
         },
@@ -204,7 +204,7 @@
                 }
             } catch (err) {
                 console.error('Error al consultar horarios', err);
-                this.rescheduleError = 'Error al consultar horarios disponibles.';
+                this.rescheduleError = '{{ __('Error querying available time slots.') }}';
             } finally {
                 this.rescheduleSlotsLoading = false;
             }
@@ -217,7 +217,7 @@
 
         async submitReschedule() {
             if (!this.rescheduleDate || !this.rescheduleTime) {
-                this.rescheduleError = 'Por favor selecciona la fecha y un horario disponible.';
+                this.rescheduleError = '{{ __('Please select a date and an available time slot.') }}';
                 return;
             }
             this.rescheduleLoading = true;
@@ -234,10 +234,10 @@
                     this.data = res.data;
                     this.isRescheduleOpen = false;
                 } else {
-                    this.rescheduleError = res.error || 'Error al reprogramar la cita.';
+                    this.rescheduleError = res.error || '{{ __('Error rescheduling appointment.') }}';
                 }
             } catch (err) {
-                this.rescheduleError = 'Error de conexión al reprogramar la cita.';
+                this.rescheduleError = '{{ __('Connection error while rescheduling appointment.') }}';
             } finally {
                 this.rescheduleLoading = false;
             }
@@ -308,14 +308,14 @@
                 <div>
                     <div class="flex items-center gap-2">
                         <h3 class="text-base font-extrabold text-white leading-tight">
-                            Detalle de Cita
+                            {{ __('Appointment Detail') }}
                         </h3>
                         <span class="px-2.5 py-0.5 rounded-full font-mono text-xs font-black bg-[#16294D] text-[#38BDF8] border border-sky-400/30 shadow-inner"
                               x-text="data?.code ? data.code : '...'">
                         </span>
                     </div>
                     <p class="text-xs text-sky-200/90 font-medium mt-0.5">
-                        Gestión clínica y operativa de la cita
+                        {{ __('Clinical and operational appointment management') }}
                     </p>
                 </div>
             </div>
@@ -323,7 +323,7 @@
             <!-- Botón Cerrar (con hover sutil estilo sidebar) -->
             <button type="button"
                     @click="close()"
-                    aria-label="Cerrar panel"
+                    aria-label="{{ __('Close panel') }}"
                     class="w-9 h-9 rounded-full flex items-center justify-center text-slate-300 hover:text-white hover:bg-[#16294D] transition-all">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -379,7 +379,7 @@
                 </div>
                 <div class="space-y-1">
                     <h4 class="font-extrabold text-slate-900 dark:text-white text-base">
-                        No se pudo obtener la cita
+                        {{ __('Could not load appointment') }}
                     </h4>
                     <p class="text-xs text-slate-600 dark:text-slate-300 font-medium max-w-xs mx-auto" x-text="errorMessage"></p>
                 </div>
@@ -387,12 +387,12 @@
                     <button type="button"
                             @click="retry()"
                             class="px-5 py-2.5 rounded-full text-xs font-extrabold bg-[#0EA5E9] hover:bg-[#0284C7] text-[#0F172A] shadow-md shadow-sky-500/25 transition-all">
-                        Reintentar
+                        {{ __('Retry') }}
                     </button>
                     <button type="button"
                             @click="close()"
                             class="px-4 py-2.5 rounded-full text-xs font-bold bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-colors">
-                        Cerrar
+                        {{ __('Close') }}
                     </button>
                 </div>
             </div>
@@ -411,7 +411,7 @@
 
                             <div class="min-w-0">
                                 <span class="text-[11px] font-black uppercase tracking-wider text-[#0A74B8] dark:text-[#38BDF8]">
-                                    Paciente
+                                    {{ __('Patient') }}
                                 </span>
                                 <h4 class="font-extrabold text-slate-900 dark:text-white text-lg leading-snug truncate"
                                     x-text="data?.patient_name">
@@ -419,7 +419,7 @@
                                 <div class="flex items-center gap-2 mt-0.5">
                                     <template x-if="data?.patient_phone">
                                         <span class="text-xs font-bold text-slate-700 dark:text-slate-300"
-                                              x-text="'Tel. ' + data?.patient_phone">
+                                              x-text="'{{ __('Phone:') }} ' + data?.patient_phone">
                                         </span>
                                     </template>
                                 </div>
@@ -438,7 +438,7 @@
                     <!-- Información de Contacto: Correo -->
                     <template x-if="data?.patient_email">
                         <div class="mt-4 pt-3.5 border-t border-slate-100 dark:border-white/10 flex items-center justify-between text-xs">
-                            <span class="text-slate-600 dark:text-slate-300 font-bold">Correo electrónico:</span>
+                            <span class="text-slate-600 dark:text-slate-300 font-bold">{{ __('Email address:') }}</span>
                             <span class="font-extrabold text-slate-900 dark:text-white" x-text="data?.patient_email"></span>
                         </div>
                     </template>
@@ -455,22 +455,22 @@
                                 <line x1="8" y1="2" x2="8" y2="6"></line>
                                 <line x1="3" y1="10" x2="21" y2="10"></line>
                             </svg>
-                            Cita Programada
+                            {{ __('Scheduled Appointment') }}
                         </span>
                         <span class="px-3 py-1 rounded-full text-xs font-extrabold bg-[#E0F2FE] dark:bg-[#16294D] text-[#0A74B8] dark:text-[#38BDF8] border border-sky-300/40 dark:border-sky-500/20"
-                              x-text="data?.duration">
+                                x-text="data?.duration">
                         </span>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 pt-1">
                         <div>
-                            <span class="text-xs text-slate-600 dark:text-slate-300 font-bold">Horario</span>
+                            <span class="text-xs text-slate-600 dark:text-slate-300 font-bold">{{ __('Schedule') }}</span>
                             <div class="agenda-time-text font-black text-2xl mt-0.5 leading-none text-slate-900 dark:text-white"
                                  x-text="data?.appointment_time">
                             </div>
                         </div>
                         <div>
-                            <span class="text-xs text-slate-600 dark:text-slate-300 font-bold">Fecha</span>
+                            <span class="text-xs text-slate-600 dark:text-slate-300 font-bold">{{ __('Date') }}</span>
                             <div class="font-extrabold text-slate-900 dark:text-white text-sm mt-1 capitalize leading-snug"
                                  x-text="data?.appointment_date">
                             </div>
@@ -485,7 +485,7 @@
                     <div class="p-4.5 rounded-2xl bg-white dark:bg-[#0A1730] border border-slate-200/90 dark:border-white/10 shadow-sm flex flex-col justify-between">
                         <div>
                             <span class="text-[11px] font-black uppercase tracking-wider text-[#0A74B8] dark:text-[#38BDF8] block">
-                                Tratamiento
+                                {{ __('Treatment') }}
                             </span>
                             <div class="agenda-treatment-cell text-sm font-extrabold mt-1 leading-snug text-slate-900 dark:text-white"
                                  x-text="data?.service_name">
@@ -493,7 +493,7 @@
                         </div>
                         <template x-if="data?.service_price">
                             <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-white/10 text-xs text-slate-700 dark:text-slate-300 font-bold"
-                                 x-text="'Desde ' + data?.service_price">
+                                 x-text="'{{ __('From') }} ' + data?.service_price">
                             </div>
                         </template>
                     </div>
@@ -502,7 +502,7 @@
                     <div class="p-4.5 rounded-2xl bg-white dark:bg-[#0A1730] border border-slate-200/90 dark:border-white/10 shadow-sm flex flex-col justify-between">
                         <div>
                             <span class="text-[11px] font-black uppercase tracking-wider text-[#0A74B8] dark:text-[#38BDF8] block">
-                                Especialista
+                                {{ __('Specialist') }}
                             </span>
                             <div class="agenda-specialist-name text-sm font-extrabold mt-1 leading-snug"
                                  x-text="data?.dentist_name">
@@ -523,7 +523,7 @@
                             <svg width="15" height="15" class="text-[#0EA5E9]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            Motivo / Síntomas reportados
+                            {{ __('Reported Reason / Symptoms') }}
                         </span>
                         <p class="text-xs font-semibold leading-relaxed text-slate-800 dark:text-slate-200" x-text="data?.symptoms"></p>
                     </div>
@@ -535,27 +535,27 @@
                         <svg width="15" height="15" class="text-[#0EA5E9]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        Notas de Recepción
+                        {{ __('Reception Notes') }}
                     </span>
                     <p class="text-xs font-semibold leading-relaxed text-slate-800 dark:text-slate-200 whitespace-pre-line"
-                       x-text="data?.internal_notes || 'Sin notas de recepción registradas para esta cita.'">
+                       x-text="data?.internal_notes || '{{ __('No reception notes registered for this appointment.') }}'">
                     </p>
                 </div>
 
                 <!-- INFORMACIÓN CLÍNICA Y OPERATIVA (Datos reales) -->
                 <div class="p-4.5 rounded-2xl bg-white dark:bg-[#0A1730] border border-slate-200/90 dark:border-white/10 shadow-sm space-y-2.5 text-xs">
                     <span class="text-[11px] font-black uppercase tracking-wider text-[#0A74B8] dark:text-[#38BDF8] block mb-1">
-                        Información Clínica y Registro
+                        {{ __('Clinical Information and Record') }}
                     </span>
                     <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-white/10">
-                        <span class="text-slate-600 dark:text-slate-300 font-bold">Tipo de paciente</span>
+                        <span class="text-slate-600 dark:text-slate-300 font-bold">{{ __('Patient type') }}</span>
                         <span :class="data?.is_first_visit ? 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300 border-sky-300/50' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200 border-slate-200 dark:border-white/10'"
                               class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold border"
                               x-text="data?.is_first_visit_label">
                         </span>
                     </div>
                     <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-white/10">
-                        <span class="text-slate-600 dark:text-slate-300 font-bold">Fecha de agendamiento</span>
+                        <span class="text-slate-600 dark:text-slate-300 font-bold">{{ __('Booking date') }}</span>
                         <span class="font-extrabold text-slate-900 dark:text-white" x-text="data?.created_at_formatted"></span>
                     </div>
                 </div>
@@ -574,11 +574,11 @@
                         <button type="button"
                                 @click="openCancel()"
                                 class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-black bg-[#EF4444] hover:bg-[#DC2626] text-white shadow-md shadow-rose-500/30 transition-all hover:scale-102 active:scale-98"
-                                title="Cancelar esta cita clínica">
+                                title="{{ __('Cancel this clinical appointment') }}">
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
-                            <span>Cancelar Cita</span>
+                            <span>{{ __('Cancel Appointment') }}</span>
                         </button>
                     </template>
 
@@ -590,7 +590,7 @@
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            <span>Reprogramar</span>
+                            <span>{{ __('Reschedule') }}</span>
                         </button>
                     </template>
 
@@ -602,7 +602,7 @@
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                             </svg>
-                            <span>En Sala</span>
+                            <span>{{ __('In Clinic') }}</span>
                         </button>
                     </template>
 
@@ -614,7 +614,7 @@
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
-                            <span>Confirmar</span>
+                            <span>{{ __('Confirm') }}</span>
                         </button>
                     </template>
 
@@ -626,7 +626,7 @@
                             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
-                            <span>Completar</span>
+                            <span>{{ __('Complete') }}</span>
                         </button>
                     </template>
                 </div>
@@ -639,11 +639,11 @@
                         <template x-if="data?.can_edit">
                             <a :href="data?.edit_url"
                                class="inline-flex items-center gap-1.5 px-4.5 py-2.5 rounded-full text-xs font-extrabold text-white bg-[#0A1730] hover:bg-[#16294D] border border-white/15 shadow-sm transition-all hover:scale-102 active:scale-98"
-                               title="Editar todos los campos de la cita">
+                               title="{{ __('Edit all appointment fields') }}">
                                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
-                                <span>Editar</span>
+                                <span>{{ __('Edit') }}</span>
                             </a>
                         </template>
                     </div>
@@ -652,12 +652,12 @@
                     <button type="button"
                             @click="close()"
                             class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-xs font-extrabold text-white bg-[#0A1730] hover:bg-[#16294D] border border-white/15 shadow-sm transition-all hover:scale-102 active:scale-98"
-                            title="Cerrar este panel">
+                            title="{{ __('Close this panel') }}">
                         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
                             <line x1="6" y1="6" x2="18" y2="18"></line>
                         </svg>
-                        <span>Cerrar</span>
+                        <span>{{ __('Close') }}</span>
                     </button>
                 </div>
             </div>
@@ -690,10 +690,10 @@
                     </div>
                     <div>
                         <h4 class="font-black text-slate-900 dark:text-white text-lg tracking-tight">
-                            Reprogramar Cita
+                            {{ __('Reschedule Appointment') }}
                         </h4>
                         <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                            Cita <strong class="text-sky-600 dark:text-sky-400" x-text="data?.code"></strong> · <span class="font-bold text-slate-700 dark:text-slate-200" x-text="data?.patient_name"></span>
+                            {{ __('Appointment') }} <strong class="text-sky-600 dark:text-sky-400" x-text="data?.code"></strong> · <span class="font-bold text-slate-700 dark:text-slate-200" x-text="data?.patient_name"></span>
                         </p>
                     </div>
                 </div>
@@ -724,7 +724,7 @@
                     <!-- 1. Tratamiento Dental -->
                     <div>
                         <div class="flex items-center justify-between mb-1.5">
-                            <label class="font-black text-slate-800 dark:text-slate-200">1. Tratamiento Dental</label>
+                            <label class="font-black text-slate-800 dark:text-slate-200">{{ __('1. Dental Treatment') }}</label>
                             <span class="text-[10px] text-sky-600 dark:text-sky-400 font-extrabold" x-text="currentSelectedServiceDuration + ' min'"></span>
                         </div>
                         <select x-model="rescheduleServiceId"
@@ -739,14 +739,14 @@
                     <!-- 2. Especialista -->
                     <div>
                         <div class="flex items-center justify-between mb-1.5">
-                            <label class="font-black text-slate-800 dark:text-slate-200">2. Especialista</label>
-                            <span class="text-[10px] text-slate-400 font-medium">Asignado</span>
+                            <label class="font-black text-slate-800 dark:text-slate-200">{{ __('2. Specialist') }}</label>
+                            <span class="text-[10px] text-slate-400 font-medium">{{ __('Assigned') }}</span>
                         </div>
                         <select x-model="rescheduleDentistId"
                                 @change="onRescheduleDentistChange()"
                                 :disabled="rescheduleCatalogs.is_dentist_user"
                                 class="w-full px-3.5 py-2.5 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-[#16294D] font-bold text-slate-900 dark:text-white focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 outline-none transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
-                            <option value="">Primer especialista disponible (horarios unificados)</option>
+                            <option value="">{{ __('First available specialist (unified schedule)') }}</option>
                             <template x-for="doc in filteredRescheduleDentists" :key="doc.id">
                                 <option :value="doc.id" x-text="doc.name + (doc.specialty ? ' · ' + doc.specialty : '')"></option>
                             </template>
@@ -756,7 +756,7 @@
 
                 <!-- 3. Fecha de la Cita -->
                 <div>
-                    <label class="block font-black text-slate-800 dark:text-slate-200 mb-1.5">3. Nueva Fecha de la Cita</label>
+                    <label class="block font-black text-slate-800 dark:text-slate-200 mb-1.5">{{ __('3. New Appointment Date') }}</label>
                     <input type="date"
                            x-model="rescheduleDate"
                            @change="onRescheduleDateChange()"
@@ -769,10 +769,10 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <span class="block font-black text-slate-900 dark:text-white text-xs">
-                                4. Horarios Disponibles
+                                {{ __('4. Available Time Slots') }}
                             </span>
                             <span class="text-[11px] text-slate-500 dark:text-slate-400">
-                                Horario seleccionado: <strong class="text-sky-600 dark:text-sky-400" x-text="rescheduleTime ? rescheduleTime : 'Ninguno'"></strong>
+                                {{ __('Selected Time:') }} <strong class="text-sky-600 dark:text-sky-400" x-text="rescheduleTime ? rescheduleTime : '{{ __('None') }}'"></strong>
                             </span>
                         </div>
                         <div x-show="rescheduleSlotsLoading" class="flex items-center gap-1.5 text-[11px] text-sky-600 dark:text-sky-400 font-bold">
@@ -780,20 +780,20 @@
                                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.25"></circle>
                                 <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                             </svg>
-                            <span>Consultando turnos...</span>
+                            <span>{{ __('Checking shifts...') }}</span>
                         </div>
                     </div>
 
                     <!-- Si está cargando slots -->
                     <div x-show="rescheduleSlotsLoading" class="py-6 text-center text-slate-400 space-y-2">
-                        <div class="inline-block animate-pulse text-xs font-semibold">Cargando disponibilidad del especialista...</div>
+                        <div class="inline-block animate-pulse text-xs font-semibold">{{ __('Loading specialist availability...') }}</div>
                     </div>
 
                     <!-- Si no hay slots disponibles en esa fecha -->
                     <div x-show="!rescheduleSlotsLoading && !rescheduleSlots.has_available_slots" 
                          class="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-amber-800 dark:text-amber-300 text-xs text-center space-y-1">
-                        <p class="font-bold">No hay horarios libres para esta fecha.</p>
-                        <p class="text-[11px] text-amber-700 dark:text-amber-400 font-medium">El especialista no tiene turnos configurados o ya están completamente ocupados. Por favor elige otra fecha.</p>
+                        <p class="font-bold">{{ __('No available schedules for this date.') }}</p>
+                        <p class="text-[11px] text-amber-700 dark:text-amber-400 font-medium">{{ __('The specialist has no shifts configured or they are fully booked. Please choose another date.') }}</p>
                     </div>
 
                     <!-- Turnos Mañana y Tarde -->
@@ -810,14 +810,14 @@
                                     <path d="M5 16a7 7 0 0 1 14 0"></path>
                                     <path d="M2 20h20"></path>
                                 </svg>
-                                <span>Turno Mañana</span>
+                                <span>{{ __('Morning Shift') }}</span>
                             </div>
                             <div class="flex flex-wrap gap-2">
                                 <template x-for="slot in rescheduleSlots.morning_slots" :key="slot.time">
                                     <button type="button"
                                             @click="slot.available && selectRescheduleTime(slot.time)"
                                             :disabled="!slot.available"
-                                            :title="slot.available ? 'Seleccionar ' + slot.label : 'Horario no disponible o fuera de turno'"
+                                            :title="slot.available ? '{{ __('Select') }} ' + slot.label : '{{ __('Time slot unavailable or outside shift') }}'"
                                             class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-150 flex items-center gap-1.5"
                                             :class="{
                                                 'bg-[#0A1730] text-white shadow-md ring-2 ring-sky-500 dark:bg-sky-500 dark:text-white': rescheduleTime === slot.time,
@@ -846,14 +846,14 @@
                                     <path d="m4.93 4.93 2.12 2.12"></path>
                                     <path d="m19.07 4.93-2.12 2.12"></path>
                                 </svg>
-                                <span>Turno Tarde</span>
+                                <span>{{ __('Afternoon Shift') }}</span>
                             </div>
                             <div class="flex flex-wrap gap-2">
                                 <template x-for="slot in rescheduleSlots.afternoon_slots" :key="slot.time">
                                     <button type="button"
                                             @click="slot.available && selectRescheduleTime(slot.time)"
                                             :disabled="!slot.available"
-                                            :title="slot.available ? 'Seleccionar ' + slot.label : 'Horario no disponible o fuera de turno'"
+                                            :title="slot.available ? '{{ __('Select') }} ' + slot.label : '{{ __('Time slot unavailable or outside shift') }}'"
                                             class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-150 flex items-center gap-1.5"
                                             :class="{
                                                 'bg-[#0A1730] text-white shadow-md ring-2 ring-sky-500 dark:bg-sky-500 dark:text-white': rescheduleTime === slot.time,
@@ -879,7 +879,7 @@
                 <button type="button"
                         @click="closeReschedule()"
                         class="px-5 py-2.5 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
-                    Cancelar
+                    {{ __('Cancel') }}
                 </button>
                 <button type="button"
                         @click="submitReschedule()"
@@ -889,7 +889,7 @@
                         <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.25"></circle>
                         <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                     </svg>
-                    <span x-text="rescheduleLoading ? 'Reprogramando...' : 'Guardar Nueva Fecha y Horario'"></span>
+                    <span x-text="rescheduleLoading ? '{{ __('Rescheduling...') }}' : '{{ __('Save New Date & Time') }}'"></span>
                 </button>
             </div>
         </div>
@@ -910,7 +910,7 @@
             
             <div class="flex items-center justify-between border-b border-slate-100 dark:border-white/10 pb-3">
                 <h4 class="font-extrabold text-slate-900 dark:text-white text-base">
-                    Cancelar Cita
+                    {{ __('Cancel Appointment') }}
                 </h4>
                 <button type="button" @click="closeCancel()" class="text-slate-400 hover:text-slate-600">
                     ✕
@@ -919,13 +919,13 @@
 
             <div class="space-y-3.5 text-xs">
                 <p class="text-slate-600 dark:text-slate-400">
-                    ¿Estás seguro de que deseas cancelar la cita de <strong class="text-slate-900 dark:text-white" x-text="data?.patient_name"></strong>?
+                    {{ __('Are you sure you want to cancel the appointment for') }} <strong class="text-slate-900 dark:text-white" x-text="data?.patient_name"></strong>?
                 </p>
                 <div>
-                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">Motivo (opcional)</label>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">{{ __('Reason (optional)') }}</label>
                     <textarea x-model="cancelReason"
                               rows="2"
-                              placeholder="Ej. Paciente reprogramará para la próxima semana..."
+                              placeholder="{{ __('e.g. Patient will reschedule next week...') }}"
                               class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#16294D] font-medium text-slate-800 dark:text-white"></textarea>
                 </div>
             </div>
@@ -934,13 +934,13 @@
                 <button type="button"
                         @click="closeCancel()"
                         class="px-4 py-2 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100">
-                    Volver
+                    {{ __('Go Back') }}
                 </button>
                 <button type="button"
                         @click="submitCancel()"
                         :disabled="cancelLoading"
                         class="px-5 py-2 rounded-full text-xs font-extrabold bg-rose-600 hover:bg-rose-500 text-white flex items-center gap-1.5 disabled:opacity-50 shadow-sm">
-                    <span x-text="cancelLoading ? 'Cancelando...' : 'Sí, Cancelar Cita'"></span>
+                    <span x-text="cancelLoading ? '{{ __('Cancelling...') }}' : '{{ __('Yes, Cancel Appointment') }}'"></span>
                 </button>
             </div>
         </div>

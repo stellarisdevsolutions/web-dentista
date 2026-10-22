@@ -25,7 +25,7 @@
             try {
                 const res = await $wire.getDentistDetails(id);
                 if (!res) {
-                    this.errorMessage = 'No se encontró el especialista solicitado o no tienes permisos para verlo.';
+                    this.errorMessage = '{{ __('The requested specialist was not found or you do not have permission to view it.') }}';
                     this.isLoading = false;
                     return;
                 }
@@ -33,7 +33,7 @@
                 this.isLoading = false;
             } catch (err) {
                 console.error('Error al cargar datos del especialista:', err);
-                this.errorMessage = 'Ocurrió un error inesperado al cargar la información del especialista.';
+                this.errorMessage = '{{ __('An unexpected error occurred while loading specialist information.') }}';
                 this.isLoading = false;
             }
         },
@@ -87,10 +87,10 @@
                     </div>
                     <div>
                         <h3 class="font-black text-slate-900 dark:text-white text-base tracking-tight leading-tight">
-                            Perfil del Especialista
+                            {{ __('Specialist Profile') }}
                         </h3>
                         <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
-                            Información profesional y horarios clínicos
+                            {{ __('Professional information and clinical schedules') }}
                         </p>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
                     <template x-if="data?.edit_url">
                         <a :href="data.edit_url"
                            class="p-2 rounded-xl text-slate-400 hover:text-sky-500 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
-                           title="Editar especialista">
+                           title="{{ __('Edit specialist') }}">
                             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                             </svg>
@@ -145,8 +145,8 @@
                     </div>
                     <p class="text-xs text-slate-600 dark:text-slate-300 font-medium" x-text="errorMessage"></p>
                     <div class="flex justify-center gap-2">
-                        <button type="button" @click="retry()" class="px-4 py-2 rounded-full text-xs font-extrabold bg-[#0EA5E9] text-white">Reintentar</button>
-                        <button type="button" @click="close()" class="px-4 py-2 rounded-full text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200">Cerrar</button>
+                        <button type="button" @click="retry()" class="px-4 py-2 rounded-full text-xs font-extrabold bg-[#0EA5E9] text-white">{{ __('Retry') }}</button>
+                        <button type="button" @click="close()" class="px-4 py-2 rounded-full text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200">{{ __('Close') }}</button>
                     </div>
                 </div>
 
@@ -171,12 +171,12 @@
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center justify-between gap-2">
                                     <span class="text-[10px] font-black uppercase tracking-wider text-[#0A74B8] dark:text-[#38BDF8]"
-                                          x-text="data?.specialty || 'Especialista'">
+                                          x-text="data?.specialty || '{{ __('Specialist') }}'">
                                     </span>
                                     <!-- Badge Disponibilidad -->
                                     <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black shrink-0"
                                           :class="data?.is_active ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-slate-500/10 text-slate-500 dark:text-slate-400 border border-slate-500/20'"
-                                          x-text="data?.is_active ? 'Disponible' : 'No disponible'">
+                                          x-text="data?.is_active ? '{{ __('Available') }}' : '{{ __('Unavailable') }}'">
                                     </span>
                                 </div>
 
@@ -195,7 +195,7 @@
                                         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
                                         </svg>
-                                        <span>Col. <strong class="text-slate-900 dark:text-white" x-text="data.license_number"></strong></span>
+                                        <span>{{ __('License') }} <strong class="text-slate-900 dark:text-white" x-text="data.license_number"></strong></span>
                                     </div>
                                 </template>
                             </div>
@@ -209,7 +209,7 @@
                                         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                         </svg>
-                                        Teléfono:
+                                        {{ __('Phone:') }}
                                     </span>
                                     <a :href="'tel:' + data.phone"
                                        class="font-extrabold text-[#0EA5E9] hover:underline"
@@ -224,7 +224,7 @@
                                         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
-                                        Correo:
+                                        {{ __('Email:') }}
                                     </span>
                                     <a :href="'mailto:' + data.email"
                                        class="font-extrabold text-slate-900 dark:text-white hover:underline truncate max-w-[220px]"
@@ -242,7 +242,7 @@
                                 <svg width="16" height="16" class="text-[#0EA5E9]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
-                                Biografía y Formación
+                                {{ __('Biography & Background') }}
                             </span>
                             <p class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium"
                                x-text="data.bio">
@@ -257,10 +257,10 @@
                                 <svg width="16" height="16" class="text-[#0EA5E9]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                                 </svg>
-                                Tratamientos que Atiende
+                                {{ __('Treatments Handled') }}
                             </span>
                             <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-[#E0F2FE] dark:bg-[#16294D] text-[#0A74B8] dark:text-[#38BDF8]"
-                                  x-text="(data?.services?.length || 0) + ' asignados'">
+                                  x-text="(data?.services?.length || 0) + ' ' + '{{ __('assigned') }}'">
                             </span>
                         </div>
 
@@ -273,7 +273,7 @@
                             </template>
                             <template x-if="!data?.services || data.services.length === 0">
                                 <span class="text-xs text-slate-500 dark:text-slate-400 italic">
-                                    Sin tratamientos específicos asignados (atiende tratamientos generales).
+                                    {{ __('No specific treatments assigned (handles general treatments).') }}
                                 </span>
                             </template>
                         </div>
@@ -286,7 +286,7 @@
                                 <circle cx="12" cy="12" r="10" />
                                 <polyline points="12 6 12 12 16 14" />
                             </svg>
-                            Turnos y Horarios Semanales
+                            {{ __('Weekly Schedule & Shifts') }}
                         </span>
 
                         <div class="space-y-2 pt-1">
@@ -308,7 +308,7 @@
                                         </div>
                                     </template>
                                     <template x-if="!item.is_working">
-                                        <span class="text-slate-400 dark:text-slate-500 font-semibold italic">Descanso</span>
+                                        <span class="text-slate-400 dark:text-slate-500 font-semibold italic">{{ __('Rest Day') }}</span>
                                     </template>
                                 </div>
                             </template>
@@ -324,7 +324,7 @@
                 <button type="button"
                         @click="close()"
                         class="px-5 py-2.5 rounded-full text-xs font-bold bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 transition-colors">
-                    Cerrar
+                    {{ __('Close') }}
                 </button>
 
                 <template x-if="data?.edit_url">
@@ -333,7 +333,7 @@
                         <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                         </svg>
-                        <span>Editar Especialista</span>
+                        <span>{{ __('Edit Specialist') }}</span>
                     </a>
                 </template>
             </div>

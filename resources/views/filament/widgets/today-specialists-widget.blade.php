@@ -3,11 +3,11 @@
         <!-- Cabecera -->
         <div class="aura-specialists-header">
             <div class="aura-specialists-header-text">
-                <h3 class="aura-specialists-title">Especialistas</h3>
-                <p class="aura-specialists-subtitle">Equipo odontológico en la clínica</p>
+                <h3 class="aura-specialists-title">{{ __('Specialists') }}</h3>
+                <p class="aura-specialists-subtitle">{{ __('Dental team at the clinic') }}</p>
             </div>
-            <div class="aura-specialists-shift-chip" title="Especialistas activos o con agenda hoy">
-                <span>{{ $data->inShiftCount }} en turno</span>
+            <div class="aura-specialists-shift-chip" title="{{ __('Active specialists or with scheduled appointments today') }}">
+                <span>{{ __(':count on shift', ['count' => $data->inShiftCount]) }}</span>
             </div>
         </div>
 
@@ -23,10 +23,10 @@
                             <line x1="22" y1="11" x2="16" y2="11"></line>
                         </svg>
                     </div>
-                    <p class="aura-specialists-empty-text">Aún no hay especialistas registrados</p>
+                    <p class="aura-specialists-empty-text">{{ __('No specialists registered yet') }}</p>
                     @if (auth()->user()?->isAdmin())
                         <a href="{{ url('/admin/dentists/create') }}" class="aura-btn-specialist-add">
-                            + Agregar especialista
+                            + {{ __('Add specialist') }}
                         </a>
                     @endif
                 </div>
@@ -72,7 +72,7 @@
                 @if (count($data->specialists) > 6)
                     <div class="aura-specialists-see-all">
                         <a href="{{ auth()->user()?->isAdmin() ? url('/admin/dentists') : url('/admin/appointments') }}">
-                            Ver todos ({{ $data->totalCount }})
+                            {{ __('View all') }} ({{ $data->totalCount }})
                         </a>
                     </div>
                 @endif
@@ -82,12 +82,12 @@
         <!-- Pie con botón de ancho completo -->
         <div class="aura-specialists-footer">
             @if (auth()->user()?->isAdmin())
-                <a href="{{ url('/admin/dentists') }}" class="aura-btn-specialists-action" title="Gestionar especialistas de la clínica">
-                    <span>Gestionar especialistas →</span>
+                <a href="{{ url('/admin/dentists') }}" class="aura-btn-specialists-action" title="{{ __('Manage clinic specialists') }}">
+                    <span>{{ __('Manage specialists') }} &rarr;</span>
                 </a>
             @else
-                <a href="{{ url('/admin/appointments') }}" class="aura-btn-specialists-action" title="Ver la agenda completa de citas por especialista">
-                    <span>Ver agenda por especialista →</span>
+                <a href="{{ url('/admin/appointments') }}" class="aura-btn-specialists-action" title="{{ __('View full appointment schedule by specialist') }}">
+                    <span>{{ __('View schedule by specialist') }} &rarr;</span>
                 </a>
             @endif
         </div>

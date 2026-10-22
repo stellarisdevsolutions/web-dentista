@@ -21,8 +21,8 @@ class UsersTable
             ->recordAction(null)
             ->recordUrl(null)
             ->header(view('filament.resources.users.table-header'))
-            ->emptyStateHeading('No hay usuarios registrados')
-            ->emptyStateDescription('Comienza añadiendo los miembros del equipo clínico y asignando sus roles.')
+            ->emptyStateHeading(__('No users registered'))
+            ->emptyStateDescription(__('Start by adding clinic team members and assigning their roles.'))
             ->emptyStateIcon('heroicon-o-users')
             ->columns([
                 TextColumn::make('avatar')
@@ -30,21 +30,21 @@ class UsersTable
                     ->view('filament.resources.users.columns.avatar-column'),
 
                 TextColumn::make('name')
-                    ->label('Nombre')
+                    ->label(__('Name'))
                     ->searchable()
                     ->sortable()
                     ->weight(FontWeight::Bold),
 
                 TextColumn::make('email')
-                    ->label('Correo Electrónico')
+                    ->label(__('Email Address'))
                     ->searchable()
                     ->copyable()
-                    ->copyMessage('Correo copiado al portapapeles')
+                    ->copyMessage(__('Email copied to clipboard'))
                     ->icon('heroicon-o-envelope')
                     ->sortable(),
 
                 TextColumn::make('role')
-                    ->label('Rol de Acceso')
+                    ->label(__('Access Role'))
                     ->badge()
                     ->icon(fn (UserRole $state): string => $state->icon())
                     ->color(fn (UserRole $state): string => $state->color())
@@ -52,34 +52,34 @@ class UsersTable
                     ->sortable(),
 
                 TextColumn::make('dentist.name')
-                    ->label('Especialista Vinculado')
+                    ->label(__('Linked Specialist'))
                     ->badge()
                     ->icon(fn (?string $state): ?string => $state ? 'heroicon-m-academic-cap' : null)
                     ->color('gray')
-                    ->placeholder('Sin vincular')
+                    ->placeholder(__('Unlinked'))
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Fecha Alta')
+                    ->label(__('Registration Date'))
                     ->dateTime('d M, Y')
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('role')
-                    ->label('Filtrar por Rol')
+                    ->label(__('Filter by Role'))
                     ->options([
-                        UserRole::Admin->value => 'Administradores',
-                        UserRole::Receptionist->value => 'Recepción',
-                        UserRole::Dentist->value => 'Odontólogos',
+                        UserRole::Admin->value => __('Administrators'),
+                        UserRole::Receptionist->value => __('Receptionists'),
+                        UserRole::Dentist->value => __('Dentists'),
                     ]),
             ])
             ->recordActions([
                 EditAction::make()
                     ->iconButton()
-                    ->tooltip('Editar usuario'),
+                    ->tooltip(__('Edit user')),
                 DeleteAction::make()
                     ->iconButton()
-                    ->tooltip('Eliminar usuario')
+                    ->tooltip(__('Delete user'))
                     ->visible(fn (User $record): bool => auth()->id() !== $record->id),
             ]);
     }

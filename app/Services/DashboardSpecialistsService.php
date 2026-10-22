@@ -66,19 +66,19 @@ class DashboardSpecialistsService
 
             if ($hasInConsultation) {
                 $statusKey = 'in_consultation';
-                $statusLabel = 'En consulta';
+                $statusLabel = __('In consultation');
                 $statusBgColor = '#E0F2FE';
                 $statusTextColor = '#0A74B8';
                 $inShiftCount++;
             } elseif ($appointmentsCount > 0) {
                 $statusKey = 'available';
-                $statusLabel = 'Disponible';
+                $statusLabel = __('Available');
                 $statusBgColor = '#DCFCE7';
                 $statusTextColor = '#166534';
                 $inShiftCount++;
             } else {
                 $statusKey = 'no_appointments';
-                $statusLabel = 'Sin citas hoy';
+                $statusLabel = __('No appointments today');
                 $statusBgColor = '#E6ECF4';
                 $statusTextColor = '#5B6B86';
             }
@@ -96,8 +96,8 @@ class DashboardSpecialistsService
             // Color del avatar determinista con id % 6
             $avatarBgColor = self::AVATAR_PALETTE[$dentist->id % count(self::AVATAR_PALETTE)];
 
-            $specialty = ! empty($dentist->specialty) ? $dentist->specialty : 'Odontología general';
-            $appointmentsText = $appointmentsCount === 1 ? '1 cita hoy' : "{$appointmentsCount} citas hoy";
+            $specialty = ! empty($dentist->specialty) ? $dentist->specialty : __('General dentistry');
+            $appointmentsText = $appointmentsCount === 1 ? __('1 appointment today') : __(':count appointments today', ['count' => $appointmentsCount]);
 
             $specialistItems[] = new TodaySpecialistItemData(
                 id: $dentist->id,

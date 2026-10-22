@@ -19,32 +19,32 @@ class BannersTable
             ->defaultSort('order', 'asc')
             ->columns([
                 ImageColumn::make('background_image')
-                    ->label('Imagen')
+                    ->label(__('Image'))
                     ->disk('public'),
 
                 TextColumn::make('badge')
-                    ->label('Etiqueta')
+                    ->label(__('Badge'))
                     ->badge(),
 
                 TextColumn::make('title')
-                    ->label('Título Principal')
+                    ->label(__('Title'))
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
                 TextColumn::make('button_text')
-                    ->label('Texto Botón (CTA)'),
+                    ->label(__('Button CTA Text')),
 
                 ToggleColumn::make('is_active')
-                    ->label('Activo'),
+                    ->label(__('Active')),
 
                 TextColumn::make('order')
-                    ->label('Orden')
+                    ->label(__('Sort Order'))
                     ->sortable(),
             ])
             ->filters([
                 TernaryFilter::make('is_active')
-                    ->label('Banners Activos'),
+                    ->label(__('Active banners')),
             ])
             ->recordActions([
                 EditAction::make(),

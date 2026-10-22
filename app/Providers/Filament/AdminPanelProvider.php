@@ -14,6 +14,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -53,14 +54,18 @@ class AdminPanelProvider extends PanelProvider
                 fn () => view('filament.admin.theme-overrides')
             )
             ->navigationItems([
-                NavigationItem::make('Editor Web')
+                NavigationItem::make('Web Editor')
+                    ->label(fn (): string => __('Web Editor'))
                     ->url(fn (): string => route('admin.editor.index'))
                     ->icon('heroicon-o-paint-brush')
-                    ->sort(6),
-                NavigationItem::make('Biblioteca Multimedia')
-                    ->url(fn (): string => route('admin.media.standalone'))
-                    ->icon('heroicon-o-photo')
-                    ->sort(7),
+                    ->group(fn (): string => __('Web Content & CMS'))
+                    ->sort(1),
+            ])
+            ->navigationGroups([
+                NavigationGroup::make()->label(fn (): string => __('Clinical Management')),
+                NavigationGroup::make()->label(fn (): string => __('Web Content & CMS')),
+                NavigationGroup::make()->label(fn (): string => __('Settings')),
+                NavigationGroup::make()->label(fn (): string => __('System Administration')),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

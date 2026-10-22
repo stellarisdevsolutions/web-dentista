@@ -15,6 +15,7 @@ use App\Models\Appointment;
 use App\Models\Dentist;
 use App\Models\Service;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -127,7 +128,7 @@ class CreateAndEditRedirectNotificationTest extends TestCase
             'patient_name' => 'Juan Paciente',
             'patient_email' => 'juan@test.com',
             'patient_phone' => '+123456789',
-            'appointment_date' => now()->addDays(2)->toDateString(),
+            'appointment_date' => now()->next(Carbon::MONDAY)->toDateString(),
             'appointment_time' => '10:00:00',
         ]);
 

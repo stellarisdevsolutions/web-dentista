@@ -39,55 +39,55 @@
                 </a>
 
                 <p class="text-slate-400 text-xs leading-relaxed font-light">
-                    {{ $footerClinic->tagline ?? 'Odontología integral, moderna y sin dolor. Escaneos 3D, tecnología láser y atención personalizada para toda la familia.' }}
+                    {{ $footerClinic->tagline ?? __('Odontología integral, moderna y sin dolor. Escaneos 3D, tecnología láser y atención personalizada para toda la familia.') }}
                 </p>
 
                 <div class="flex items-center gap-3 pt-2">
                     <div class="w-8 h-8 rounded-full bg-slate-800 text-sky-400 flex items-center justify-center text-xs font-bold border border-slate-700">
                         ✓
                     </div>
-                    <span class="text-xs font-bold text-slate-300">Especialistas Médicos Colegiados</span>
+                    <span class="text-xs font-bold text-slate-300">{{ __('Especialistas Médicos Colegiados') }}</span>
                 </div>
             </div>
 
             <!-- Col 2: Quick Links -->
             <div>
-                <h4 class="text-white font-extrabold text-sm uppercase tracking-wider mb-5">Navegación</h4>
+                <h4 class="text-white font-extrabold text-sm uppercase tracking-wider mb-5">{{ __('Navegación') }}</h4>
                 <ul class="space-y-3 text-xs font-medium">
                     <li>
                         <a href="{{ route('home') }}" class="hover:text-sky-400 transition-colors flex items-center gap-2">
                             <span class="text-sky-500 font-bold">›</span>
-                            <span>Página de Inicio</span>
+                            <span>{{ __('Página de Inicio') }}</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('about') }}" class="hover:text-sky-400 transition-colors flex items-center gap-2">
                             <span class="text-sky-500 font-bold">›</span>
-                            <span>Sobre Nosotros y Doctores</span>
+                            <span>{{ __('Sobre Nosotros y Doctores') }}</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('services.index') }}" class="hover:text-sky-400 transition-colors flex items-center gap-2">
                             <span class="text-sky-500 font-bold">›</span>
-                            <span>Catálogo de Tratamientos</span>
+                            <span>{{ __('Catálogo de Tratamientos') }}</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('blog.index') }}" class="hover:text-sky-400 transition-colors flex items-center gap-2">
                             <span class="text-sky-500 font-bold">›</span>
-                            <span>Blog y Consejos Clínicos</span>
+                            <span>{{ __('Blog y Consejos Clínicos') }}</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('contact') }}" class="hover:text-sky-400 transition-colors flex items-center gap-2">
                             <span class="text-sky-500 font-bold">›</span>
-                            <span>Contacto y Ubicación</span>
+                            <span>{{ __('Contacto y Ubicación') }}</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('schedule') }}" class="hover:text-sky-400 transition-colors flex items-center gap-2 font-bold text-sky-400">
                             <span class="text-sky-500 font-bold">›</span>
-                            <span>Agendar Cita en Línea 24/7</span>
+                            <span>{{ __('Agendar Cita en Línea 24/7') }}</span>
                         </a>
                     </li>
                 </ul>
@@ -95,7 +95,7 @@
 
             <!-- Col 3: Specialized Services -->
             <div>
-                <h4 class="text-white font-extrabold text-sm uppercase tracking-wider mb-5">Servicios Especializados</h4>
+                <h4 class="text-white font-extrabold text-sm uppercase tracking-wider mb-5">{{ __('Servicios Especializados') }}</h4>
                 <ul class="space-y-3 text-xs font-medium">
                     @foreach($footerServices as $fSvc)
                         <li>
@@ -108,7 +108,7 @@
                     <li>
                         <a href="{{ route('services.index') }}" class="text-sky-400 hover:text-sky-300 font-bold flex items-center gap-2 pt-1">
                             <span>✦</span>
-                            <span>Ver Todos los Procedimientos »</span>
+                            <span>{{ __('Ver Todos los Procedimientos »') }}</span>
                         </a>
                     </li>
                 </ul>
@@ -116,7 +116,7 @@
 
             <!-- Col 4: Emergency Contact -->
             <div class="space-y-4">
-                <h4 class="text-white font-extrabold text-sm uppercase tracking-wider mb-5">Contacto y Urgencias</h4>
+                <h4 class="text-white font-extrabold text-sm uppercase tracking-wider mb-5">{{ __('Contacto y Urgencias') }}</h4>
                 
                 <div class="p-4 rounded-2xl bg-[#13223f] border border-slate-800 space-y-3">
                     <div class="flex items-center gap-3">
@@ -126,7 +126,7 @@
                             </svg>
                         </div>
                         <div>
-                            <p class="text-[10px] text-slate-400 uppercase font-bold">Línea Telefónica 24/7</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold">{{ __('Línea Telefónica 24/7') }}</p>
                             <a href="tel:{{ preg_replace('/[^0-9+]/', '', $footerClinic->emergency_phone ?? $footerClinic->phone) }}" class="text-xs font-black text-sky-400 hover:underline">
                                 {{ $footerClinic->emergency_phone ?? $footerClinic->phone }}
                             </a>
@@ -141,7 +141,7 @@
                             </svg>
                         </div>
                         <div>
-                            <p class="text-[10px] text-slate-400 uppercase font-bold">Dirección de la Clínica</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold">{{ __('Dirección de la Clínica') }}</p>
                             <p class="text-xs text-slate-300 leading-tight">{{ $footerClinic->address }}</p>
                         </div>
                     </div>
@@ -152,7 +152,7 @@
                         href="{{ route('schedule') }}"
                         class="w-full inline-flex items-center justify-center py-2.5 px-4 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm"
                     >
-                        Agendar Cita Médica »
+                        {{ __('Agendar Cita Médica »') }}
                     </a>
                 </div>
             </div>
@@ -161,12 +161,12 @@
 
         <!-- Bottom Copyright -->
         <div class="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 gap-4">
-            <p>© {{ date('Y') }} {{ $footerClinic->clinic_name }}. Todos los derechos reservados.</p>
+            <p>© {{ date('Y') }} {{ $footerClinic->clinic_name }}. {{ __('Todos los derechos reservados.') }}</p>
             <div class="flex flex-wrap items-center justify-center gap-6 text-xs font-bold text-slate-400">
-                <a href="{{ url('/admin') }}" class="hover:text-sky-400 transition-colors">Portal Administrativo</a>
-                <span class="hover:text-sky-400 cursor-pointer">Política de Privacidad</span>
-                <span class="hover:text-sky-400 cursor-pointer">Términos del Servicio</span>
-                <span class="hover:text-sky-400 cursor-pointer">Derechos del Paciente</span>
+                <a href="{{ url('/admin') }}" class="hover:text-sky-400 transition-colors">{{ __('Portal Administrativo') }}</a>
+                <a href="{{ route('privacy') }}" class="hover:text-sky-400 transition-colors">{{ __('Política de Privacidad') }}</a>
+                <a href="{{ route('terms') }}" class="hover:text-sky-400 transition-colors">{{ __('Términos del Servicio') }}</a>
+                <a href="{{ route('patient-rights') }}" class="hover:text-sky-400 transition-colors">{{ __('Derechos del Paciente') }}</a>
             </div>
         </div>
 
@@ -179,14 +179,14 @@
     <a 
         href="tel:{{ preg_replace('/[^0-9+]/', '', $footerClinic->emergency_phone ?? $footerClinic->phone) }}"
         class="flex items-center bg-rose-600 hover:bg-rose-700 text-white p-3.5 rounded-full shadow-2xl shadow-rose-600/40 hover:scale-105 active:scale-95 transition-all duration-300 group"
-        title="Llamar a Emergencias Odontológicas"
-        aria-label="Llamar a Emergencias Odontológicas"
+        title="{{ __('Llamar a Emergencias Odontológicas') }}"
+        aria-label="{{ __('Llamar a Emergencias Odontológicas') }}"
     >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 flex-shrink-0">
             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
         </svg>
         <span class="max-w-0 opacity-0 overflow-hidden whitespace-nowrap text-xs font-bold uppercase tracking-wider transition-all duration-300 ease-in-out group-hover:max-w-xs group-hover:opacity-100 group-hover:pl-2 group-hover:pr-1">
-            Emergencias
+            {{ __('Emergencias') }}
         </span>
     </a>
 
@@ -194,8 +194,8 @@
     <a 
         href="{{ route('schedule') }}"
         class="flex items-center bg-sky-500 hover:bg-sky-600 text-white p-3.5 rounded-full shadow-2xl shadow-sky-500/40 hover:scale-105 active:scale-95 transition-all duration-300 group"
-        title="Reservar Cita Online"
-        aria-label="Reservar Cita Online"
+        title="{{ __('Reservar Cita Online') }}"
+        aria-label="{{ __('Reservar Cita Online') }}"
     >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 flex-shrink-0">
             <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
@@ -205,7 +205,7 @@
             <path d="m9 16 2 2 4-4"></path>
         </svg>
         <span class="max-w-0 opacity-0 overflow-hidden whitespace-nowrap text-xs font-bold uppercase tracking-wider transition-all duration-300 ease-in-out group-hover:max-w-xs group-hover:opacity-100 group-hover:pl-2 group-hover:pr-1">
-            Reservar Cita
+            {{ __('Reservar Cita') }}
         </span>
     </a>
 </div>

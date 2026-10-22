@@ -57,6 +57,7 @@ class Service extends Model
         }
 
         $fallbacks = [
+            'general-checkup-consultation' => 'https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&w=800&q=80',
             'comprehensive-exam-cleaning' => 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80',
             'laser-teeth-whitening' => 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80',
             'clear-aligners-orthodontics' => 'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&w=800&q=80',

@@ -18,26 +18,26 @@ class FaqsTable
             ->defaultSort('order', 'asc')
             ->columns([
                 TextColumn::make('question')
-                    ->label('Pregunta')
+                    ->label(__('Question'))
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
                 TextColumn::make('category')
-                    ->label('Categoría')
+                    ->label(__('Category'))
                     ->badge()
                     ->searchable(),
 
                 ToggleColumn::make('is_active')
-                    ->label('Activo'),
+                    ->label(__('Active')),
 
                 TextColumn::make('order')
-                    ->label('Orden')
+                    ->label(__('Sort Order'))
                     ->sortable(),
             ])
             ->filters([
                 TernaryFilter::make('is_active')
-                    ->label('Preguntas Activas'),
+                    ->label(__('Active FAQs')),
             ])
             ->recordActions([
                 EditAction::make(),

@@ -7,8 +7,10 @@
 
     @include('partials.favicon')
 
-    <title>Reserva tu Cita Dental Online | {{ $clinic->clinic_name }}</title>
-    <meta name="description" content="Agenda tu consulta odontológica online 24/7. Elige tratamiento, turno mañana o tarde y recibe confirmación inmediata vía WhatsApp.">
+    @include('partials.seo-meta', [
+        'title' => __('Reserva tu Cita Dental Online') . ' | ' . $clinic->clinic_name,
+        'description' => __('Agenda tu consulta odontológica online 24/7. Elige tratamiento, turno mañana o tarde y recibe confirmación inmediata vía WhatsApp.'),
+    ])
 
     <!-- Google Fonts: Instrument Sans -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -33,10 +35,10 @@
                 <!-- Icon via JS -->
             </div>
             <div class="flex-1 min-w-0 pr-1">
-                <h5 id="bookingToastTitle" class="text-xs font-black text-slate-900 tracking-tight">Selección requerida</h5>
+                <h5 id="bookingToastTitle" class="text-xs font-black text-slate-900 tracking-tight">{{ __('Selección requerida') }}</h5>
                 <p id="bookingToastMessage" class="text-xs text-slate-600 mt-0.5 leading-snug"></p>
             </div>
-            <button type="button" onclick="hideToast()" class="text-slate-400 hover:text-slate-600 p-1 -mr-1 rounded-lg transition-colors" title="Cerrar notificación">
+            <button type="button" onclick="hideToast()" class="text-slate-400 hover:text-slate-600 p-1 -mr-1 rounded-lg transition-colors" title="{{ __('Cerrar notificación') }}">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -56,17 +58,17 @@
 
         $heroEyebrow = $scheduleHero['eyebrow'] ?? null;
         if (!array_key_exists('eyebrow', $scheduleHero)) {
-            $heroEyebrow = 'RESERVA ONLINE 24/7';
+            $heroEyebrow = __('RESERVA ONLINE 24/7');
         }
 
         $heroTitle = $scheduleHero['title'] ?? null;
         if (!array_key_exists('title', $scheduleHero)) {
-            $heroTitle = 'Agenda tu Cita Dental en 3 Pasos';
+            $heroTitle = __('Agenda tu Cita Dental en 3 Pasos');
         }
 
         $heroSubtitle = $scheduleHero['subtitle'] ?? null;
         if (!array_key_exists('subtitle', $scheduleHero)) {
-            $heroSubtitle = 'Selecciona tu tratamiento, el turno que mejor te acomode (Mañana o Tarde) y recibe confirmación instantánea vía WhatsApp con recepción.';
+            $heroSubtitle = __('Selecciona tu tratamiento, el turno que mejor te acomode (Mañana o Tarde) y recibe confirmación instantánea vía WhatsApp con recepción.');
         }
 
         $hasHeroEyebrow = filled(trim($heroEyebrow ?? ''));
@@ -138,15 +140,15 @@
                         <!-- ============================================== -->
                         <div id="stepView1" class="space-y-8">
                             <div class="border-b border-slate-100 pb-4">
-                                <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">Paso 1 de 3</span>
-                                <h2 class="text-2xl font-black text-slate-900">Tipo de Paciente y Tratamiento</h2>
-                                <p class="text-xs text-slate-500">Indícanos si es tu primera consulta y el procedimiento que necesitas.</p>
+                                <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">{{ __('Paso 1 de 3') }}</span>
+                                <h2 class="text-2xl font-black text-slate-900">{{ __('Tipo de Paciente y Tratamiento') }}</h2>
+                                <p class="text-xs text-slate-500">{{ __('Indícanos si es tu primera consulta y el procedimiento que necesitas.') }}</p>
                             </div>
 
                             <!-- 1. Patient Type Selector (Nuevo vs Ya soy paciente) -->
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2.5">
-                                    1. ¿Nos visitas por primera vez?
+                                    1. {{ __('¿Nos visitas por primera vez?') }}
                                 </label>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                     <!-- Card 1: Soy Paciente Nuevo -->
@@ -162,7 +164,7 @@
                                                     <circle cx="12" cy="7" r="4"></circle>
                                                 </svg>
                                             </div>
-                                            <span class="font-bold text-slate-900 text-sm sm:text-base">Soy Paciente Nuevo</span>
+                                            <span class="font-bold text-slate-900 text-sm sm:text-base">{{ __('Soy Paciente Nuevo') }}</span>
                                         </div>
                                         <div class="check-circle-patient w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors bg-sky-500 border-sky-500 text-white">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
@@ -185,7 +187,7 @@
                                                     <polyline points="16 11 18 13 22 9"></polyline>
                                                 </svg>
                                             </div>
-                                            <span class="font-bold text-slate-900 text-sm sm:text-base">Ya soy Paciente</span>
+                                            <span class="font-bold text-slate-900 text-sm sm:text-base">{{ __('Ya soy Paciente') }}</span>
                                         </div>
                                         <div class="check-circle-patient w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors border-slate-200 text-transparent">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
@@ -199,7 +201,7 @@
                             <!-- 2. Treatment Selector -->
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2.5">
-                                    2. Selecciona el Tratamiento Dental
+                                    2. {{ __('Selecciona el Tratamiento Dental') }}
                                 </label>
                                 @if($services->count() > 0)
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -220,7 +222,7 @@
                                     </div>
                                 @else
                                     <div class="text-center py-8 text-slate-400 text-xs">
-                                        No hay tratamientos cargados actualmente.
+                                        {{ __('No hay tratamientos cargados actualmente.') }}
                                     </div>
                                 @endif
                             </div>
@@ -232,7 +234,7 @@
                                     onclick="goToWizardStep(2)"
                                     class="bg-sky-500 hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-3.5 rounded-full font-black text-xs uppercase tracking-wider shadow-lg shadow-sky-500/30 transition-all flex items-center gap-2 hover:scale-105"
                                 >
-                                    <span>Continuar a Fecha y Hora</span>
+                                    <span>{{ __('Continuar a Fecha y Hora') }}</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M5 12h14"></path>
                                         <path d="m12 5 7 7-7 7"></path>
@@ -247,17 +249,17 @@
                         <div id="stepView2" class="space-y-6 hidden">
                             <div class="border-b border-slate-100 pb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
                                 <div>
-                                    <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">Paso 2 de 3</span>
-                                    <h2 class="text-2xl font-black text-slate-900">Fecha, Horario y Especialista</h2>
+                                    <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">{{ __('Paso 2 de 3') }}</span>
+                                    <h2 class="text-2xl font-black text-slate-900">{{ __('Fecha, Horario y Especialista') }}</h2>
                                     <div class="flex flex-wrap items-center gap-2 mt-1">
-                                        <span class="text-xs text-slate-500">Tratamiento: <strong id="summarySelectedServiceName" class="text-sky-600">Por seleccionar</strong></span>
+                                        <span class="text-xs text-slate-500">{{ __('Tratamiento') }}: <strong id="summarySelectedServiceName" class="text-sky-600">{{ __('Por seleccionar') }}</strong></span>
                                         <span class="text-slate-300">•</span>
-                                        <span class="text-xs text-slate-500">Tipo: <strong id="summarySelectedPatientType" class="text-slate-700">Paciente Nuevo</strong></span>
+                                        <span class="text-xs text-slate-500">{{ __('Tipo') }}: <strong id="summarySelectedPatientType" class="text-slate-700">{{ __('Paciente Nuevo') }}</strong></span>
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <span class="text-[11px] text-slate-400">Duración estimada:</span>
-                                    <span id="summarySelectedDuration" class="text-xs font-bold text-slate-800 ml-1">45 min</span>
+                                    <span class="text-[11px] text-slate-400">{{ __('Duración estimada') }}:</span>
+                                    <span id="summarySelectedDuration" class="text-xs font-bold text-slate-800 ml-1">45 {{ __('min') }}</span>
                                 </div>
                             </div>
 
@@ -273,9 +275,9 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <h4 class="text-xs sm:text-sm font-bold text-slate-900">¿Deseas elegir a tu dentista de preferencia?</h4>
+                                                <h4 class="text-xs sm:text-sm font-bold text-slate-900">{{ __('¿Deseas elegir a tu dentista de preferencia?') }}</h4>
                                                 <p class="text-[11px] text-slate-500 mt-0.5" id="returningDentistSelectedLabel">
-                                                    Actualmente mostrando: <strong class="text-sky-600">Primer especialista disponible</strong> (horarios combinados de especialistas calificados).
+                                                    {{ __('Actualmente mostrando') }}: <strong class="text-sky-600">{{ __('Primer especialista disponible') }}</strong> ({{ __('horarios combinados de especialistas calificados') }}).
                                                 </p>
                                             </div>
                                         </div>
@@ -286,7 +288,7 @@
                                             onclick="toggleDentistSelectionList()"
                                             class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-sky-400 bg-white hover:bg-sky-50 text-sky-600 font-bold text-xs uppercase tracking-wider transition-all shadow-2xs flex-shrink-0"
                                         >
-                                            <span id="btnToggleDentistText">Elegir Odontólogo</span>
+                                            <span id="btnToggleDentistText">{{ __('Elegir Odontólogo') }}</span>
                                             <svg id="btnToggleDentistChevron" class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                             </svg>
@@ -296,19 +298,19 @@
                                     <!-- Collapsible cards container (hidden by default) -->
                                     <div id="dentistCardsCollapsible" class="hidden mt-4 pt-4 border-t border-slate-200/80">
                                         <div class="flex items-center justify-between mb-3">
-                                            <span class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Selecciona tu especialista habitual:</span>
+                                            <span class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">{{ __('Selecciona tu especialista habitual:') }}</span>
                                             <button
                                                 type="button"
                                                 onclick="resetToFirstAvailableDentist()"
                                                 class="text-[11px] font-bold text-sky-600 hover:text-sky-700 underline"
                                             >
-                                                Restablecer a primer disponible
+                                                {{ __('Restablecer a primer disponible') }}
                                             </button>
                                         </div>
 
                                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                             <div
-                                                onclick="selectWizardDentist(null, 'Primer Especialista Disponible')"
+                                                onclick="selectWizardDentist(null, @js(__('Primer Especialista Disponible')))"
                                                 id="dentist-card-null"
                                                 class="dentist-select-card p-3 rounded-xl border cursor-pointer transition-all flex items-center gap-3 border-sky-500 bg-sky-50/70"
                                             >
@@ -318,8 +320,8 @@
                                                     </svg>
                                                 </div>
                                                 <div class="min-w-0">
-                                                    <p class="text-xs font-bold text-slate-900 truncate">Primer disponible</p>
-                                                    <p class="text-[10px] text-slate-500">Especialistas calificados</p>
+                                                    <p class="text-xs font-bold text-slate-900 truncate">{{ __('Primer disponible') }}</p>
+                                                    <p class="text-[10px] text-slate-500">{{ __('Especialistas calificados') }}</p>
                                                 </div>
                                             </div>
 
@@ -351,13 +353,13 @@
                             <!-- Date and Time Slots Section (Restructured according to uploaded design) -->
                             <div class="pt-2">
                                 <div class="flex items-center justify-between mb-4">
-                                    <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Selecciona tu horario</h3>
+                                    <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{{ __('Selecciona tu horario') }}</h3>
                                     <span id="slotsLoadingSpinner" class="text-xs text-sky-600 font-bold hidden flex items-center gap-1.5">
                                         <svg class="animate-spin h-3.5 w-3.5 text-sky-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                                         </svg>
-                                        Consultando disponibilidad...
+                                        {{ __('Consultando disponibilidad...') }}
                                     </span>
                                 </div>
 
@@ -368,7 +370,7 @@
                                         type="button"
                                         id="btnPrevDateCarousel"
                                         onclick="navigateDateCarousel(-1)"
-                                        title="Días anteriores"
+                                        title="{{ __('Días anteriores') }}"
                                         class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors flex-shrink-0 disabled:opacity-20 disabled:cursor-not-allowed"
                                     >
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
@@ -386,7 +388,7 @@
                                         type="button"
                                         id="btnNextDateCarousel"
                                         onclick="navigateDateCarousel(1)"
-                                        title="Días siguientes"
+                                        title="{{ __('Días siguientes') }}"
                                         class="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors flex-shrink-0"
                                     >
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
@@ -399,7 +401,7 @@
                                         <button
                                             type="button"
                                             onclick="openDatePickerModal()"
-                                            title="Elegir otra fecha específica en el calendario"
+                                            title="{{ __('Elegir otra fecha específica en el calendario') }}"
                                             class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-slate-300 hover:border-sky-500 hover:bg-sky-50/50 text-slate-600 hover:text-sky-600 flex items-center justify-center transition-all bg-white shadow-2xs group"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 text-sky-600 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -435,10 +437,10 @@
                                                 <path d="M5 16a7 7 0 0 1 14 0"/>
                                                 <path d="M2 20h20"/>
                                             </svg>
-                                            <h4 class="text-base sm:text-lg font-bold text-slate-900">Mañana</h4>
+                                            <h4 class="text-base sm:text-lg font-bold text-slate-900">{{ __('Mañana') }}</h4>
                                         </div>
                                         <div id="scheduleMorningSlots" class="flex flex-wrap gap-2.5 sm:gap-3">
-                                            <div class="py-3 text-xs text-slate-400 italic">Cargando turnos...</div>
+                                            <div class="py-3 text-xs text-slate-400 italic">{{ __('Cargando turnos...') }}</div>
                                         </div>
                                     </div>
 
@@ -456,10 +458,10 @@
                                                 <path d="m4.93 4.93 2.12 2.12"/>
                                                 <path d="m19.07 4.93-2.12 2.12"/>
                                             </svg>
-                                            <h4 class="text-base sm:text-lg font-bold text-slate-900">Tarde</h4>
+                                            <h4 class="text-base sm:text-lg font-bold text-slate-900">{{ __('Tarde') }}</h4>
                                         </div>
                                         <div id="scheduleAfternoonSlots" class="flex flex-wrap gap-2.5 sm:gap-3">
-                                            <div class="py-3 text-xs text-slate-400 italic">Cargando turnos...</div>
+                                            <div class="py-3 text-xs text-slate-400 italic">{{ __('Cargando turnos...') }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -471,7 +473,7 @@
                                     onclick="goToWizardStep(1)"
                                     class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider transition-colors"
                                 >
-                                    « Volver a Tratamientos
+                                    {{ __('« Volver a Tratamientos') }}
                                 </button>
                                 <button
                                     type="button"
@@ -479,7 +481,7 @@
                                     onclick="validateAndGoToStep3()"
                                     class="bg-sky-500 hover:bg-sky-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-sky-500/25 transition-all flex items-center gap-2 hover:scale-105"
                                 >
-                                    <span>Continuar a tus Datos</span>
+                                    <span>{{ __('Continuar a tus Datos') }}</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M5 12h14"></path>
                                         <path d="m12 5 7 7-7 7"></path>
@@ -493,22 +495,22 @@
                         <!-- ============================================== -->
                         <div id="stepView3" class="space-y-6 hidden">
                             <div class="border-b border-slate-100 pb-4">
-                                <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">Paso 3 de 3</span>
-                                <h2 class="text-2xl font-black text-slate-900">Tus Datos de Contacto</h2>
-                                <p class="text-xs text-slate-500">Ingresa tus datos para registrar la reserva y enviarte la confirmación por WhatsApp.</p>
+                                <span class="text-sky-500 font-bold text-xs uppercase tracking-widest block mb-1">{{ __('Paso 3 de 3') }}</span>
+                                <h2 class="text-2xl font-black text-slate-900">{{ __('Tus Datos de Contacto') }}</h2>
+                                <p class="text-xs text-slate-500">{{ __('Ingresa tus datos para registrar la reserva y enviarte la confirmación por WhatsApp.') }}</p>
                             </div>
 
                             <!-- Summary Card Preview -->
                             <div class="bg-sky-50/70 rounded-2xl p-4 border border-sky-100 flex flex-wrap justify-between items-center gap-3">
                                 <div>
-                                    <span class="text-[10px] text-sky-800 font-bold uppercase tracking-wider block">Resumen de tu Cita</span>
+                                    <span class="text-[10px] text-sky-800 font-bold uppercase tracking-wider block">{{ __('Resumen de tu Cita') }}</span>
                                     <p class="text-xs font-black text-slate-900 mt-0.5">
-                                        <span id="finalSummaryService">-</span> con <span id="finalSummaryDentist" class="text-sky-700">-</span>
+                                        <span id="finalSummaryService">-</span> {{ __('con') }} <span id="finalSummaryDentist" class="text-sky-700">-</span>
                                     </p>
-                                    <span class="text-[11px] text-slate-500 mt-0.5 block" id="finalSummaryPatientType">Paciente Nuevo</span>
+                                    <span class="text-[11px] text-slate-500 mt-0.5 block" id="finalSummaryPatientType">{{ __('Paciente Nuevo') }}</span>
                                 </div>
                                 <div class="text-right">
-                                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Fecha y Turno</span>
+                                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">{{ __('Fecha y Turno') }}</span>
                                     <p class="text-xs font-black text-sky-600 mt-0.5" id="finalSummaryDateTime">-</p>
                                 </div>
                             </div>
@@ -519,29 +521,29 @@
                             <!-- Patient Inputs -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre Completo *</label>
+                                    <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">{{ __('Nombre Completo') }} *</label>
                                     <input
                                         type="text"
                                         name="patient_name"
                                         required
-                                        placeholder="Ej: Sofia Martínez"
+                                        placeholder="{{ __('Ej: Sofia Martínez') }}"
                                         class="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-sky-500"
                                     />
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Correo Electrónico *</label>
+                                    <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">{{ __('Correo Electrónico') }} *</label>
                                     <input
                                         type="email"
                                         name="patient_email"
                                         required
-                                        placeholder="sofia@ejemplo.com"
+                                        placeholder="{{ __('sofia@ejemplo.com') }}"
                                         class="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-sky-500"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Teléfono Móvil / WhatsApp *</label>
+                                <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">{{ __('Teléfono Móvil / WhatsApp') }} *</label>
                                 <input
                                     type="tel"
                                     name="patient_phone"
@@ -552,11 +554,11 @@
                             </div>
 
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">Motivo de Consulta o Síntomas (Opcional)</label>
+                                <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">{{ __('Motivo de Consulta o Síntomas (Opcional)') }}</label>
                                 <textarea
                                     name="symptoms"
                                     rows="2"
-                                    placeholder="Describe brevemente alguna molestia, preferencia o dolor específico..."
+                                    placeholder="{{ __('Describe brevemente alguna molestia, preferencia o dolor específico...') }}"
                                     class="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-800 focus:outline-none focus:border-sky-500"
                                 ></textarea>
                             </div>
@@ -567,14 +569,14 @@
                                     onclick="goToWizardStep(2)"
                                     class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider transition-colors"
                                 >
-                                    « Modificar Horario
+                                    {{ __('« Modificar Horario') }}
                                 </button>
                                 <button
                                     type="submit"
                                     id="btnConfirmSchedule"
                                     class="bg-sky-500 hover:bg-sky-600 text-white px-9 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-sky-500/25 transition-all flex items-center gap-2 hover:scale-105"
                                 >
-                                    <span id="btnConfirmText">Confirmar y Agendar Cita »</span>
+                                    <span id="btnConfirmText">{{ __('Confirmar y Agendar Cita »') }}</span>
                                     <svg id="btnConfirmSpinner" class="animate-spin h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
@@ -597,30 +599,30 @@
 
                         <div>
                             <span class="inline-block px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-[11px] font-black uppercase tracking-wider mb-2">
-                                Código de Cita: <span id="successCodeDisplay">CIT-PENDIENTE</span>
+                                {{ __('Código de Cita') }}: <span id="successCodeDisplay">CIT-PENDIENTE</span>
                             </span>
-                            <h2 class="text-3xl font-black text-slate-900">¡Tu Cita Dental Ha Sido Registrada!</h2>
+                            <h2 class="text-3xl font-black text-slate-900">{{ __('¡Tu Cita Dental Ha Sido Registrada!') }}</h2>
                             <p class="text-xs text-slate-500 max-w-md mx-auto mt-2 leading-relaxed">
-                                Te esperamos en nuestras instalaciones. Tu turno de atención médica ha quedado registrado con éxito. Si tienes dudas, puedes llamar a nuestra recepción.
+                                {{ __('Te esperamos en nuestras instalaciones. Tu turno de atención médica ha quedado registrado con éxito. Si tienes dudas, puedes llamar a nuestra recepción.') }}
                             </p>
                         </div>
 
                         <!-- Ticket Receipt Details -->
                         <div class="max-w-md mx-auto bg-slate-50 rounded-2xl p-5 border border-slate-200/80 text-left space-y-2.5 text-xs">
                             <div class="flex justify-between border-b border-slate-200/60 pb-2">
-                                <span class="text-slate-400 font-medium">Tratamiento:</span>
+                                <span class="text-slate-400 font-medium">{{ __('Tratamiento') }}:</span>
                                 <span class="font-bold text-slate-900" id="successCardService">-</span>
                             </div>
                             <div class="flex justify-between border-b border-slate-200/60 pb-2">
-                                <span class="text-slate-400 font-medium">Especialista:</span>
+                                <span class="text-slate-400 font-medium">{{ __('Especialista') }}:</span>
                                 <span class="font-bold text-slate-900" id="successCardDentist">-</span>
                             </div>
                             <div class="flex justify-between border-b border-slate-200/60 pb-2">
-                                <span class="text-slate-400 font-medium">Fecha y Horario:</span>
+                                <span class="text-slate-400 font-medium">{{ __('Fecha y Horario') }}:</span>
                                 <span class="font-bold text-sky-600" id="successCardDateTime">-</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-slate-400 font-medium">Dirección Clínica:</span>
+                                <span class="text-slate-400 font-medium">{{ __('Dirección Clínica') }}:</span>
                                 <span class="text-slate-700">{{ $clinic->address }}</span>
                             </div>
                         </div>
@@ -634,14 +636,14 @@
                                 <svg class="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
                                 </svg>
-                                <span>Llamar a Recepción ({{ $clinic->phone }})</span>
+                                <span>{{ __('Llamar a Recepción (:phone)', ['phone' => $clinic->phone]) }}</span>
                             </a>
                             <button
                                 type="button"
                                 onclick="resetScheduleWizard()"
                                 class="w-full sm:w-auto px-6 py-3.5 rounded-full border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-bold uppercase tracking-wider transition-colors"
                             >
-                                Agendar Otra Cita
+                                {{ __('Agendar Otra Cita') }}
                             </button>
                         </div>
                     </div>
@@ -702,22 +704,22 @@
                 warning: {
                     border: 'border-amber-300 shadow-amber-500/10 ring-1 ring-amber-400/20',
                     bgIcon: 'bg-amber-100 text-amber-600',
-                    defaultTitle: 'Selección requerida'
+                    defaultTitle: @json(__('Selección requerida'))
                 },
                 error: {
                     border: 'border-rose-300 shadow-rose-500/10 ring-1 ring-rose-400/20',
                     bgIcon: 'bg-rose-100 text-rose-600',
-                    defaultTitle: 'Atención'
+                    defaultTitle: @json(__('Atención'))
                 },
                 info: {
                     border: 'border-sky-300 shadow-sky-500/10 ring-1 ring-sky-400/20',
                     bgIcon: 'bg-sky-100 text-sky-600',
-                    defaultTitle: 'Información'
+                    defaultTitle: @json(__('Información'))
                 },
                 success: {
                     border: 'border-emerald-300 shadow-emerald-500/10 ring-1 ring-emerald-400/20',
                     bgIcon: 'bg-emerald-100 text-emerald-600',
-                    defaultTitle: 'Completado'
+                    defaultTitle: @json(__('Completado'))
                 }
             };
 
@@ -762,13 +764,17 @@
         };
         let selectedDentist = {
             id: '{{ $selectedDentistId ?? '' }}',
-            name: 'Primer Especialista Disponible'
+            name: @json(__('Primer Especialista Disponible'))
         };
         let selectedDate = '{{ date('Y-m-d', strtotime('+1 day')) }}';
         let selectedTime = '';
 
-        const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-        const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        @php
+            $localizedDays = [__('Dom'), __('Lun'), __('Mar'), __('Mié'), __('Jue'), __('Vie'), __('Sáb')];
+            $localizedMonths = [__('Ene'), __('Feb'), __('Mar'), __('Abr'), __('May'), __('Jun'), __('Jul'), __('Ago'), __('Sep'), __('Oct'), __('Nov'), __('Dic')];
+        @endphp
+        const dayNames = @json($localizedDays);
+        const monthNames = @json($localizedMonths);
 
         function formatYMD(dateObj) {
             const year = dateObj.getFullYear();
@@ -865,15 +871,16 @@
                 tab.className = `date-carousel-tab relative py-2 px-1 text-center cursor-pointer transition-all select-none ${i === 3 ? 'hidden sm:block' : ''}`;
 
                 if (isSelected) {
+                    const availableTxt = currentDateSlotCount > 0 ? `${currentDateSlotCount} ${@json(__('Turnos Disponibles'))}` : @json(__('Sin turnos'));
                     tab.innerHTML = `
                         <div class="font-bold text-xs sm:text-sm text-slate-900">${dayLabel}</div>
                         <div id="activeDateSlotCountLabel" class="text-[10px] sm:text-[11px] font-semibold text-emerald-600 mt-0.5">
-                            ${currentDateSlotCount !== null ? (currentDateSlotCount > 0 ? `${currentDateSlotCount} Turnos Disponibles` : 'Sin turnos') : 'Consultando...'}
+                            ${currentDateSlotCount !== null ? availableTxt : @json(__('Consultando...'))}
                         </div>
                         <div class="absolute bottom-0 left-2 right-2 h-0.5 bg-sky-500 rounded-full"></div>
                     `;
                 } else {
-                    const subtext = isSunday ? 'Cerrado' : 'Disponible';
+                    const subtext = isSunday ? @json(__('Cerrado')) : @json(__('Disponible'));
                     const subtextClass = isSunday ? 'text-slate-400' : 'text-slate-500';
                     tab.innerHTML = `
                         <div class="font-semibold text-xs sm:text-sm text-slate-700 hover:text-slate-900">${dayLabel}</div>
@@ -953,18 +960,18 @@
             // If selectedDentist was set, check if still qualified; if not, reset to first available
             if (selectedDentist.id && qualifiedDentistIds.length > 0 && !qualifiedDentistIds.includes(parseInt(selectedDentist.id, 10))) {
                 resetToFirstAvailableDentist();
-                showToast(`Se cambió a "Primer especialista disponible" porque el doctor previo no realiza ${name}.`, 'info', 'Especialista ajustado');
+                showToast(@json(__('Se cambió a "Primer especialista disponible" porque el doctor previo no realiza este tratamiento.')), 'info', @json(__('Especialista ajustado')));
             } else if (!selectedDentist.id) {
                 const label = document.getElementById('returningDentistSelectedLabel');
                 if (label) {
-                    label.innerHTML = `Actualmente mostrando: <strong class="text-sky-600">Primer especialista disponible</strong> (horarios unificados del equipo de ${name}).`;
+                    label.innerHTML = `${@json(__('Actualmente mostrando'))}: <strong class="text-sky-600">${@json(__('Primer especialista disponible'))}</strong> (${@json(__('horarios unificados del equipo'))}).`;
                 }
             }
         }
 
         function goToWizardStep(step) {
             if (step === 2 && !selectedService.id) {
-                showToast('Por favor selecciona un tratamiento dental para continuar.', 'warning', 'Tratamiento requerido');
+                showToast(@json(__('Por favor selecciona un tratamiento dental para continuar.')), 'warning', @json(__('Tratamiento requerido')));
                 const servicesBox = document.getElementById('stepView1');
                 if (servicesBox) {
                     servicesBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1007,7 +1014,7 @@
                 updateStep2Visibility();
                 const summaryName = document.getElementById('summarySelectedServiceName');
                 const summaryDuration = document.getElementById('summarySelectedDuration');
-                if (summaryName) summaryName.textContent = selectedService.name || 'Por seleccionar';
+                if (summaryName) summaryName.textContent = selectedService.name || @json(__('Por seleccionar'));
                 if (summaryDuration) summaryDuration.textContent = `${selectedService.duration || 45} min`;
                 renderDateCarouselTabs();
                 fetchAvailableSlots();
@@ -1041,7 +1048,7 @@
 
                 // New patients get unified slots with automatic allocation
                 selectedDentist.id = '';
-                selectedDentist.name = 'Primer Especialista Disponible';
+                selectedDentist.name = @json(__('Primer Especialista Disponible'));
                 document.getElementById('formDentistId').value = '';
             } else {
                 if (returningCard) {
@@ -1065,13 +1072,13 @@
 
             if (isFirstVisit === 1) {
                 if (returningSelector) returningSelector.classList.add('hidden');
-                if (typeSummary) typeSummary.textContent = 'Paciente Nuevo';
+                if (typeSummary) typeSummary.textContent = @json(__('Paciente Nuevo'));
                 selectedDentist.id = '';
-                selectedDentist.name = 'Primer Especialista Disponible';
+                selectedDentist.name = @json(__('Primer Especialista Disponible'));
                 document.getElementById('formDentistId').value = '';
             } else {
                 if (returningSelector) returningSelector.classList.remove('hidden');
-                if (typeSummary) typeSummary.textContent = 'Ya soy Paciente';
+                if (typeSummary) typeSummary.textContent = @json(__('Ya soy Paciente'));
 
                 // Keep collapsed by default if no specific doctor was selected yet
                 const collapsible = document.getElementById('dentistCardsCollapsible');
@@ -1080,7 +1087,7 @@
                 if (collapsible && !selectedDentist.id) {
                     collapsible.classList.add('hidden');
                     if (chevron) chevron.style.transform = 'rotate(0deg)';
-                    if (btnText) btnText.textContent = 'Elegir Odontólogo';
+                    if (btnText) btnText.textContent = @json(__('Elegir Odontólogo'));
                 }
             }
         }
@@ -1097,18 +1104,18 @@
                 chevron.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
             }
             if (btnText) {
-                btnText.textContent = isHidden ? 'Ocultar Opciones' : (selectedDentist.id ? 'Cambiar Odontólogo' : 'Elegir Odontólogo');
+                btnText.textContent = isHidden ? @json(__('Ocultar Opciones')) : (selectedDentist.id ? @json(__('Cambiar Odontólogo')) : @json(__('Elegir Odontólogo')));
             }
         }
 
         function resetToFirstAvailableDentist() {
-            selectWizardDentist(null, 'Primer Especialista Disponible');
+            selectWizardDentist(null, @json(__('Primer Especialista Disponible')));
             const container = document.getElementById('dentistCardsCollapsible');
             const chevron = document.getElementById('btnToggleDentistChevron');
             const btnText = document.getElementById('btnToggleDentistText');
             if (container) container.classList.add('hidden');
             if (chevron) chevron.style.transform = 'rotate(0deg)';
-            if (btnText) btnText.textContent = 'Elegir Odontólogo';
+            if (btnText) btnText.textContent = @json(__('Elegir Odontólogo'));
         }
 
         function selectWizardDentist(id, name) {
@@ -1132,11 +1139,11 @@
             const btnText = document.getElementById('btnToggleDentistText');
             if (label) {
                 label.innerHTML = id
-                    ? `Especialista seleccionado: <strong class="text-sky-600">${name}</strong>`
-                    : `Actualmente mostrando: <strong class="text-sky-600">Primer especialista disponible</strong> (horarios unificados del equipo de ${selectedService.name || 'este tratamiento'}).`;
+                    ? `${@json(__('Especialista seleccionado'))}: <strong class="text-sky-600">${name}</strong>`
+                    : `${@json(__('Actualmente mostrando'))}: <strong class="text-sky-600">${@json(__('Primer especialista disponible'))}</strong> (${@json(__('horarios unificados del equipo'))}).`;
             }
             if (btnText) {
-                btnText.textContent = id ? 'Cambiar Odontólogo' : 'Elegir Odontólogo';
+                btnText.textContent = id ? @json(__('Cambiar Odontólogo')) : @json(__('Elegir Odontólogo'));
             }
 
             fetchAvailableSlots();
@@ -1172,8 +1179,8 @@
             const morningContainer = document.getElementById('scheduleMorningSlots');
             const afternoonContainer = document.getElementById('scheduleAfternoonSlots');
 
-            if (morningContainer) morningContainer.innerHTML = '<div class="py-3 text-xs text-slate-400 italic">Consultando horarios disponibles...</div>';
-            if (afternoonContainer) afternoonContainer.innerHTML = '<div class="py-3 text-xs text-slate-400 italic">Consultando horarios disponibles...</div>';
+            if (morningContainer) morningContainer.innerHTML = `<div class="py-3 text-xs text-slate-400 italic">${@json(__('Consultando horarios disponibles...'))}</div>`;
+            if (afternoonContainer) afternoonContainer.innerHTML = `<div class="py-3 text-xs text-slate-400 italic">${@json(__('Consultando horarios disponibles...'))}</div>`;
 
             selectedTime = '';
             document.getElementById('formAppointmentTime').value = '';
@@ -1200,14 +1207,14 @@
                 const countLabel = document.getElementById('activeDateSlotCountLabel');
                 if (countLabel) {
                     countLabel.textContent = availableCount > 0
-                        ? `${availableCount} Turnos Disponibles`
-                        : 'Sin turnos disponibles';
+                        ? `${availableCount} ${@json(__('Turnos Disponibles'))}`
+                        : @json(__('Sin turnos disponibles'));
                     countLabel.className = availableCount > 0
                         ? 'text-[10px] sm:text-[11px] font-semibold text-emerald-600 mt-0.5'
                         : 'text-[10px] sm:text-[11px] font-semibold text-slate-400 mt-0.5';
                 }
             } catch (err) {
-                if (morningContainer) morningContainer.innerHTML = '<div class="py-3 text-xs text-rose-500">Error al cargar horarios. Por favor intenta nuevamente.</div>';
+                if (morningContainer) morningContainer.innerHTML = `<div class="py-3 text-xs text-rose-500">${@json(__('Error al cargar horarios. Por favor intenta nuevamente.'))}</div>`;
                 if (afternoonContainer) afternoonContainer.innerHTML = '';
             } finally {
                 if (spinner) spinner.classList.add('hidden');
@@ -1217,7 +1224,7 @@
         function renderShiftSlots(container, slots) {
             if (!container) return;
             if (slots.length === 0) {
-                container.innerHTML = '<div class="py-3 text-xs text-slate-400 italic">No hay turnos disponibles para este horario.</div>';
+                container.innerHTML = `<div class="py-3 text-xs text-slate-400 italic">${@json(__('No hay turnos disponibles para este horario.'))}</div>`;
                 return;
             }
 
@@ -1253,7 +1260,7 @@
 
         function validateAndGoToStep3() {
             if (!selectedTime) {
-                showToast('Por favor selecciona un horario disponible para continuar.', 'warning', 'Horario requerido');
+                showToast(@json(__('Por favor selecciona un horario disponible para continuar.')), 'warning', @json(__('Horario requerido')));
                 const slotsHeading = document.getElementById('scheduleMorningSlots');
                 if (slotsHeading) {
                     slotsHeading.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1261,14 +1268,14 @@
                 return;
             }
 
-            document.getElementById('finalSummaryService').textContent = selectedService.name || 'Tratamiento seleccionado';
+            document.getElementById('finalSummaryService').textContent = selectedService.name || @json(__('Tratamiento seleccionado'));
             document.getElementById('finalSummaryDentist').textContent = (isFirstVisit === 1 || !selectedDentist.id)
-                ? 'Primer Especialista Disponible (Asignación automática)'
+                ? @json(__('Primer Especialista Disponible (Asignación automática)'))
                 : selectedDentist.name;
             document.getElementById('finalSummaryPatientType').textContent = (isFirstVisit === 1)
-                ? 'Paciente Nuevo (Primera visita)'
-                : 'Paciente Recurrente (Ficha clínica)';
-            document.getElementById('finalSummaryDateTime').textContent = `${selectedDate} a las ${formatTime(selectedTime)}`;
+                ? @json(__('Paciente Nuevo (Primera visita)'))
+                : @json(__('Paciente Recurrente (Ficha clínica)'));
+            document.getElementById('finalSummaryDateTime').textContent = `${selectedDate} ${@json(__('a las'))} ${formatTime(selectedTime)}`;
 
             goToWizardStep(3);
         }
@@ -1285,7 +1292,7 @@
             errorBox.classList.add('hidden');
             errorBox.textContent = '';
             submitBtn.disabled = true;
-            submitText.textContent = 'Procesando reserva...';
+            submitText.textContent = @json(__('Procesando reserva...'));
             spinner.classList.remove('hidden');
 
             const formData = new FormData(form);
@@ -1305,16 +1312,16 @@
                 const data = await res.json();
 
                 if (!res.ok) {
-                    let errMsg = data.message || 'Ocurrió un error al agendar tu cita.';
+                    let errMsg = data.message || @json(__('Ocurrió un error al agendar tu cita.'));
                     if (data.errors) {
                         errMsg = Object.values(data.errors).flat().join(' ');
                     }
                     errorBox.textContent = errMsg;
                     errorBox.classList.remove('hidden');
                     submitBtn.disabled = false;
-                    submitText.textContent = 'Confirmar y Agendar Cita »';
+                    submitText.textContent = @json(__('Confirmar y Agendar Cita »'));
                     spinner.classList.add('hidden');
-                    showToast(errMsg, 'error', 'No se pudo agendar');
+                    showToast(errMsg, 'error', @json(__('No se pudo agendar')));
                     return;
                 }
 
@@ -1328,19 +1335,21 @@
                 document.getElementById('successCardDentist').textContent = data.appointment?.dentist || selectedDentist.name;
                 document.getElementById('successCardDateTime').textContent = `${data.appointment?.date || selectedDate} • ${data.appointment?.time || formatTime(selectedTime)}`;
 
+                @if(app()->getLocale() !== 'en')
                 if (data.whatsapp_url && document.getElementById('btnWhatsappConfirmation')) {
                     document.getElementById('btnWhatsappConfirmation').href = data.whatsapp_url;
                 }
+                @endif
 
                 hideToast();
                 window.scrollTo({ top: 300, behavior: 'smooth' });
             } catch (err) {
-                errorBox.textContent = 'Error de conexión con el servidor. Por favor verifica tu conexión y vuelve a intentar.';
+                errorBox.textContent = @json(__('Error de conexión con el servidor. Por favor verifica tu conexión y vuelve a intentar.'));
                 errorBox.classList.remove('hidden');
                 submitBtn.disabled = false;
-                submitText.textContent = 'Confirmar y Agendar Cita »';
+                submitText.textContent = @json(__('Confirmar y Agendar Cita »'));
                 spinner.classList.add('hidden');
-                showToast('Error de conexión con el servidor. Intenta nuevamente.', 'error', 'Error de conexión');
+                showToast(@json(__('Error de conexión con el servidor. Intenta nuevamente.')), 'error', @json(__('Error de conexión')));
             }
         }
 

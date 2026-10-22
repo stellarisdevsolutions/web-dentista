@@ -189,6 +189,36 @@ class HomeController extends Controller
     }
 
     /**
+     * Render the clinic Privacy Policy page.
+     */
+    public function privacy(): View
+    {
+        $clinic = $this->getClinicSetting();
+
+        return view('legal.privacy', compact('clinic'));
+    }
+
+    /**
+     * Render the clinic Terms and Conditions page.
+     */
+    public function terms(): View
+    {
+        $clinic = $this->getClinicSetting();
+
+        return view('legal.terms', compact('clinic'));
+    }
+
+    /**
+     * Render the clinic Patient Rights and Responsibilities page.
+     */
+    public function patientRights(): View
+    {
+        $clinic = $this->getClinicSetting();
+
+        return view('legal.patient-rights', compact('clinic'));
+    }
+
+    /**
      * Helper to get active clinic setting with fallbacks.
      */
     private function getClinicSetting(): ClinicSetting

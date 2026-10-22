@@ -44,10 +44,8 @@ class BannerResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         /** @var Banner $record */
-        $isSpanish = app()->getLocale() === 'es';
-
         return [
-            $isSpanish ? 'Subtítulo' : 'Subtitle' => $record->subtitle ?? '-',
+            __('Subtitle') => $record->subtitle ?? '-',
         ];
     }
 

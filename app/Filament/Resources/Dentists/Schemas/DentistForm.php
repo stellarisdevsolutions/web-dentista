@@ -18,12 +18,12 @@ class DentistForm
         $is12h = config('app.time_format', '12h') === '12h';
 
         $days = [
-            'monday' => 'Lunes',
-            'tuesday' => 'Martes',
-            'wednesday' => 'Miércoles',
-            'thursday' => 'Jueves',
-            'friday' => 'Viernes',
-            'saturday' => 'Sábado',
+            'monday' => __('Monday'),
+            'tuesday' => __('Tuesday'),
+            'wednesday' => __('Wednesday'),
+            'thursday' => __('Thursday'),
+            'friday' => __('Friday'),
+            'saturday' => __('Saturday'),
         ];
 
         $timeRegexRule = fn () => function (string $attribute, $value, \Closure $fail) use ($is12h) {
@@ -71,7 +71,7 @@ class DentistForm
                         ]),
 
                     TextInput::make("weekly_schedule.{$dayKey}.morning_start")
-                        ->label('Mañana Inicio')
+                        ->label(__('Morning Start'))
                         ->mask('99:99')
                         ->placeholder('--:--')
                         ->suffix($is12h ? 'AM' : null)
@@ -87,14 +87,14 @@ class DentistForm
                                 $mEnd = $get("weekly_schedule.{$dayKey}.morning_end");
 
                                 if ($isWorking && blank($value) && filled($mEnd)) {
-                                    $fail('La hora de inicio de la mañana es obligatoria si se indica la hora de fin.');
+                                    $fail(__('Morning start time is required if end time is specified.'));
                                 }
                             },
                         ])
                         ->columnSpan(['default' => 1, 'sm' => 1]),
 
                     TextInput::make("weekly_schedule.{$dayKey}.morning_end")
-                        ->label('Mañana Fin')
+                        ->label(__('Morning End'))
                         ->mask('99:99')
                         ->placeholder('--:--')
                         ->suffix($is12h ? 'AM' : null)
@@ -110,7 +110,7 @@ class DentistForm
                                 $mStart = $get("weekly_schedule.{$dayKey}.morning_start");
 
                                 if ($isWorking && blank($value) && filled($mStart)) {
-                                    $fail('La hora de fin de la mañana es obligatoria si se indica la hora de inicio.');
+                                    $fail(__('Morning end time is required if start time is specified.'));
 
                                     return;
                                 }
@@ -120,7 +120,7 @@ class DentistForm
                                     $eMins = self::parseTimeToMinutes($value, 'morning');
 
                                     if ($sMins !== null && $eMins !== null && $eMins <= $sMins) {
-                                        $fail('La hora de fin de la mañana debe ser posterior a la hora de inicio.');
+                                        $fail(__('Morning end time must be after start time.'));
                                     }
                                 }
                             },
@@ -128,7 +128,7 @@ class DentistForm
                         ->columnSpan(['default' => 1, 'sm' => 1]),
 
                     TextInput::make("weekly_schedule.{$dayKey}.afternoon_start")
-                        ->label('Tarde Inicio')
+                        ->label(__('Afternoon Start'))
                         ->mask('99:99')
                         ->placeholder('--:--')
                         ->suffix($is12h ? 'PM' : null)
@@ -144,7 +144,7 @@ class DentistForm
                                 $aEnd = $get("weekly_schedule.{$dayKey}.afternoon_end");
 
                                 if ($isWorking && blank($value) && filled($aEnd)) {
-                                    $fail('La hora de inicio de la tarde es obligatoria si se indica la hora de fin.');
+                                    $fail(__('Afternoon start time is required if end time is specified.'));
                                 }
 
                                 $mEnd = $get("weekly_schedule.{$dayKey}.morning_end");
@@ -153,7 +153,7 @@ class DentistForm
                                     $aStartMins = self::parseTimeToMinutes($value, 'afternoon');
 
                                     if ($mEndMins !== null && $aStartMins !== null && $aStartMins < $mEndMins) {
-                                        $fail('El turno de la tarde no puede iniciar antes de finalizar el turno de la mañana.');
+                                        $fail(__('Afternoon shift cannot start before morning shift ends.'));
                                     }
                                 }
                             },
@@ -161,7 +161,7 @@ class DentistForm
                         ->columnSpan(['default' => 1, 'sm' => 1]),
 
                     TextInput::make("weekly_schedule.{$dayKey}.afternoon_end")
-                        ->label('Tarde Fin')
+                        ->label(__('Afternoon End'))
                         ->mask('99:99')
                         ->placeholder('--:--')
                         ->suffix($is12h ? 'PM' : null)
@@ -177,7 +177,7 @@ class DentistForm
                                 $aStart = $get("weekly_schedule.{$dayKey}.afternoon_start");
 
                                 if ($isWorking && blank($value) && filled($aStart)) {
-                                    $fail('La hora de fin de la tarde es obligatoria si se indica la hora de inicio.');
+                                    $fail(__('Afternoon end time is required if start time is specified.'));
 
                                     return;
                                 }
@@ -187,7 +187,7 @@ class DentistForm
                                     $eMins = self::parseTimeToMinutes($value, 'afternoon');
 
                                     if ($sMins !== null && $eMins !== null && $eMins <= $sMins) {
-                                        $fail('La hora de fin de la tarde debe ser posterior a la hora de inicio.');
+                                        $fail(__('Afternoon end time must be after start time.'));
                                     }
                                 }
                             },
@@ -202,8 +202,8 @@ class DentistForm
                 // ==========================================
                 // SECCIÓN 1: PERFIL PROFESIONAL E IDENTIDAD
                 // ==========================================
-                Section::make('Perfil Profesional e Identidad')
-                    ->description('Fotografía oficial, credenciales médicas y datos de contacto directo del especialista.')
+                Section::make(__('Professional Profile & Identity'))
+                    ->description(__('Official photography, medical credentials, and direct contact details for the specialist.'))
                     ->icon('heroicon-o-user')
                     ->columnSpanFull()
                     ->schema([
@@ -214,7 +214,7 @@ class DentistForm
                                     ->columnSpan(['default' => 12, 'lg' => 4, 'xl' => 3])
                                     ->schema([
                                         FileUpload::make('photo')
-                                            ->label('Fotografía Oficial (1:1)')
+                                            ->label(__('Official Photo (1:1)'))
                                             ->image()
                                             ->imageCropAspectRatio('1:1')
                                             ->imageEditor()
@@ -228,7 +228,7 @@ class DentistForm
                                             ->imagePreviewHeight('220')
                                             ->directory('dentists')
                                             ->disk('public')
-                                            ->helperText('Formato 1:1 cuadrado (800×800 px). Si se deja vacío, se mostrarán las iniciales con fondo celeste como en Agenda. Se optimiza automáticamente a WebP.'),
+                                            ->helperText(__('Square 1:1 format (800×800 px). If left empty, initials will be shown with a light blue background as in Agenda. Automatically optimized to WebP.')),
                                     ]),
 
                                 // Columna Derecha: Campos de Identidad, Contacto y Disponibilidad
@@ -236,64 +236,64 @@ class DentistForm
                                     ->columnSpan(['default' => 12, 'lg' => 8, 'xl' => 9])
                                     ->schema([
                                         TextInput::make('name')
-                                            ->label('Nombre Completo Profesional')
+                                            ->label(__('Full Professional Name'))
                                             ->prefixIcon('heroicon-o-user')
-                                            ->placeholder('ej. Dr. Marcus Sterling')
+                                            ->placeholder('Dr. Marcus Sterling')
                                             ->required()
                                             ->maxLength(255),
 
                                         TextInput::make('title')
-                                            ->label('Cargo / Título Profesional')
+                                            ->label(__('Job Title / Professional Degree'))
                                             ->prefixIcon('heroicon-o-briefcase')
-                                            ->placeholder('ej. Endodoncista y Odontología Restauradora')
+                                            ->placeholder(__('e.g. Endodontist & Restorative Dentistry'))
                                             ->required()
                                             ->maxLength(255),
 
                                         TextInput::make('specialty')
-                                            ->label('Especialidad Médica Principal')
+                                            ->label(__('Main Medical Specialty'))
                                             ->prefixIcon('heroicon-o-sparkles')
-                                            ->placeholder('ej. Tratamientos de Conducto y Microcirugía')
+                                            ->placeholder(__('e.g. Root Canal & Microsurgery'))
                                             ->required()
                                             ->maxLength(255),
 
                                         TextInput::make('license_number')
-                                            ->label('Nº Colegiatura / Registro Médico')
+                                            ->label(__('Medical License / Registration No.'))
                                             ->prefixIcon('heroicon-o-identification')
-                                            ->placeholder('ej. DDS-73419')
+                                            ->placeholder('DDS-73419')
                                             ->maxLength(100),
 
                                         TextInput::make('email')
-                                            ->label('Correo Electrónico Directo')
+                                            ->label(__('Direct Email'))
                                             ->prefixIcon('heroicon-o-envelope')
                                             ->email()
                                             ->placeholder('dr.sterling@auradental.com')
                                             ->maxLength(255),
 
                                         TextInput::make('phone')
-                                            ->label('Teléfono Directo / WhatsApp')
+                                            ->label(__('Direct Phone / WhatsApp'))
                                             ->prefixIcon('heroicon-o-phone')
                                             ->tel()
                                             ->telRegex('/^[+0-9\s()\-.]+$/')
                                             ->validationMessages([
-                                                'regex' => 'El formato del teléfono no es válido (solo números, espacios, +, -, ()).',
+                                                'regex' => __('Invalid phone format (numbers, spaces, +, -, () only).'),
                                             ])
                                             ->placeholder('+1 (555) 234-5678')
                                             ->nullable()
                                             ->maxLength(50),
 
                                         TextInput::make('order')
-                                            ->label('Orden de Visualización')
+                                            ->label(__('Display Order'))
                                             ->prefixIcon('heroicon-o-arrows-up-down')
                                             ->numeric()
                                             ->nullable()
                                             ->placeholder('0')
                                             ->default(0)
                                             ->dehydrateStateUsing(fn ($state) => (int) ($state ?? 0))
-                                            ->helperText('Opcional. Entre más bajo el número, primero aparecerá (ej. 1 va antes que 2). Si se deja vacío, será 0.'),
+                                            ->helperText(__('Optional. Lower numbers appear first (e.g. 1 goes before 2). Defaults to 0.')),
 
                                         Toggle::make('is_active')
-                                            ->label('Disponible para Citas en la Web')
-                                            ->helperText('Habilita este doctor en el selector de reservas públicas de la clínica.')
+                                            ->label(__('Available for Appointments Online'))
+                                            ->helperText(__('Enables this doctor in the clinic\'s public booking selector.'))
                                             ->default(true),
                                     ]),
                             ]),
@@ -302,35 +302,35 @@ class DentistForm
                 // ==========================================
                 // SECCIÓN 2: ÁREA CLÍNICA Y TRATAMIENTOS ASIGNADOS
                 // ==========================================
-                Section::make('Área Clínica y Tratamientos Asignados')
-                    ->description('Procedimientos odontológicos que atiende y reseña curricular para los pacientes.')
+                Section::make(__('Clinical Area & Assigned Treatments'))
+                    ->description(__('Dental procedures handled and curricular overview for patients.'))
                     ->icon('heroicon-o-academic-cap')
                     ->columnSpanFull()
                     ->schema([
                         Select::make('services')
-                            ->label('Tratamientos Habilitados para este Especialista')
+                            ->label(__('Treatments Enabled for this Specialist'))
                             ->multiple()
                             ->relationship('services', 'name')
                             ->preload()
                             ->searchable()
                             ->columnSpanFull()
-                            ->helperText('Selecciona los tratamientos que este profesional atiende. La agenda y el wizard público solo ofrecerán este especialista para estos procedimientos.'),
+                            ->helperText(__('Select the treatments handled by this professional. The agenda and public booking wizard will only offer this specialist for these procedures.')),
 
                         Textarea::make('bio')
-                            ->label('Biografía y Formación Académica')
-                            ->placeholder('Resumen curricular, estudios de especialización, universidad de egreso y experiencia para la ficha pública de la clínica...')
+                            ->label(__('Biography & Academic Background'))
+                            ->placeholder(__('Curricular overview, specialized studies, university and clinical experience for the clinic profile...'))
                             ->rows(4)
                             ->columnSpanFull()
-                            ->helperText('Esta información se mostrará a los pacientes cuando elijan especialista al agendar su cita.'),
+                            ->helperText(__('This information will be displayed to patients when selecting a specialist.')),
                     ]),
 
                 // ==========================================
                 // SECCIÓN 3: HORARIOS Y TURNOS DE ATENCIÓN SEMANAL (ANCHO COMPLETO)
                 // ==========================================
-                Section::make('Horarios y Turnos de Atención Semanal (Mañana y Tarde)')
+                Section::make(__('Weekly Schedule & Working Shifts (Morning & Afternoon)'))
                     ->description($is12h
-                        ? 'Configura los turnos por día en formato 12 horas (AM/PM). Los turnos vacíos se consideran no laborables.'
-                        : 'Configura los turnos por día en formato 24 horas. Los turnos vacíos se consideran no laborables.')
+                        ? __('Configure daily shifts in 12-hour format (AM/PM). Empty shifts are considered non-working.')
+                        : __('Configure daily shifts in 24-hour format. Empty shifts are considered non-working.'))
                     ->icon('heroicon-o-clock')
                     ->columnSpanFull()
                     ->schema($shiftComponents),

@@ -16,7 +16,7 @@ class ListServices extends ListRecords
     {
         return [
             CreateAction::make()
-                ->label('+ Nuevo Tratamiento')
+                ->label('+ '.__('New Treatment'))
                 ->extraAttributes([
                     'style' => 'border-radius: 9999px !important; background-color: #0EA5E9 !important; color: #0F172A !important; font-weight: 800 !important; min-height: 48px !important; padding: 0 24px !important; box-shadow: 0 10px 24px rgba(14, 165, 233, 0.40) !important; border: none !important; font-size: 14px !important;',
                 ]),
@@ -47,7 +47,7 @@ class ListServices extends ListRecords
                 'id' => $service->id,
                 'name' => $service->name,
                 'slug' => $service->slug,
-                'category' => $service->category ?? 'Sin categoría',
+                'category' => $service->category ?? __('Uncategorized'),
                 'short_description' => $service->short_description,
                 'description' => $service->description,
                 'price' => $service->price,

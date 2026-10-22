@@ -20,20 +20,20 @@ class UserForm
                 // ==========================================
                 // SECCIÓN 1: ROL Y PRIVILEGIOS DE ACCESO
                 // ==========================================
-                Section::make('Rol y Privilegios en el Sistema')
-                    ->description('Selecciona primero el rol de acceso. Si es Odontólogo, vincúlalo con su perfil médico para asociar automáticamente su nombre.')
+                Section::make(__('Role & System Privileges'))
+                    ->description(__('Select access role first. If Dentist, link to their medical profile to automatically associate their name.'))
                     ->icon('heroicon-o-shield-check')
                     ->columnSpanFull()
                     ->schema([
                         Grid::make(['default' => 1, 'sm' => 2])
                             ->schema([
                                 Select::make('role')
-                                    ->label('Rol de Acceso')
+                                    ->label(__('Access Role'))
                                     ->prefixIcon('heroicon-o-shield-check')
                                     ->options([
-                                        UserRole::Admin->value => 'Administrador (Acceso Total y Ajustes)',
-                                        UserRole::Receptionist->value => 'Recepción / Asistente (Gestión de Citas y Pacientes)',
-                                        UserRole::Dentist->value => 'Odontólogo / Especialista (Agenda Médica Propia)',
+                                        UserRole::Admin->value => __('Administrator (Full Access & Settings)'),
+                                        UserRole::Receptionist->value => __('Receptionist / Assistant (Appointments & Patient Management)'),
+                                        UserRole::Dentist->value => __('Dentist / Specialist (Own Medical Schedule)'),
                                     ])
                                     ->default(UserRole::Admin->value)
                                     ->required()
@@ -52,10 +52,10 @@ class UserForm
                                             $set('dentist_id', null);
                                         }
                                     })
-                                    ->helperText('Determina a qué secciones y permisos tendrá acceso este usuario.'),
+                                    ->helperText(__('Determines which sections and permissions this user will access.')),
 
                                 Select::make('dentist_id')
-                                    ->label('Especialista Médico Asociado')
+                                    ->label(__('Associated Medical Specialist'))
                                     ->prefixIcon('heroicon-o-academic-cap')
                                     ->relationship('dentist', 'name')
                                     ->searchable()
@@ -71,7 +71,7 @@ class UserForm
                                             }
                                         }
                                     })
-                                    ->helperText('Selecciona el doctor del equipo. El campo de nombre se vinculará de forma automática.')
+                                    ->helperText(__('Select the team doctor. The name field will be linked automatically.'))
                                     ->columnSpan(1),
                             ]),
                     ]),
@@ -79,17 +79,17 @@ class UserForm
                 // ==========================================
                 // SECCIÓN 2: IDENTIDAD Y CREDENCIALES
                 // ==========================================
-                Section::make('Identidad y Credenciales de Acceso')
-                    ->description('Nombre oficial, correo de inicio de sesión y contraseña del panel administrativo.')
+                Section::make(__('Identity & Access Credentials'))
+                    ->description(__('Official name, login email, and admin panel password.'))
                     ->icon('heroicon-o-identification')
                     ->columnSpanFull()
                     ->schema([
                         Grid::make(['default' => 1, 'sm' => 2])
                             ->schema([
                                 TextInput::make('name')
-                                    ->label('Nombre Completo')
+                                    ->label(__('Full Name'))
                                     ->prefixIcon('heroicon-o-user')
-                                    ->placeholder('ej. Carlos Méndez / Lic. Ana Morales')
+                                    ->placeholder('Carlos Méndez / Dra. Ana Morales')
                                     ->required()
                                     ->maxLength(255)
                                     ->readOnly(fn (callable $get): bool => $get('role') === UserRole::Dentist->value)
@@ -99,23 +99,23 @@ class UserForm
                                             : '',
                                     ])
                                     ->helperText(fn (callable $get): string => $get('role') === UserRole::Dentist->value
-                                        ? 'Vinculado directamente con el especialista médico seleccionado (solo lectura).'
-                                        : 'Nombre del usuario que aparecerá en el sistema y auditorías.'
+                                        ? __('Directly linked to selected medical specialist (read-only).')
+                                        : __('User name displayed in the system and audit logs.')
                                     ),
 
                                 TextInput::make('email')
-                                    ->label('Correo Electrónico')
+                                    ->label(__('Email Address'))
                                     ->prefixIcon('heroicon-o-envelope')
                                     ->placeholder('usuario@auradental.com')
                                     ->email()
                                     ->required()
                                     ->unique(ignoreRecord: true)
                                     ->maxLength(255)
-                                    ->helperText('Correo utilizado para iniciar sesión en el panel.'),
+                                    ->helperText(__('Email used to log in to the admin panel.')),
                             ]),
 
                         TextInput::make('password')
-                            ->label('Contraseña de Acceso')
+                            ->label(__('Access Password'))
                             ->prefixIcon('heroicon-o-key')
                             ->password()
                             ->revealable()
@@ -125,8 +125,8 @@ class UserForm
                             ->maxLength(255)
                             ->columnSpanFull()
                             ->helperText(fn (string $operation): string => $operation === 'create'
-                                ? 'Mínimo 8 caracteres recomendado. Se encriptará de forma segura.'
-                                : 'Dejar este campo vacío si no deseas modificar la contraseña actual.'
+                                ? __('Minimum 8 characters recommended. Securely encrypted.')
+                                : __('Leave blank if you do not want to modify current password.')
                             ),
                     ]),
             ]);

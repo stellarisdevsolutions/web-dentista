@@ -53,9 +53,9 @@
                         const d = this.parseDate(this.clientDate);
                         const now = new Date();
                         const isToday = d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
-                        const formatter = new Intl.DateTimeFormat('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+                        const formatter = new Intl.DateTimeFormat('{{ app()->getLocale() === 'es' ? 'es-ES' : 'en-US' }}', { weekday: 'short', day: 'numeric', month: 'short' });
                         let formatted = formatter.format(d).replace(/[.,]/g, '');
-                        this.dateLabel = isToday ? ('Hoy · ' + formatted) : formatted;
+                        this.dateLabel = isToday ? ('{{ __('Today') }} · ' + formatted) : formatted;
                     },
 
                     previousDay() {
@@ -133,8 +133,8 @@
                 <!-- Anterior ‹ -->
                 <button type="button"
                         @click.prevent="previousDay()"
-                        aria-label="Día anterior"
-                        title="Día anterior"
+                        aria-label="{{ __('Previous Day') }}"
+                        title="{{ __('Previous Day') }}"
                         class="agenda-nav-btn">
                     ‹
                 </button>
@@ -147,8 +147,8 @@
                 <!-- Siguiente › -->
                 <button type="button"
                         @click.prevent="nextDay()"
-                        aria-label="Día siguiente"
-                        title="Día siguiente"
+                        aria-label="{{ __('Next Day') }}"
+                        title="{{ __('Next Day') }}"
                         class="agenda-nav-btn">
                     ›
                 </button>
@@ -156,7 +156,7 @@
                 <!-- Icono de Calendario (selector de fecha con showPicker instantáneo) -->
                 <div class="agenda-cal-btn"
                      @click="openCalendar()"
-                     title="Elegir fecha">
+                     title="{{ __('Choose date') }}">
                     <svg class="agenda-cal-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                         <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -168,7 +168,7 @@
                            :value="clientDate"
                            @click.stop="openCalendar()"
                            @change="onDateInput($event)"
-                           aria-label="Elegir fecha"
+                           aria-label="{{ __('Choose date') }}"
                            class="agenda-date-hidden-input" />
                 </div>
 
@@ -176,7 +176,7 @@
                 <button type="button"
                         @click.prevent="goToToday()"
                         class="agenda-today-btn">
-                    Hoy
+                    {{ __('Today') }}
                 </button>
             </div>
 
@@ -185,7 +185,7 @@
                 <div class="agenda-specialist-wrapper">
                     <select wire:model.live="dentistId"
                             class="agenda-specialist-select">
-                        <option value="">Todos los especialistas</option>
+                        <option value="">{{ __('All Specialists') }}</option>
                         @foreach($this->getDentists() as $dentist)
                             <option value="{{ $dentist->id }}">
                                 {{ preg_replace('/^(Dr\.|Dra\.|Dr|Dra)\s+/i', '', $dentist->name) }}{{ $dentist->specialty ? ' · ' . $dentist->specialty : '' }}
@@ -201,12 +201,12 @@
                         @click="$dispatch('agenda-reset-filters')"
                         wire:click="clearAllFilters"
                         class="agenda-clear-filters-btn"
-                        title="Restablecer todos los filtros">
+                        title="{{ __('Reset all filters') }}">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
-                    <span>Limpiar filtros</span>
+                    <span>{{ __('Clear filters') }}</span>
                 </button>
             @endif
         </div>
@@ -242,7 +242,7 @@
                         @click.prevent="select('all')"
                         class="agenda-tab-btn"
                         :class="{ 'active': currentTab === 'all' }">
-                    <span>Todas</span>
+                    <span>{{ __('All') }}</span>
                     <span class="agenda-tab-badge badge-all">
                         {{ $tabCounts['all'] ?? 0 }}
                     </span>
@@ -253,7 +253,7 @@
                         @click.prevent="select('pending')"
                         class="agenda-tab-btn"
                         :class="{ 'active': currentTab === 'pending' }">
-                    <span>Pendientes</span>
+                    <span>{{ __('Pending Appointments') }}</span>
                     <span class="agenda-tab-badge badge-pending">
                         {{ $tabCounts['pending'] ?? 0 }}
                     </span>
@@ -264,7 +264,7 @@
                         @click.prevent="select('confirmed')"
                         class="agenda-tab-btn"
                         :class="{ 'active': currentTab === 'confirmed' }">
-                    <span>Confirmadas</span>
+                    <span>{{ __('Confirmed Appointments') }}</span>
                     <span class="agenda-tab-badge badge-confirmed">
                         {{ $tabCounts['confirmed'] ?? 0 }}
                     </span>
@@ -275,7 +275,7 @@
                         @click.prevent="select('cancelled')"
                         class="agenda-tab-btn"
                         :class="{ 'active': currentTab === 'cancelled' }">
-                    <span>Canceladas</span>
+                    <span>{{ __('Cancelled Appointments') }}</span>
                     <span class="agenda-tab-badge badge-cancelled">
                         {{ $tabCounts['cancelled'] ?? 0 }}
                     </span>
@@ -291,8 +291,8 @@
                     </svg>
                     <input type="search"
                            wire:model.live.debounce.350ms="tableSearch"
-                           placeholder="Buscar paciente o teléfono"
-                           aria-label="Buscar paciente o teléfono"
+                           placeholder="{{ __('Search patient or phone') }}"
+                           aria-label="{{ __('Search patient or phone') }}"
                            class="agenda-search-input" />
                 </div>
             </div>
@@ -307,10 +307,10 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <span>Buscando en todas las fechas · próximas citas primero</span>
+                <span>{{ __('Searching all dates · upcoming appointments first') }}</span>
             </div>
             <button type="button" wire:click="clearSearch" class="agenda-search-banner-clear">
-                Limpiar búsqueda
+                {{ __('Clear search') }}
             </button>
         </div>
     @endif
@@ -325,7 +325,7 @@
                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.25"></circle>
                 <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span>Cargando citas...</span>
+            <span>{{ __('Loading appointments...') }}</span>
         </div>
     </div>
 

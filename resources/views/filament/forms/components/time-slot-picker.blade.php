@@ -9,7 +9,7 @@
             duration: {{ (int) ($durationMinutes ?? 45) }},
             is12h: {{ $is12h ? 'true' : 'false' }},
             formatSelectedRange() {
-                if (!this.state) return 'Ninguno';
+                if (!this.state) return '{{ __('None') }}';
                 const clean = String(this.state).substring(0, 5);
                 const parts = clean.split(':');
                 if (parts.length !== 2) return clean;
@@ -32,7 +32,7 @@
                     return `${padH}:${padM} ${period}`;
                 };
 
-                return `${formatH(totalStart)} a ${formatH(totalEnd)} (${this.duration || 45} min)`;
+                return `${formatH(totalStart)} {{ __('to') }} ${formatH(totalEnd)} (${this.duration || 45} min)`;
             }
         }"
         class="w-full space-y-3.5 pt-1">
@@ -41,10 +41,10 @@
         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 dark:border-white/10 pb-2.5">
             <div>
                 <span class="block text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-200">
-                    Turnos Disponibles
+                    {{ __('Available Shifts') }}
                 </span>
                 <span class="text-[11px] text-slate-500 dark:text-slate-400">
-                    Horario seleccionado: 
+                    {{ __('Selected Time:') }} 
                     <strong class="text-sky-600 dark:text-sky-400 font-extrabold" x-text="formatSelectedRange()"></strong>
                 </span>
             </div>
@@ -56,7 +56,7 @@
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    <span>Limpiar selección</span>
+                    <span>{{ __('Clear selection') }}</span>
                 </button>
             </template>
         </div>
@@ -71,10 +71,10 @@
                         <line x1="8" y1="2" x2="8" y2="6"></line>
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
-                    <span>Selecciona la fecha de la cita</span>
+                    <span>{{ __('Select appointment date') }}</span>
                 </p>
                 <p class="text-[11px] text-sky-700 dark:text-sky-300/80">
-                    Los turnos disponibles de mañana y tarde se calcularán en tiempo real según el especialista y tratamiento.
+                    {{ __('Available morning and afternoon slots will be calculated in real time according to specialist and treatment.') }}
                 </p>
             </div>
         {{-- Estado 2: Fecha seleccionada pero no hay cupos --}}
@@ -84,10 +84,10 @@
                     <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                     </svg>
-                    <span>Sin turnos disponibles para esta fecha</span>
+                    <span>{{ __('No available slots for this date') }}</span>
                 </p>
                 <p class="text-[11px] text-amber-700 dark:text-amber-400">
-                    El odontólogo seleccionado no atiende ese día o ya tiene la agenda completa. Puedes probar otra fecha o elegir "Primer Especialista Disponible".
+                    {{ __('The selected dentist does not practice on this day or is fully booked. You can try another date or select "First Available Specialist".') }}
                 </p>
             </div>
         {{-- Estado 3: Turnos cargados con éxito en bloques Mañana y Tarde --}}
@@ -106,7 +106,7 @@
                                 <path d="M5 16a7 7 0 0 1 14 0"></path>
                                 <path d="M2 20h20"></path>
                             </svg>
-                            <span>Turno Mañana</span>
+                            <span>{{ __('Morning Shift') }}</span>
                         </div>
 
                         <div class="flex flex-wrap gap-2">
@@ -116,7 +116,7 @@
                                             @click="state = '{{ $slot['time'] }}'"
                                         @endif
                                         @disabled(! $slot['available'])
-                                        title="{{ $slot['available'] ? 'Seleccionar ' . $slot['label'] : ($slot['reason'] ?? 'Horario ocupado o fuera de turno') }}"
+                                        title="{{ $slot['available'] ? __('Select :time', ['time' => $slot['label']]) : ($slot['reason'] ?? __('Time slot occupied or outside schedule')) }}"
                                         class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-150 flex items-center gap-1.5 cursor-pointer"
                                         :class="{
                                             'bg-[#0A1730] text-white shadow-md ring-2 ring-sky-500 dark:bg-sky-500 dark:text-white': state === '{{ $slot['time'] }}' || (state && String(state).startsWith('{{ $slot['time'] }}')),
@@ -147,7 +147,7 @@
                                 <path d="m4.93 4.93 2.12 2.12"></path>
                                 <path d="m19.07 4.93-2.12 2.12"></path>
                             </svg>
-                            <span>Turno Tarde</span>
+                            <span>{{ __('Afternoon Shift') }}</span>
                         </div>
 
                         <div class="flex flex-wrap gap-2">

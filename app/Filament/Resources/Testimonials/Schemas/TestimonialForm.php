@@ -15,67 +15,65 @@ class TestimonialForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $isSpanish = app()->getLocale() === 'es';
-
         return $schema
             ->components([
-                Section::make($isSpanish ? 'Perfil del Paciente' : 'Reviewer Profile')
+                Section::make(__('Reviewer Profile'))
                     ->schema([
                         Grid::make(3)
                             ->schema([
                                 TextInput::make('patient_name')
-                                    ->label($isSpanish ? 'Nombre Completo del Paciente' : 'Patient Full Name')
+                                    ->label(__('Patient Full Name'))
                                     ->required()
                                     ->maxLength(255),
                                 Select::make('rating')
-                                    ->label($isSpanish ? 'Calificación (Estrellas)' : 'Rating (Stars)')
+                                    ->label(__('Rating (Stars)'))
                                     ->options([
-                                        5 => '★★★★★ (5 Estrellas)',
-                                        4 => '★★★★☆ (4 Estrellas)',
-                                        3 => '★★★☆☆ (3 Estrellas)',
-                                        2 => '★★☆☆☆ (2 Estrellas)',
-                                        1 => '★☆☆☆☆ (1 Estrella)',
+                                        5 => '5 / 5 ('.__('5 stars').')',
+                                        4 => '4 / 5 ('.__('4 stars').')',
+                                        3 => '3 / 5 ('.__('3 stars').')',
+                                        2 => '2 / 5 ('.__('2 stars').')',
+                                        1 => '1 / 5 ('.__('1 star').')',
                                     ])
                                     ->default(5)
                                     ->required(),
                                 TextInput::make('source')
-                                    ->label($isSpanish ? 'Fuente de la Reseña' : 'Review Source')
-                                    ->placeholder('Google Reviews, Paciente Verificado')
+                                    ->label(__('Review Source'))
+                                    ->placeholder(__('Google Reviews, Verified Patient'))
                                     ->default('Google Reviews')
                                     ->maxLength(100),
                             ]),
 
                         FileUpload::make('patient_avatar')
-                            ->label($isSpanish ? 'Foto del Paciente (Opcional)' : 'Patient Photo (Optional)')
+                            ->label(__('Patient Photo (Optional)'))
                             ->image()
                             ->directory('testimonials')
                             ->disk('public'),
                     ]),
 
-                Section::make($isSpanish ? 'Opinión del Tratamiento' : 'Review Content')
+                Section::make(__('Review Content'))
                     ->schema([
                         TextInput::make('treatment')
-                            ->label('Tratamiento Realizado')
-                            ->placeholder('ej. Blanqueamiento Dental Láser')
+                            ->label(__('Completed Treatment'))
+                            ->placeholder(__('e.g. Laser Teeth Whitening'))
                             ->maxLength(150),
                         Textarea::make('comment')
-                            ->label('Testimonio / Comentario del Paciente')
+                            ->label(__('Patient Review / Comment'))
                             ->required()
                             ->rows(4),
                     ]),
 
-                Section::make($isSpanish ? 'Estado y Visibilidad' : 'Status & Visibility')
+                Section::make(__('Status & Visibility'))
                     ->schema([
                         Grid::make(3)
                             ->schema([
                                 Toggle::make('is_verified')
-                                    ->label($isSpanish ? 'Paciente Verificado' : 'Verified Patient')
+                                    ->label(__('Verified Patient'))
                                     ->default(true),
                                 Toggle::make('is_active')
-                                    ->label($isSpanish ? 'Mostrar en la Web' : 'Display on Website')
+                                    ->label(__('Display on Website'))
                                     ->default(true),
                                 TextInput::make('order')
-                                    ->label($isSpanish ? 'Orden' : 'Sort Order')
+                                    ->label(__('Sort Order'))
                                     ->numeric()
                                     ->default(0),
                             ]),

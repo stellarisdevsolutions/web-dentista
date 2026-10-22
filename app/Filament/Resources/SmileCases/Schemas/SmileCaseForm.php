@@ -15,37 +15,35 @@ class SmileCaseForm
 {
     public static function configure(Schema $schema): Schema
     {
-        $isSpanish = app()->getLocale() === 'es';
-
         return $schema
             ->components([
-                Section::make($isSpanish ? 'Detalles del Caso Clínico' : 'Case Details')
+                Section::make(__('Case Details'))
                     ->schema([
                         TextInput::make('title')
-                            ->label('Título del Caso')
-                            ->placeholder('ej. Alineación Dental Completa con Alineadores')
+                            ->label(__('Case Title'))
+                            ->placeholder(__('e.g. Full Teeth Alignment with Clear Aligners'))
                             ->required()
                             ->maxLength(255),
                         Textarea::make('description')
-                            ->label('Descripción Clínica del Caso')
+                            ->label(__('Clinical Description'))
                             ->rows(3),
                         Textarea::make('patient_testimonial')
-                            ->label('Testimonio del Paciente')
+                            ->label(__('Patient Testimonial'))
                             ->rows(2),
                     ]),
 
-                Section::make($isSpanish ? 'Fotografías Antes/Después y Asignación' : 'Comparison Photos & Assignment')
+                Section::make(__('Comparison Photos & Assignment'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 FileUpload::make('before_image')
-                                    ->label('Foto Antes (Estado Inicial)')
+                                    ->label(__('Before Photo (Initial State)'))
                                     ->image()
                                     ->directory('cases')
                                     ->disk('public')
                                     ->required(),
                                 FileUpload::make('after_image')
-                                    ->label('Foto Después (Resultado Final)')
+                                    ->label(__('After Photo (Final Result)'))
                                     ->image()
                                     ->directory('cases')
                                     ->disk('public')
@@ -55,13 +53,13 @@ class SmileCaseForm
                         Grid::make(2)
                             ->schema([
                                 Select::make('service_id')
-                                    ->label('Tratamiento Asociado')
+                                    ->label(__('Associated Service'))
                                     ->relationship('service', 'name')
                                     ->searchable()
                                     ->preload()
                                     ->nullable(),
                                 Select::make('dentist_id')
-                                    ->label($isSpanish ? 'Especialista a Cargo' : 'Specialist in Charge')
+                                    ->label(__('Specialist in Charge'))
                                     ->relationship('dentist', 'name')
                                     ->searchable()
                                     ->preload()
@@ -71,13 +69,13 @@ class SmileCaseForm
                         Grid::make(3)
                             ->schema([
                                 Toggle::make('is_featured')
-                                    ->label($isSpanish ? 'Destacar en Galería' : 'Featured in Gallery')
+                                    ->label(__('Featured in Gallery'))
                                     ->default(true),
                                 Toggle::make('is_active')
-                                    ->label($isSpanish ? 'Visible en la Web' : 'Visible on Website')
+                                    ->label(__('Visible on Website'))
                                     ->default(true),
                                 TextInput::make('order')
-                                    ->label($isSpanish ? 'Orden' : 'Sort Order')
+                                    ->label(__('Sort Order'))
                                     ->numeric()
                                     ->default(0),
                             ]),

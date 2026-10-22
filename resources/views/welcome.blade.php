@@ -7,8 +7,11 @@
 
     @include('partials.favicon')
 
-    <title>{{ $clinic->clinic_name }} | Odontología Avanzada y Cuidado Dental</title>
-    <meta name="description" content="{{ $clinic->tagline ?? 'Cuidado dental suave, integral e indoloro para toda la familia.' }}">
+    @include('partials.seo-meta', [
+        'title' => $clinic->clinic_name . ' | ' . __('Odontología Avanzada y Cuidado Dental'),
+        'description' => $clinic->tagline ?? __('Cuidado dental suave, integral e indoloro para toda la familia.'),
+        'ogType' => 'website',
+    ])
 
     <!-- Google Fonts: Instrument Sans -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -78,17 +81,17 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-sky-400">
                                 <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path>
                             </svg>
-                            <span data-cms-field="eyebrow">{{ $hero['eyebrow'] ?? 'Tu Sonrisa Merece la Mejor Atención' }}</span>
+                            <span data-cms-field="eyebrow">{{ $hero['eyebrow'] ?? __('Tu Sonrisa Merece la Mejor Atención') }}</span>
                         </div>
 
                         <!-- Main Heading -->
                         <h1 data-cms-field="title" class="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.1] mb-5 tracking-tight">
-                            {{ $hero['title'] ?? 'Odontología Suave, Sin Dolor para Toda tu Familia.' }}
+                            {{ $hero['title'] ?? __('Odontología Suave, Sin Dolor para Toda tu Familia.') }}
                         </h1>
 
                         <!-- Description -->
                         <p data-cms-field="subtitle" class="text-slate-300 text-sm leading-relaxed mb-8 font-light max-w-lg">
-                            {{ $hero['subtitle'] ?? ($clinic->tagline ?? 'Combinamos escáner digital 3D y tecnología láser avanzada con un trato cálido y humano para devolverte una sonrisa radiante y saludable.') }}
+                            {{ $hero['subtitle'] ?? ($clinic->tagline ?? __('Combinamos escáner digital 3D y tecnología láser avanzada con un trato cálido y humano para devolverte una sonrisa radiante y saludable.')) }}
                         </p>
 
                         <!-- Key Benefits / Bullet Checkmarks -->
@@ -96,10 +99,10 @@
                             $benefit1 = $hero['benefit_1'] ?? null;
                             $benefit2 = $hero['benefit_2'] ?? null;
                             if (!array_key_exists('benefit_1', $hero)) {
-                                $benefit1 = 'Odontólogos y Cirujanos Especialistas Certificados';
+                                $benefit1 = __('Odontólogos y Cirujanos Especialistas Certificados');
                             }
                             if (!array_key_exists('benefit_2', $hero)) {
-                                $benefit2 = 'Tratamientos Láser 100% Indoloros y Sedación Consciente';
+                                $benefit2 = __('Tratamientos Láser 100% Indoloros y Sedación Consciente');
                             }
                             $hasBenefit1 = filled(trim($benefit1 ?? ''));
                             $hasBenefit2 = filled(trim($benefit2 ?? ''));
@@ -118,7 +121,7 @@
                         <!-- CTA Actions -->
                         <div class="flex items-center">
                             <a href="{{ $hero['button_primary_url'] ?? '#appointment-section' }}" class="bg-sky-500 hover:bg-sky-600 text-white px-8 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-lg shadow-sky-500/30 flex items-center gap-1.5 hover:scale-105 active:scale-95 hover:shadow-sky-500/50">
-                                <span data-cms-field="button_primary_text">{{ $hero['button_primary_text'] ?? 'Agendar Consulta Online »' }}</span>
+                                <span data-cms-field="button_primary_text">{{ $hero['button_primary_text'] ?? __('Agendar Consulta Online »') }}</span>
                             </a>
                         </div>
                     </div>
@@ -126,8 +129,8 @@
                     <!-- Floating Circular Badge on Seam: 24 Horas Soporte -->
                     <div class="absolute right-0 lg:-right-12 top-1/2 -translate-y-1/2 z-30 hidden sm:flex animate-float">
                         <div class="w-24 h-24 rounded-full bg-sky-500 text-white border-4 border-white shadow-xl flex flex-col items-center justify-center text-center p-2 hover:scale-110 transition-transform cursor-default">
-                            <span data-cms-field="badge_title" class="text-sm font-black leading-none">{{ $hero['badge_title'] ?? '24 Horas' }}</span>
-                            <span data-cms-field="badge_subtitle" class="text-[10px] font-bold uppercase tracking-wider mt-1">{{ $hero['badge_subtitle'] ?? 'Urgencias' }}</span>
+                            <span data-cms-field="badge_title" class="text-sm font-black leading-none">{{ $hero['badge_title'] ?? __('24 Horas') }}</span>
+                            <span data-cms-field="badge_subtitle" class="text-[10px] font-bold uppercase tracking-wider mt-1">{{ $hero['badge_subtitle'] ?? __('Urgencias') }}</span>
                         </div>
                     </div>
                 </div>
@@ -157,8 +160,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 data-cms-field="emergency_title" class="text-xl font-black text-slate-900 mb-1">{{ $quickCards['emergency_title'] ?? 'Llamada de Urgencia' }}</h3>
-                            <p data-cms-field="emergency_subtitle" class="text-slate-500 text-xs mb-2">{{ $quickCards['emergency_subtitle'] ?? 'Atención dental prioritaria el mismo día' }}</p>
+                            <h3 data-cms-field="emergency_title" class="text-xl font-black text-slate-900 mb-1">{{ $quickCards['emergency_title'] ?? __('Llamada de Urgencia') }}</h3>
+                            <p data-cms-field="emergency_subtitle" class="text-slate-500 text-xs mb-2">{{ $quickCards['emergency_subtitle'] ?? __('Atención dental prioritaria el mismo día') }}</p>
                             <a href="tel:{{ preg_replace('/[^0-9+]/', '', $clinic->emergency_phone ?? $clinic->phone) }}" class="text-sky-500 font-extrabold text-sm hover:underline">
                                 {{ $clinic->emergency_phone ?? $clinic->phone }}
                             </a>
@@ -174,10 +177,10 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 data-cms-field="schedule_title" class="text-xl font-black text-slate-900 mb-1">{{ $quickCards['schedule_title'] ?? 'Agenda tu Cita en Línea' }}</h3>
-                            <p data-cms-field="schedule_subtitle" class="text-slate-500 text-xs mb-2">{{ $quickCards['schedule_subtitle'] ?? 'Elige a tu especialista y horario disponible en segundos.' }}</p>
+                            <h3 data-cms-field="schedule_title" class="text-xl font-black text-slate-900 mb-1">{{ $quickCards['schedule_title'] ?? __('Agenda tu Cita en Línea') }}</h3>
+                            <p data-cms-field="schedule_subtitle" class="text-slate-500 text-xs mb-2">{{ $quickCards['schedule_subtitle'] ?? __('Elige a tu especialista y horario disponible en segundos.') }}</p>
                             <a href="#appointment-section" class="text-sky-500 font-extrabold text-sm hover:underline">
-                                <span data-cms-field="schedule_button_text">{{ $quickCards['schedule_button_text'] ?? 'Reservar Cita Ahora' }}</span> →
+                                <span data-cms-field="schedule_button_text">{{ $quickCards['schedule_button_text'] ?? __('Reservar Cita Ahora') }}</span> →
                             </a>
                         </div>
                     </div>
@@ -212,7 +215,7 @@
                             <!-- Floating Circular Badge (ej. 20+ AÑOS EXP.) -->
                             <div class="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full bg-[#13223f] text-white border-4 border-white shadow-2xl flex flex-col items-center justify-center text-center p-2 z-20 hover:scale-110 transition-transform duration-300">
                                 <span data-cms-field="badge_years" class="text-xl font-black leading-none">{{ $aboutSec['badge_years'] ?? '20+' }}</span>
-                                <span data-cms-field="badge_text" class="text-[10px] font-bold uppercase tracking-widest mt-1">{{ $aboutSec['badge_text'] ?? 'Años Exp.' }}</span>
+                                <span data-cms-field="badge_text" class="text-[10px] font-bold uppercase tracking-widest mt-1">{{ $aboutSec['badge_text'] ?? __('Años Exp.') }}</span>
                             </div>
 
                             <!-- Secondary Overlapping Clinical Photo (Inferior Derecha) -->
@@ -232,18 +235,18 @@
                     <div class="lg:w-1/2 flex flex-col items-start">
                         <div class="flex items-center gap-2 text-sky-500 font-bold text-xs uppercase tracking-widest mb-3">
                             <span class="w-5 h-1 bg-sky-500 rounded-full"></span>
-                            <span data-cms-field="eyebrow">{{ $aboutSec['eyebrow'] ?? 'CONOCE NUESTRA CLÍNICA' }}</span>
+                            <span data-cms-field="eyebrow">{{ $aboutSec['eyebrow'] ?? __('CONOCE NUESTRA CLÍNICA') }}</span>
                         </div>
 
                         <h2 data-cms-field="title" class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight mb-5">
-                            {{ $aboutSec['title'] ?? 'Más de 15 años transformando sonrisas con calidez, ciencia y precisión.' }}
+                            {{ $aboutSec['title'] ?? __('Más de 15 años transformando sonrisas con calidez, ciencia y precisión.') }}
                         </h2>
 
                         <p data-cms-field="description" class="text-slate-500 text-sm leading-relaxed mb-6">
-                            {{ $aboutSec['description'] ?? 'En nuestra clínica creemos que una visita al dentista debe ser una experiencia reconfortante y libre de ansiedad. Contamos con tecnología de diagnóstico digital 3D y quirófanos esterilizados bajo estándares hospitalarios internacionales.' }}
+                            {{ $aboutSec['description'] ?? __('En nuestra clínica creemos que una visita al dentista debe ser una experiencia reconfortante y libre de ansiedad. Contamos con tecnología de diagnóstico digital 3D y quirófanos esterilizados bajo estándares hospitalarios internacionales.') }}
                         </p>
 
-                        <!-- Cards hardcodeadas con soporte bilingüe EN / ES -->
+                        <!-- Cards con soporte bilingüe EN / ES -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-6">
                             <!-- Card 1: Atención Sin Temor -->
                             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-start gap-3.5 hover:border-sky-300 transition-colors">
@@ -254,10 +257,10 @@
                                 </div>
                                 <div>
                                     <h4 class="font-extrabold text-slate-900 text-sm mb-0.5">
-                                        {{ app()->getLocale() === 'en' ? 'Fear-Free Dental Care' : 'Atención Sin Temor' }}
+                                        {{ __('Atención Sin Temor') }}
                                     </h4>
                                     <p class="text-xs text-slate-400">
-                                        {{ app()->getLocale() === 'en' ? 'Gentle techniques for anxious patients and children.' : 'Técnicas suaves para pacientes con fobia y niños.' }}
+                                        {{ __('Técnicas suaves para pacientes con fobia y niños.') }}
                                     </p>
                                 </div>
                             </div>
@@ -272,10 +275,10 @@
                                 </div>
                                 <div>
                                     <h4 class="font-extrabold text-slate-900 text-sm mb-0.5">
-                                        {{ app()->getLocale() === 'en' ? 'Top Specialists' : 'Especialistas Top' }}
+                                        {{ __('Especialistas Top') }}
                                     </h4>
                                     <p class="text-xs text-slate-400">
-                                        {{ app()->getLocale() === 'en' ? 'Accredited doctors in aesthetics, implants and orthodontics.' : 'Doctores acreditados en estética, implantes y ortodoncia.' }}
+                                        {{ __('Doctores acreditados en estética, implantes y ortodoncia.') }}
                                     </p>
                                 </div>
                             </div>
@@ -284,7 +287,7 @@
                         @php
                             $checkText = $aboutSec['check_text'] ?? null;
                             if (!array_key_exists('check_text', $aboutSec)) {
-                                $checkText = 'Horarios organizados por Turno Mañana y Turno Tarde para tu comodidad.';
+                                $checkText = __('Horarios organizados por Turno Mañana y Turno Tarde para tu comodidad.');
                             }
                             $hasCheckText = filled(trim($checkText ?? ''));
                         @endphp
@@ -296,7 +299,7 @@
 
                         <!-- Botón: Conocer a los Especialistas (Fin de la sección Sobre la Clínica) -->
                         <a href="{{ $aboutSec['button_url'] ?? '#dentists' }}" class="bg-sky-500 hover:bg-sky-600 text-white px-8 py-3.5 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-sky-500/25 transition-all flex items-center gap-1 hover:scale-105 hover:shadow-sky-500/40">
-                            <span data-cms-field="button_text">{{ $aboutSec['button_text'] ?? 'CONOCER A LOS ESPECIALISTAS »' }}</span>
+                            <span data-cms-field="button_text">{{ $aboutSec['button_text'] ?? __('CONOCER A LOS ESPECIALISTAS »') }}</span>
                         </a>
                     </div>
                 </div>
@@ -321,7 +324,7 @@
                                 </svg>
                             </div>
                             <h3 data-cms-field="stat_1_number" class="text-3xl sm:text-4xl font-black text-white mb-1 tracking-tight">{{ $trustbarSec['stat_1_number'] ?? '25,000+' }}</h3>
-                            <p data-cms-field="stat_1_label" class="text-xs text-sky-400 font-bold uppercase tracking-wider">{{ $trustbarSec['stat_1_label'] ?? 'Pacientes Felices' }}</p>
+                            <p data-cms-field="stat_1_label" class="text-xs text-sky-400 font-bold uppercase tracking-wider">{{ $trustbarSec['stat_1_label'] ?? __('Pacientes Felices') }}</p>
                         </div>
 
                         <div class="flex flex-col items-center p-3 pt-6 md:pt-3 group">
@@ -331,7 +334,7 @@
                                 </svg>
                             </div>
                             <h3 data-cms-field="stat_2_number" class="text-3xl sm:text-4xl font-black text-white mb-1 tracking-tight">{{ $trustbarSec['stat_2_number'] ?? '24/7' }}</h3>
-                            <p data-cms-field="stat_2_label" class="text-xs text-sky-400 font-bold uppercase tracking-wider">{{ $trustbarSec['stat_2_label'] ?? 'Soporte Urgencias' }}</p>
+                            <p data-cms-field="stat_2_label" class="text-xs text-sky-400 font-bold uppercase tracking-wider">{{ $trustbarSec['stat_2_label'] ?? __('Soporte Urgencias') }}</p>
                         </div>
 
                         <div class="flex flex-col items-center p-3 pt-6 md:pt-3 group">
@@ -343,7 +346,7 @@
                                 </svg>
                             </div>
                             <h3 data-cms-field="stat_3_number" class="text-3xl sm:text-4xl font-black text-white mb-1 tracking-tight">{{ $trustbarSec['stat_3_number'] ?? '18,500+' }}</h3>
-                            <p data-cms-field="stat_3_label" class="text-xs text-sky-400 font-bold uppercase tracking-wider">{{ $trustbarSec['stat_3_label'] ?? 'Sonrisas Renovadas' }}</p>
+                            <p data-cms-field="stat_3_label" class="text-xs text-sky-400 font-bold uppercase tracking-wider">{{ $trustbarSec['stat_3_label'] ?? __('Sonrisas Renovadas') }}</p>
                         </div>
 
                         <div class="flex flex-col items-center p-3 pt-6 md:pt-3 group">
@@ -358,7 +361,7 @@
                                 </svg>
                             </div>
                             <h3 data-cms-field="stat_4_number" class="text-3xl sm:text-4xl font-black text-white mb-1 tracking-tight">{{ $trustbarSec['stat_4_number'] ?? '99.4%' }}</h3>
-                            <p data-cms-field="stat_4_label" class="text-xs text-sky-400 font-bold uppercase tracking-wider">{{ $trustbarSec['stat_4_label'] ?? 'Satisfacción Clínica' }}</p>
+                            <p data-cms-field="stat_4_label" class="text-xs text-sky-400 font-bold uppercase tracking-wider">{{ $trustbarSec['stat_4_label'] ?? __('Satisfacción Clínica') }}</p>
                         </div>
                     </div>
                 </div>
@@ -376,15 +379,15 @@
                     <div class="lg:w-1/2 flex flex-col items-start">
                         <div class="flex items-center gap-2 text-sky-500 font-bold text-xs uppercase tracking-widest mb-3">
                             <span class="w-5 h-1 bg-sky-500 rounded-full"></span>
-                            <span data-cms-field="eyebrow">{{ $howItWorksSec['eyebrow'] ?? 'NUESTRAS SOLUCIONES DENTALES' }}</span>
+                            <span data-cms-field="eyebrow">{{ $howItWorksSec['eyebrow'] ?? __('NUESTRAS SOLUCIONES DENTALES') }}</span>
                         </div>
 
                         <h2 data-cms-field="title" class="text-4xl sm:text-5xl font-black text-slate-900 leading-tight mb-5">
-                            {{ $howItWorksSec['title'] ?? 'Soluciones Dentales Completas con la Mayor Suavidad.' }}
+                            {{ $howItWorksSec['title'] ?? __('Soluciones Dentales Completas con la Mayor Suavidad.') }}
                         </h2>
 
                         <p data-cms-field="subtitle" class="text-slate-500 text-sm leading-relaxed mb-6">
-                            {{ $howItWorksSec['subtitle'] ?? 'Desde limpiezas preventivas profundas hasta carillas de porcelana ultra finas e implantes guiados en 3D, cuidamos tu salud bucal con precisión quirúrgica y confort total.' }}
+                            {{ $howItWorksSec['subtitle'] ?? __('Desde limpiezas preventivas profundas hasta carillas de porcelana ultra finas e implantes guiados en 3D, cuidamos tu salud bucal con precisión quirúrgica y confort total.') }}
                         </p>
 
                         <div class="space-y-3.5 w-full mb-4">
@@ -394,16 +397,16 @@
                                 $step3 = $howItWorksSec['step_3_title'] ?? null;
                                 $step4 = $howItWorksSec['step_4_title'] ?? null;
                                 if (!array_key_exists('step_1_title', $howItWorksSec)) {
-                                    $step1 = 'Higiene y Prevención Dental Integral con Ultrasonido Tibio';
+                                    $step1 = __('Higiene y Prevención Dental Integral con Ultrasonido Tibio');
                                 }
                                 if (!array_key_exists('step_2_title', $howItWorksSec)) {
-                                    $step2 = 'Especialistas Certificados en Estética y Cirugía Reconstructiva';
+                                    $step2 = __('Especialistas Certificados en Estética y Cirugía Reconstructiva');
                                 }
                                 if (!array_key_exists('step_3_title', $howItWorksSec)) {
-                                    $step3 = 'Protocolos Estrictos de Esterilización Quirúrgica Grado Hospital';
+                                    $step3 = __('Protocolos Estrictos de Esterilización Quirúrgica Grado Hospital');
                                 }
                                 if (!array_key_exists('step_4_title', $howItWorksSec)) {
-                                    $step4 = 'Odontología Láser Indolora y Sedación Consciente';
+                                    $step4 = __('Odontología Láser Indolora y Sedación Consciente');
                                 }
                                 $hasStep1 = filled(trim($step1 ?? ''));
                                 $hasStep2 = filled(trim($step2 ?? ''));
@@ -506,30 +509,30 @@
                 $testimonialItems = [
                     [
                         'patient_name' => 'Claire Davenport',
-                        'treatment' => 'Alineadores Invisibles y Blanqueamiento',
+                        'treatment' => __('Alineadores Invisibles y Blanqueamiento'),
                         'rating' => 5,
-                        'comment' => 'La clínica más acogedora y avanzada tecnológicamente que he visitado. La Dra. Rostova me explicó cada detalle de la simulación digital. El equipo es súper profesional y cálido.',
+                        'comment' => __('La clínica más acogedora y avanzada tecnológicamente que he visitado. La Dra. Rostova me explicó cada detalle de la simulación digital. El equipo es súper profesional y cálido.'),
                         'avatar_url' => '',
                     ],
                     [
                         'patient_name' => 'David Morales',
-                        'treatment' => 'Implante Dental y Corona Circonio',
+                        'treatment' => __('Implante Dental y Corona Circonio'),
                         'rating' => 4.5,
-                        'comment' => 'Tenía mucho miedo a la cirugía dental, pero el Dr. Vance y su equipo hicieron que el implante fuera 100% indoloro. La recuperación fue rapidísima. ¡Totalmente recomendados!',
+                        'comment' => __('Tenía mucho miedo a la cirugía dental, pero el Dr. Vance y su equipo hicieron que el implante fuera 100% indoloro. La recuperación fue rapidísima. ¡Totalmente recomendados!'),
                         'avatar_url' => '',
                     ],
                     [
                         'patient_name' => 'Emma Watson-Lee',
-                        'treatment' => 'Blanqueamiento Dental Láser',
+                        'treatment' => __('Blanqueamiento Dental Láser'),
                         'rating' => 5,
-                        'comment' => 'Llegué con manchas de café de años y salí una hora después con una sonrisa radiante. Cero sensibilidad en los días posteriores. ¡Atención impecable!',
+                        'comment' => __('Llegué con manchas de café de años y salí una hora después con una sonrisa radiante. Cero sensibilidad en los días posteriores. ¡Atención impecable!'),
                         'avatar_url' => '',
                     ],
                     [
                         'patient_name' => 'Santiago Ramírez',
-                        'treatment' => 'Limpieza y Revisión General',
+                        'treatment' => __('Limpieza y Revisión General'),
                         'rating' => 4.5,
-                        'comment' => 'Instalaciones ultra modernas y precios transparentes. No intentan venderte cosas innecesarias. Mis dientes se sienten más limpios que nunca.',
+                        'comment' => __('Instalaciones ultra modernas y precios transparentes. No intentan venderte cosas innecesarias. Mis dientes se sienten más limpios que nunca.'),
                         'avatar_url' => '',
                     ],
                 ];
@@ -566,17 +569,17 @@
                                 <!-- Eyebrow -->
                                 <div class="flex items-center gap-2 text-sky-400 font-bold text-xs uppercase tracking-widest mb-3">
                                     <span class="w-5 h-1 bg-sky-400 rounded-full"></span>
-                                    <span data-cms-field="eyebrow">{{ $testimonialsSec['eyebrow'] ?? 'TESTIMONIOS DE PACIENTES' }}</span>
+                                    <span data-cms-field="eyebrow">{{ $testimonialsSec['eyebrow'] ?? __('TESTIMONIOS DE PACIENTES') }}</span>
                                 </div>
 
                                 <!-- Título de Sección -->
                                 <h3 data-cms-field="title" class="text-2xl sm:text-3xl font-black text-white leading-tight mb-2">
-                                    {{ $testimonialsSec['title'] ?? 'Lo que Dicen Nuestros Pacientes sobre su Experiencia Dental.' }}
+                                    {{ $testimonialsSec['title'] ?? __('Lo que Dicen Nuestros Pacientes sobre su Experiencia Dental.') }}
                                 </h3>
 
                                 <!-- Subtítulo de Sección -->
                                 <span data-cms-field="subtitle" class="text-xs font-bold text-sky-400 uppercase tracking-widest block mb-6">
-                                    {{ $testimonialsSec['subtitle'] ?? 'Opinión Verificada de Google & WhatsApp' }}
+                                    {{ $testimonialsSec['subtitle'] ?? __('Opinión Verificada de Google & WhatsApp') }}
                                 </span>
 
                                 <!-- 1. PACIENTE (USUARIO) ARRIBA DEL COMENTARIO -->
@@ -652,7 +655,7 @@
                                             @click="goTo(idx)" 
                                             :class="currentIndex === idx ? 'w-8 bg-sky-400' : 'w-2.5 bg-slate-700 hover:bg-slate-500'" 
                                             class="h-2 rounded-full transition-all duration-300 focus:outline-none cursor-pointer"
-                                            :title="'Ver testimonio ' + (idx + 1)"
+                                            :title="'{{ __('Ver testimonio') }} ' + (idx + 1)"
                                         ></button>
                                     </template>
                                 </div>
@@ -663,7 +666,7 @@
                                         type="button" 
                                         @click="prev()" 
                                         class="w-8 h-8 rounded-full bg-slate-800 hover:bg-sky-500 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-slate-700 focus:outline-none cursor-pointer shadow-sm"
-                                        title="Testimonio anterior"
+                                        title="{{ __('Testimonio anterior') }}"
                                     >
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
                                     </button>
@@ -671,7 +674,7 @@
                                         type="button" 
                                         @click="next()" 
                                         class="w-8 h-8 rounded-full bg-slate-800 hover:bg-sky-500 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-slate-700 focus:outline-none cursor-pointer shadow-sm"
-                                        title="Siguiente testimonio"
+                                        title="{{ __('Siguiente testimonio') }}"
                                     >
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                                     </button>
@@ -692,9 +695,9 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <div class="text-center max-w-2xl mx-auto mb-12">
-                    <span data-cms-field="eyebrow" class="text-sky-500 font-bold text-xs tracking-widest uppercase mb-2 block">{{ $servicesSec['eyebrow'] ?? 'Especialidades Odontológicas' }}</span>
-                    <h2 data-cms-field="title" class="text-4xl sm:text-5xl font-black text-slate-900 mb-4">{{ $servicesSec['title'] ?? 'Tratamientos Odontológicos Especializados' }}</h2>
-                    <p data-cms-field="subtitle" class="text-slate-500 text-sm">{{ $servicesSec['subtitle'] ?? 'Cuidado dental de alta precisión con cero dolor y tecnología digital 3D.' }}</p>
+                    <span data-cms-field="eyebrow" class="text-sky-500 font-bold text-xs tracking-widest uppercase mb-2 block">{{ $servicesSec['eyebrow'] ?? __('Especialidades Odontológicas') }}</span>
+                    <h2 data-cms-field="title" class="text-4xl sm:text-5xl font-black text-slate-900 mb-4">{{ $servicesSec['title'] ?? __('Tratamientos Odontológicos Especializados') }}</h2>
+                    <p data-cms-field="subtitle" class="text-slate-500 text-sm">{{ $servicesSec['subtitle'] ?? __('Cuidado dental de alta precisión con cero dolor y tecnología digital 3D.') }}</p>
                 </div>
 
                 <!-- Treatments Grid with Images (Max 6) -->
@@ -715,7 +718,7 @@
 
                                 <div class="p-6">
                                     <span class="text-[11px] font-bold uppercase tracking-wider text-sky-600 bg-sky-50 px-2.5 py-0.5 rounded-full inline-block mb-2.5">
-                                        {{ $service->category }}
+                                        {{ __($service->category) }}
                                     </span>
 
                                     <h3 class="text-lg font-bold text-slate-900 mb-2 group-hover:text-sky-600 transition-colors">
@@ -733,14 +736,14 @@
                                     href="{{ route('services.show', $service->slug) }}"
                                     class="text-xs font-bold text-slate-600 hover:text-sky-600 transition-colors"
                                 >
-                                    Ver detalles
+                                    {{ __('Ver detalles') }}
                                 </a>
 
                                 <a 
                                     href="{{ route('schedule') }}?service_id={{ $service->id }}"
                                     class="text-xs font-extrabold text-sky-500 group-hover:text-sky-600 uppercase tracking-wider flex items-center gap-1.5 transition-all text-left"
                                 >
-                                    <span>Agendar »</span>
+                                    <span>{{ __('Agendar') }} »</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 group-hover:translate-x-1 transition-transform">
                                         <path d="m9 18 6-6-6-6"></path>
                                     </svg>
@@ -756,7 +759,7 @@
                             href="{{ route('services.index') }}" 
                             class="inline-flex items-center gap-2 bg-[#13223f] hover:bg-sky-600 text-white px-8 py-4 rounded-full font-bold text-xs uppercase tracking-wider shadow-lg shadow-slate-900/10 transition-all hover:scale-105 hover:shadow-sky-500/25"
                         >
-                            <span>Ver todos los tratamientos ({{ $services->count() }}) »</span>
+                            <span>{{ __('Ver todos los tratamientos') }} ({{ $services->count() }}) »</span>
                         </a>
                     </div>
                 @endif
@@ -780,20 +783,20 @@
             if (empty($faqItems)) {
                 $faqItems = [
                     [
-                        'question' => '¿Cómo puedo agendar o reagendar una cita?',
-                        'answer' => 'Puedes agendar directamente a través de nuestro formulario web 24/7 o escribiendo a nuestro WhatsApp. Si necesitas reagendar, avísanos con al menos 24 horas de anticipación.',
+                        'question' => __('¿Cómo puedo agendar o reagendar una cita?'),
+                        'answer' => __('Puedes agendar directamente a través de nuestro formulario web 24/7 o escribiendo a nuestro WhatsApp. Si necesitas reagendar, avísanos con al menos 24 horas de anticipación.'),
                     ],
                     [
-                        'question' => '¿Dolerán los tratamientos o la limpieza dental?',
-                        'answer' => 'No. Nos enfocamos en odontología indolora y confortable. Utilizamos anestesia local computarizada, instrumental ultrasónico tibio y técnicas suaves para garantizar cero dolor.',
+                        'question' => __('¿Dolerán los tratamientos o la limpieza dental?'),
+                        'answer' => __('No. Nos enfocamos en odontología indolora y confortable. Utilizamos anestesia local computarizada, instrumental ultrasónico tibio y técnicas suaves para garantizar cero dolor.'),
                     ],
                     [
-                        'question' => '¿Aceptan seguros médicos o planes de pago?',
-                        'answer' => '¡Sí! Trabajamos con las principales aseguradoras y ofrecemos planes de financiamiento sin intereses de hasta 12 meses para tratamientos como ortodoncia e implantes.',
+                        'question' => __('¿Aceptan seguros médicos o planes de pago?'),
+                        'answer' => __('¡Sí! Trabajamos con las principales aseguradoras y ofrecemos planes de financiamiento sin intereses de hasta 12 meses para tratamientos como ortodoncia e implantes.'),
                     ],
                     [
-                        'question' => '¿Qué debo esperar durante mi primera consulta dental?',
-                        'answer' => 'Tu primera cita dura aproximadamente 45 minutos e incluye radiografías digitales HD, escaneo 3D intraoral, revisión periodontal completa y tu plan de tratamiento personalizado.',
+                        'question' => __('¿Qué debo esperar durante mi primera consulta dental?'),
+                        'answer' => __('Tu primera cita dura aproximadamente 45 minutos e incluye radiografías digitales HD, escaneo 3D intraoral, revisión periodontal completa y tu plan de tratamiento personalizado.'),
                     ],
                 ];
             }
@@ -803,9 +806,9 @@
             <section id="faqs" data-cms-section="faqs" data-cms-name="Preguntas Frecuentes" class="py-16 bg-slate-50/70 border-t border-slate-200/80" @if(!$faqsActive && !$isEditor) style="display: none;" @endif>
                 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="text-center max-w-xl mx-auto mb-12">
-                        <span data-cms-field="eyebrow" class="text-sky-500 font-bold text-xs tracking-widest uppercase mb-2 block">{{ $faqsSec['eyebrow'] ?? 'Dudas Comunes' }}</span>
-                        <h2 data-cms-field="title" class="text-3xl sm:text-4xl font-black text-slate-900 mb-3">{{ $faqsSec['title'] ?? 'Preguntas Frecuentes' }}</h2>
-                        <p data-cms-field="subtitle" class="text-slate-500 text-xs sm:text-sm">{{ $faqsSec['subtitle'] ?? 'Todo lo que necesitas saber antes de tu primera consulta odontológica.' }}</p>
+                        <span data-cms-field="eyebrow" class="text-sky-500 font-bold text-xs tracking-widest uppercase mb-2 block">{{ $faqsSec['eyebrow'] ?? __('Dudas Comunes') }}</span>
+                        <h2 data-cms-field="title" class="text-3xl sm:text-4xl font-black text-slate-900 mb-3">{{ $faqsSec['title'] ?? __('Preguntas Frecuentes') }}</h2>
+                        <p data-cms-field="subtitle" class="text-slate-500 text-xs sm:text-sm">{{ $faqsSec['subtitle'] ?? __('Todo lo que necesitas saber antes de tu primera consulta odontológica.') }}</p>
                     </div>
 
                     <div 
@@ -857,15 +860,15 @@
                             <div class="relative z-10 flex-1 flex flex-col">
                                 <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-300 font-bold text-xs uppercase tracking-widest mb-5 self-start">
                                     <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
-                                    <span data-cms-field="eyebrow">{{ $ctaBookingSec['eyebrow'] ?? 'Reserva Online 24/7' }}</span>
+                                    <span data-cms-field="eyebrow">{{ $ctaBookingSec['eyebrow'] ?? __('Reserva Online 24/7') }}</span>
                                 </div>
 
                                 <h2 data-cms-field="title" class="text-3xl sm:text-4xl font-black text-white leading-tight mb-3 tracking-tight">
-                                    {{ $ctaBookingSec['title'] ?? 'Reserva tu Cita Odontológica Online' }}
+                                    {{ $ctaBookingSec['title'] ?? __('Reserva tu Cita Odontológica Online') }}
                                 </h2>
 
                                 <p data-cms-field="subtitle" class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-6 font-light">
-                                    {{ $ctaBookingSec['subtitle'] ?? 'Selecciona el tratamiento que necesitas y reserva tu turno en el día y horario que mejor se adapte a tu rutina.' }}
+                                    {{ $ctaBookingSec['subtitle'] ?? __('Selecciona el tratamiento que necesitas y reserva tu turno en el día y horario que mejor se adapte a tu rutina.') }}
                                 </p>
 
                                 <!-- Benefits Checklist -->
@@ -874,13 +877,13 @@
                                     $check2 = $ctaBookingSec['check_2'] ?? null;
                                     $check3 = $ctaBookingSec['check_3'] ?? null;
                                     if (!array_key_exists('check_1', $ctaBookingSec)) {
-                                        $check1 = 'Confirmación instantánea de cita y recordatorios automáticos por WhatsApp.';
+                                        $check1 = __('Confirmación instantánea de cita y recordatorios automáticos por WhatsApp.');
                                     }
                                     if (!array_key_exists('check_2', $ctaBookingSec)) {
-                                        $check2 = 'Especialistas certificados en estética y cirugía reconstructiva.';
+                                        $check2 = __('Especialistas certificados en estética y cirugía reconstructiva.');
                                     }
                                     if (!array_key_exists('check_3', $ctaBookingSec)) {
-                                        $check3 = 'Horarios flexibles organizados por Turno Mañana y Turno Tarde.';
+                                        $check3 = __('Horarios flexibles organizados por Turno Mañana y Turno Tarde.');
                                     }
                                     $hasCheck1 = filled(trim($check1 ?? ''));
                                     $hasCheck2 = filled(trim($check2 ?? ''));
@@ -914,7 +917,7 @@
                                     href="{{ $ctaBookingSec['button_url'] ?? route('schedule') }}"
                                     class="w-full inline-flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 text-white font-bold py-4 px-8 rounded-2xl shadow-lg shadow-sky-500/25 hover:scale-[1.02] active:scale-95 transition-all text-xs uppercase tracking-wider text-center group cursor-pointer"
                                 >
-                                    <span data-cms-field="button_text">{{ $ctaBookingSec['button_text'] ?? 'Reservar Cita Online »' }}</span>
+                                    <span data-cms-field="button_text">{{ $ctaBookingSec['button_text'] ?? __('Reservar Cita Online »') }}</span>
                                     <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                                 </a>
                             </div>
@@ -944,8 +947,8 @@
                                     </svg>
                                 </div>
                                 <div class="text-left min-w-0 flex-1">
-                                    <h4 data-cms-field="emergency_title" class="font-extrabold text-white text-base truncate">{{ $ctaBookingSec['emergency_title'] ?? 'Llamada de Urgencia 24/7' }}</h4>
-                                    <p data-cms-field="emergency_subtitle" class="text-[11px] text-slate-300 truncate">{{ $ctaBookingSec['emergency_subtitle'] ?? 'Atención el mismo día para dolor agudo' }}</p>
+                                    <h4 data-cms-field="emergency_title" class="font-extrabold text-white text-base truncate">{{ $ctaBookingSec['emergency_title'] ?? __('Llamada de Urgencia 24/7') }}</h4>
+                                    <p data-cms-field="emergency_subtitle" class="text-[11px] text-slate-300 truncate">{{ $ctaBookingSec['emergency_subtitle'] ?? __('Atención el mismo día para dolor agudo') }}</p>
                                     <a href="tel:{{ preg_replace('/[^0-9+]/', '', $clinic->emergency_phone ?? $clinic->phone) }}" class="text-sky-400 font-bold text-xs hover:underline block mt-0.5">
                                         {{ $clinic->emergency_phone ?? $clinic->phone }}
                                     </a>
@@ -1001,10 +1004,10 @@
                 get current() {
                     if (!this.items || this.items.length === 0) {
                         return {
-                            patient_name: 'Paciente Verificado',
-                            treatment: 'Tratamiento Dental',
+                            patient_name: @json(__('Paciente Verificado')),
+                            treatment: @json(__('Tratamiento Dental')),
                             rating: 5,
-                            comment: 'Excelente experiencia clínica en Aura Dental Studio.',
+                            comment: @json(__('Excelente experiencia clínica en :clinic.', ['clinic' => $clinic->clinic_name ?? 'Aura Dental Studio'])),
                             avatar_url: ''
                         };
                     }
