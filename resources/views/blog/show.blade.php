@@ -90,10 +90,10 @@
                     
                     <!-- Main Article Body Column -->
                     <article class="lg:col-span-8 space-y-8">
-                        <div class="bg-white rounded-3xl border border-slate-200/80 p-7 sm:p-10 shadow-xs space-y-8">
-                            <!-- Featured Cover Image -->
+                        <div class="bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm md:p-8 lg:p-10">
+                            <!-- Featured Cover Image (flush on mobile, framed with margins and rounded on desktop like treatments) -->
                             @if($post->cover_image)
-                                <div class="rounded-2xl overflow-hidden shadow-sm border border-slate-100 bg-slate-100 h-80 sm:h-96 relative">
+                                <div class="aspect-[4/3] w-full overflow-hidden bg-slate-100 md:rounded-2xl md:shadow-xs">
                                     <img 
                                         src="{{ Str::startsWith($post->cover_image, ['http://', 'https://']) ? $post->cover_image : asset('storage/' . $post->cover_image) }}" 
                                         alt="{{ __('images.blog_detail', ['title' => $post->title]) }}" 
@@ -103,46 +103,48 @@
                                 </div>
                             @endif
 
-                            <!-- Lead Excerpt Callout -->
-                            @if($post->excerpt)
-                                <div class="p-6 rounded-2xl bg-sky-50 border-l-4 border-sky-500 text-slate-700 font-medium text-sm sm:text-base leading-relaxed">
-                                    {{ $post->excerpt }}
+                            <div class="p-6 sm:p-8 md:p-0 md:pt-8 space-y-8">
+                                <!-- Lead Excerpt Callout -->
+                                @if($post->excerpt)
+                                    <div class="p-6 rounded-2xl bg-sky-50 border-l-4 border-sky-500 text-slate-700 font-medium text-sm sm:text-base leading-relaxed">
+                                        {{ $post->excerpt }}
+                                    </div>
+                                @endif
+
+                                <!-- Body Content (Rendered Quill RichText HTML) -->
+                                <div class="blog-content leading-relaxed text-sm sm:text-base font-normal">
+                                    {!! $post->content !!}
                                 </div>
-                            @endif
 
-                            <!-- Body Content (Rendered Quill RichText HTML) -->
-                            <div class="blog-content leading-relaxed text-sm sm:text-base font-normal">
-                                {!! $post->content !!}
-                            </div>
-
-                            <!-- Author & Clinical Disclaimer Box -->
-                            <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-center gap-5">
-                                <div class="w-14 h-14 rounded-2xl bg-sky-500 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-sky-500/20">
-                                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                    </svg>
+                                <!-- Author & Clinical Disclaimer Box -->
+                                <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row items-center gap-5">
+                                    <div class="w-14 h-14 rounded-2xl bg-sky-500 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-sky-500/20">
+                                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                        </svg>
+                                    </div>
+                                    <div class="text-xs text-slate-600 leading-relaxed text-center sm:text-left">
+                                        <p class="font-bold text-slate-900 text-sm mb-1">{{ __('Nota médica informativa') }}</p>
+                                        <p>{{ __('Este contenido tiene fines puramente educativos e informativos con base odontológica. No reemplaza el diagnóstico presencial o tratamiento médico indicado por un odontólogo colegiado.') }}</p>
+                                    </div>
                                 </div>
-                                <div class="text-xs text-slate-600 leading-relaxed text-center sm:text-left">
-                                    <p class="font-bold text-slate-900 text-sm mb-1">{{ __('Nota médica informativa') }}</p>
-                                    <p>{{ __('Este contenido tiene fines puramente educativos e informativos con base odontológica. No reemplaza el diagnóstico presencial o tratamiento médico indicado por un odontólogo colegiado.') }}</p>
+
+                                <!-- Navigation Controls -->
+                                <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <a 
+                                        href="{{ route('blog.index') }}" 
+                                        class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-sky-600 transition-colors"
+                                    >
+                                        <span>{{ __('« Volver al Blog') }}</span>
+                                    </a>
+
+                                    <a 
+                                        href="{{ route('schedule') }}" 
+                                        class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm hover:scale-105 transition-all"
+                                    >
+                                        <span>{{ __('Agendar Consulta »') }}</span>
+                                    </a>
                                 </div>
-                            </div>
-
-                            <!-- Navigation Controls -->
-                            <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                                <a 
-                                    href="{{ route('blog.index') }}" 
-                                    class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-sky-600 transition-colors"
-                                >
-                                    <span>{{ __('« Volver al Blog') }}</span>
-                                </a>
-
-                                <a 
-                                    href="{{ route('schedule') }}" 
-                                    class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm hover:scale-105 transition-all"
-                                >
-                                    <span>{{ __('Agendar Consulta »') }}</span>
-                                </a>
                             </div>
                         </div>
                     </article>

@@ -60,8 +60,8 @@
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0"
          @click="close()"
-         class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity"
-         style="backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">
+         class="fixed inset-0 z-50 bg-[#0A1730]/65 backdrop-blur-sm transition-opacity"
+         style="backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);">
     </div>
 
     <!-- PANEL LATERAL DERECHO (SLIDE-OVER DRAWER) -->
@@ -72,10 +72,8 @@
          x-transition:leave="transform transition ease-in duration-200"
          x-transition:leave-start="translate-x-0"
          x-transition:leave-end="translate-x-full"
-         class="fixed inset-y-0 right-0 flex max-w-full pl-10">
-
-        <div class="w-screen max-w-lg bg-slate-50 dark:bg-[#060D1A] text-slate-900 dark:text-slate-100 shadow-2xl flex flex-col border-l border-slate-200 dark:border-white/10"
-             @click.away="close()">
+         class="fixed inset-y-0 right-0 z-50 w-full max-w-lg bg-slate-50 dark:bg-[#060D1A] text-slate-900 dark:text-slate-100 shadow-2xl flex flex-col border-l border-slate-200 dark:border-white/10"
+         style="box-shadow: -15px 0 45px -5px rgba(10, 23, 48, 0.35);">
 
             <!-- HEADER DEL DRAWER -->
             <div class="px-6 py-5 bg-white dark:bg-[#0A1730] border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between shrink-0">
@@ -261,5 +259,3 @@
         </div>
 
     </div>
-
-</div>

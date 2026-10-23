@@ -891,6 +891,42 @@
         margin: 0 !important;
     }
 
+    @media (max-width: 639px) {
+        .fi-header {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 0.875rem !important;
+            margin-bottom: 1.25rem !important;
+        }
+
+        .fi-header > div:first-child {
+            width: 100% !important;
+        }
+
+        .fi-header-heading {
+            font-size: 1.5rem !important;
+            white-space: normal !important;
+            word-break: break-word !important;
+            line-height: 1.25 !important;
+        }
+
+        .fi-header-actions {
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 0.5rem !important;
+        }
+
+        .fi-header-actions .fi-ac,
+        .fi-header-actions .fi-btn,
+        .fi-header-actions a,
+        .fi-header-actions button {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+    }
+
     /* 1. Botón "Nueva Cita" - Azul Océano Vibrante y Limpio (#0284c7) */
     .aura-btn-header-primary {
         background: #0284c7 !important;

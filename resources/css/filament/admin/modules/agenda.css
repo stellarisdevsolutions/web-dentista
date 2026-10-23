@@ -571,19 +571,88 @@
     }
 
     @media (max-width: 640px) {
+        .agenda-filter-container {
+            padding: 12px 14px 10px 14px !important;
+        }
+
+        .agenda-filter-card {
+            padding: 12px 14px !important;
+        }
+
+        .agenda-filter-row-1 {
+            gap: 8px !important;
+        }
+
+        .agenda-date-nav {
+            width: 100% !important;
+            justify-content: space-between !important;
+        }
+
+        .agenda-specialist-wrapper {
+            width: 100% !important;
+            min-width: 100% !important;
+            flex: 1 1 100% !important;
+        }
+
         .agenda-tabs-row {
             flex-direction: column !important;
             align-items: stretch !important;
+            margin-top: 10px !important;
+            padding-top: 10px !important;
+            gap: 8px !important;
         }
+
         .agenda-tabs-group {
             width: 100% !important;
-            justify-content: flex-start !important;
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+            gap: 6px !important;
+            padding-bottom: 4px !important;
         }
+
+        .agenda-tabs-group::-webkit-scrollbar {
+            display: none !important;
+        }
+
+        .agenda-tab-btn {
+            flex-shrink: 0 !important;
+            height: 34px !important;
+            padding: 0 12px !important;
+            font-size: 12px !important;
+        }
+
         .agenda-integrated-search {
             max-width: 100% !important;
             width: 100% !important;
             min-width: 100% !important;
-            margin-top: 6px !important;
+            margin-top: 4px !important;
+        }
+
+        .fi-ta-ctn thead th:first-child,
+        .fi-ta-ctn tbody td:first-child,
+        .fi-ta-table thead th:first-child,
+        .fi-ta-table tbody td:first-child,
+        .agenda-table-card thead th:first-child,
+        .agenda-table-card tbody td:first-child {
+            padding-left: 12px !important;
+        }
+
+        .fi-ta-ctn thead th:last-child,
+        .fi-ta-ctn tbody td:last-child,
+        .fi-ta-table thead th:last-child,
+        .fi-ta-table tbody td:last-child,
+        .agenda-table-card thead th:last-child,
+        .agenda-table-card tbody td:last-child {
+            padding-right: 12px !important;
+        }
+
+        .fi-ta-ctn .fi-ta-pagination,
+        .fi-resource-appointments .fi-ta-pagination,
+        .agenda-table-card .fi-ta-pagination {
+            padding: 10px 12px !important;
         }
     }
 

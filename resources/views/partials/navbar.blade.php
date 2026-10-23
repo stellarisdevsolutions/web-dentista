@@ -172,26 +172,6 @@
                             </svg>
                         </a>
                     </div>
-
-                    <div class="h-3 w-px bg-slate-700"></div>
-
-                    <!-- Language Selector (ES | EN) -->
-                    <div class="inline-flex items-center text-[10px] font-black tracking-wider rounded-lg bg-slate-800/90 p-0.5 border border-slate-700">
-                        <a 
-                            href="{{ \App\Services\LocalizationService::getAlternateUrl('es') }}"
-                            class="px-2 py-0.5 rounded-md transition-all {{ app()->getLocale() === 'es' ? 'bg-sky-500 text-white font-black shadow-xs' : 'text-slate-400 hover:text-white' }}"
-                            title="Versión en Español"
-                        >
-                            ES
-                        </a>
-                        <a 
-                            href="{{ \App\Services\LocalizationService::getAlternateUrl('en') }}"
-                            class="px-2 py-0.5 rounded-md transition-all {{ app()->getLocale() === 'en' ? 'bg-sky-500 text-white font-black shadow-xs' : 'text-slate-400 hover:text-white' }}"
-                            title="English Version"
-                        >
-                            EN
-                        </a>
-                    </div>
                 </div>
             </div>
 
@@ -498,24 +478,6 @@
                 {{ __('Reservar Cita Online') }} »
             </a>
 
-            <!-- Mobile Language Switcher -->
-            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">{{ __('Idioma') }}</span>
-                <div class="inline-flex items-center text-xs font-black rounded-xl bg-slate-100 p-1 border border-slate-200">
-                    <a 
-                        href="{{ \App\Services\LocalizationService::getAlternateUrl('es') }}"
-                        class="px-3 py-1 rounded-lg transition-all {{ app()->getLocale() === 'es' ? 'bg-sky-500 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900' }}"
-                    >
-                        Español
-                    </a>
-                    <a 
-                        href="{{ \App\Services\LocalizationService::getAlternateUrl('en') }}"
-                        class="px-3 py-1 rounded-lg transition-all {{ app()->getLocale() === 'en' ? 'bg-sky-500 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900' }}"
-                    >
-                        English
-                    </a>
-                </div>
-            </div>
         </div>
     </div>
 

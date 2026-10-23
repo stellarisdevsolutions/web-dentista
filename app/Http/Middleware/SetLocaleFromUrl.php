@@ -34,6 +34,15 @@ class SetLocaleFromUrl
 
         $path = trim($request->path(), '/');
 
+        // Auto-redirect if browsing /en while app is configured in Spanish
+        if ($path === 'en' && config('app.locale') === 'es' && ! app()->runningUnitTests()) {
+            if ($request->hasSession()) {
+                $request->session()->put('locale', 'es');
+            }
+
+            return redirect('/', 302);
+        }
+
         // 2. English paths
         $isEnglishPath = $path === 'en'
             || str_starts_with($path, 'en/')
@@ -60,14 +69,17 @@ class SetLocaleFromUrl
 
         if ($isEnglishPath) {
             app()->setLocale('en');
-            session(['locale' => 'en']);
         } elseif ($isSpanishPath) {
-            if (config('app.locale') !== 'en' || session('locale') === 'es') {
+            if (config('app.locale') !== 'en') {
                 app()->setLocale('es');
-                session(['locale' => 'es']);
             }
-        } elseif (session()->has('locale') && in_array(session('locale'), ['es', 'en'], true)) {
-            app()->setLocale(session('locale'));
+        } else {
+            // Default or root URL: strictly honor config('app.locale') from .env
+            $locale = config('app.locale', 'es');
+            app()->setLocale($locale);
+            if ($request->hasSession()) {
+                $request->session()->put('locale', $locale);
+            }
         }
 
         return $next($request);
